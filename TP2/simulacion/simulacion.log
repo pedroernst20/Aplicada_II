@@ -1,0 +1,24 @@
+LTspice 26.0.1 for Windows
+Circuit: Z:\home\pedro\Facultad\Cuarto\Aplicada\TP's\TP2\simulacion.net
+Start Time: Mon Apr 27 18:34:00 2026
+solver = Normal
+Maximum thread count: 12
+tnom = 27
+temp = 27
+method = trap
+Compress1stOrder = true
+Compress2ndOrder = true
+Early termination of direct N-R iteration.
+Direct Newton iteration failed to find operating point.
+Starting Gmin stepping
+Gmin stepping failed to find operating point. Use".option gminsteps=0" to skip all Gmin stepping.
+Starting source stepping with srcstepmethod=0
+Source stepping succeeded in finding the operating point.
+
+Total elapsed time: 0.677 seconds.
+
+Files loaded:
+Z:\home\pedro\Facultad\Cuarto\Aplicada\TP's\TP2\simulacion.net
+C:\users\pedro\AppData\Local\LTspice\lib\cmp\standard.dio
+C:\users\pedro\AppData\Local\LTspice\lib\sub\LTC.lib
+
