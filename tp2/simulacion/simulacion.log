@@ -1,6 +1,6 @@
 LTspice 24.1.10 for Windows
 Circuit: C:\Users\valen\Documents\Valen\Facultad\4to\electronica_aplicada_2\practico\Aplicada_II\TP2\simulacion\simulacion.net
-Start Time: Wed Sep 23 22:00:44 2026
+Start Time: Wed Oct  7 20:35:57 2026
 solver = Normal
 Maximum thread count: 16
 tnom = 27
@@ -112,7 +112,7 @@ vernier = 0.225254
 Source Step = 98.8023%
 Source stepping succeeded in finding the operating point.
 
-Total elapsed time: 1.245 seconds.
+Total elapsed time: 3.311 seconds.
 
 Files loaded:
 C:\Users\valen\Documents\Valen\Facultad\4to\electronica_aplicada_2\practico\Aplicada_II\TP2\simulacion\simulacion.net
