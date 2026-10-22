@@ -1,0 +1,6 @@
+# Historial local de KiCad (es un repo git propio)
+.history/
+
+# Salidas de LTspice (se regeneran al simular)
+*.raw
+*.log
