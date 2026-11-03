@@ -1,0 +1,51 @@
+% Camino de senal del amplificador de ECG, dibujado para una columna IEEE.
+\begin{circuitikz}[font=\footnotesize]
+\ctikzset{bipoles/length=0.85cm, amplifiers/scale=0.62, diodes/scale=0.5,
+  resistors/scale=0.7, capacitors/scale=0.6, grounds/scale=0.6}
+\tikzset{dot/.style={circle, fill, inner sep=0pt, minimum size=2.6pt}}
+% ---------------- Etapa 1: amplificador de instrumentacion ----------------
+\node[op amp, noinv input up] (B) at (3.0,3.0) {};
+\node[op amp] (A) at (3.0,0.2) {};
+\node at (3.25,3.6) {U1B};
+\node at (3.25,-0.4) {U1A};
+% entrada + (LA): R1 y diodos D1/D3 a masa
+\draw (0,0 |- B.+) node[ocirc] (la) {} to[R, l=$R_1$, a=10k] (0.85,0 |- B.+)
+  -- (B.+);
+\node[left] at (la) {LA};
+\draw (1.0,0 |- B.+) node[dot] {} to[D] ++(0,-0.55) node[ground] {};
+\draw (1.27,0 |- B.+) node[dot] {} to[D, invert] ++(0,-0.55) node[ground] {};
+% entrada - (RA): R2 y diodos D2/D4 a masa
+\draw (0,0 |- A.+) node[ocirc] (ra) {} to[R, l_=$R_2$, a^=10k] (0.85,0 |- A.+)
+  -- (A.+);
+\node[left] at (ra) {RA};
+\draw (1.0,0 |- A.+) node[dot] {} to[D] ++(0,-0.55) node[ground] {};
+\draw (1.27,0 |- A.+) node[dot] {} to[D, invert] ++(0,-0.55) node[ground] {};
+% R3 entre las entradas inversoras
+\draw (B.-) -- (1.7,0 |- B.-) node[dot] {} to[R, l_={$R_3$ 10k}] (1.7,0 |- A.-) node[dot] {} -- (A.-);
+% realimentaciones R5 y R4
+\draw (1.95,0 |- B.-) node[dot] {} |- (2.25,2.05) to[R, l={$R_5$ 499k}] (3.4,2.05) -| (3.95,0 |- B.out) -- (B.out);
+\draw (1.95,0 |- A.-) node[dot] {} |- (2.25,1.15) to[R, l_={$R_4$ 499k}] (3.4,1.15) -| (3.95,0 |- A.out) -- (A.out);
+% ---------------- Etapa 2: restador con filtro pasabanda ----------------
+\node[op amp] (C) at (6.95,1.6) {};
+\node at (7.25,1.0) {U1C};
+\draw (3.95,0 |- B.out) node[dot] {} to[R, l=$R_6$, a=100k] (4.85,0 |- B.out)
+  to[C, l=$C_3$, a=33$\mu$] (5.6,0 |- B.out) |- (C.-);
+\draw (3.95,0 |- A.out) node[dot] {} to[R, l_=$R_7$, a^=100k] (4.85,0 |- A.out)
+  to[C, l_=$C_4$, a^=33$\mu$] (5.6,0 |- A.out) |- (C.+);
+% realimentacion R10 || C7
+\draw (5.85,0 |- C.-) node[dot] {} -- (5.85,3.3) node[dot] {} to[R, l_={$R_{10}$ 100k}] (7.95,3.3) node[dot] {}
+  -- (7.95,0 |- C.out) node[dot] {} -- (C.out);
+\draw (5.85,3.3) -- (5.85,4.0) to[C, l={$C_7$ 15n}] (7.95,4.0) -- (7.95,3.3);
+% rama a masa de la entrada +: C8 y R8 + R9 + RV1
+\draw (5.85,0 |- C.+) node[dot] {} -- (5.85,-0.15) node[dot] {} to[C, l={$C_8$ 15n}] (5.85,-0.95) node[ground] {};
+\draw (5.85,-0.15) -- (7.25,-0.15) to[R, l={$R_8{+}R_9$ 98k}] (7.25,-1.05) to[vR, l={RV1 5k}] (7.25,-1.95) node[ground] {};
+% ---------------- Etapa 3: inversor de salida ----------------
+\node[op amp, anchor=-] (D) at (10.01,1.6) {};
+\node at (11.05,0.68) {U1D};
+\draw (7.95,0 |- C.out) to[R, l=$R_{11}$, a={4,7k}] (8.95,0 |- C.out)
+  to[vR, l=RV2, a=10k] (9.8,0 |- C.out) node[dot] {} -- (D.-);
+\draw (D.+) -- (9.8,0 |- D.+) node[ground] {};
+\draw (9.8,0 |- C.out) -- (9.8,2.45) to[R, l={$R_{12}$ 100k}] (11.7,2.45) -- (11.7,0 |- D.out) node[dot] {} -- (D.out);
+\draw (11.7,0 |- D.out) -- (12.0,0 |- D.out) node[ocirc] (vo) {};
+\node[right] at (vo) {$v_o$};
+\end{circuitikz}
