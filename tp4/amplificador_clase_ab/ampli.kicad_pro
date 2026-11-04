@@ -39,9 +39,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.8,
-          "height": 1.27,
-          "width": 2.54
+          "drill": 1.0,
+          "height": 2.0,
+          "width": 2.0
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -60,7 +60,7 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.5,
+          "min_clearance": 0.0,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 1,
@@ -95,7 +95,7 @@
         "extra_footprint": "warning",
         "footprint": "error",
         "footprint_filters_mismatch": "ignore",
-        "footprint_symbol_field_mismatch": "warning",
+        "footprint_symbol_field_mismatch": "ignore",
         "footprint_symbol_mismatch": "warning",
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
@@ -107,7 +107,7 @@
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "warning",
+        "lib_footprint_mismatch": "ignore",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",
@@ -121,11 +121,11 @@
         "pth_inside_courtyard": "error",
         "shorting_items": "error",
         "silk_edge_clearance": "warning",
-        "silk_over_copper": "warning",
+        "silk_over_copper": "ignore",
         "silk_overlap": "warning",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
-        "starved_thermal": "error",
+        "starved_thermal": "warning",
         "text_height": "warning",
         "text_on_edge_cuts": "error",
         "text_thickness": "warning",
@@ -146,22 +146,22 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 1.0,
+        "min_clearance": 0.3,
         "min_connection": 0.5,
-        "min_copper_edge_clearance": 0.5,
+        "min_copper_edge_clearance": 0.0,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
-        "min_hole_to_hole": 0.25,
+        "min_hole_to_hole": 0.3,
         "min_microvia_diameter": 0.2,
         "min_microvia_drill": 0.1,
         "min_resolved_spokes": 2,
         "min_silk_clearance": 0.0,
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
-        "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.2,
-        "min_via_annular_width": 0.1,
-        "min_via_diameter": 0.5,
+        "min_through_hole_diameter": 0.5,
+        "min_track_width": 0.3,
+        "min_via_annular_width": 0.3,
+        "min_via_diameter": 0.8,
         "solder_mask_to_copper_clearance": 0.0,
         "use_height_for_length_calcs": true
       },
@@ -214,8 +214,11 @@
       ],
       "track_widths": [
         0.0,
+        0.6,
+        0.8,
         1.0,
-        2.5
+        1.5,
+        2.0
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -247,6 +250,14 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 1.7,
+          "drill": 0.7
+        },
+        {
+          "diameter": 2.5,
+          "drill": 1.0
         }
       ],
       "zones_allow_external_fillets": false
@@ -258,7 +269,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "2.0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -491,7 +502,7 @@
       "similar_label_and_power": "warning",
       "similar_labels": "warning",
       "similar_power": "warning",
-      "simulation_model_issue": "ignore",
+      "simulation_model_issue": "warning",
       "single_global_label": "ignore",
       "stacked_pin_name": "warning",
       "unannotated": "error",
@@ -507,14 +518,14 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "tp4_kp.kicad_pro",
+    "filename": "ampli.kicad_pro",
     "version": 3
   },
   "net_settings": {
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.2,
+        "clearance": 0.35,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -525,11 +536,30 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2147483647,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.2,
+        "track_width": 0.8,
         "tuning_profile": "",
-        "via_diameter": 0.6,
-        "via_drill": 0.3,
+        "via_diameter": 1.7,
+        "via_drill": 0.8,
         "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.4,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "Potencia",
+        "pcb_color": "rgba(230, 80, 40, 0.800)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.5,
+        "tuning_profile": "",
+        "via_diameter": 2.0,
+        "via_drill": 1.0,
+        "wire_width": 8
       }
     ],
     "meta": {
@@ -537,7 +567,40 @@
     },
     "net_colors": {},
     "netclass_assignments": {},
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/+15V"
+      },
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/-15V"
+      },
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/GND"
+      },
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/V_{out}"
+      },
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/E_Q206"
+      },
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/E_Q207"
+      },
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/OUT_SPK"
+      },
+      {
+        "netclass": "Potencia",
+        "pattern": "/Amplificador/OUT_RL"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
@@ -553,7 +616,7 @@
   "schematic": {
     "annotate_start_num": 0,
     "annotation": {
-      "method": 0,
+      "method": 1,
       "sort_order": 0
     },
     "bom_export_filename": "${PROJECTNAME}.csv",
@@ -609,6 +672,18 @@
         },
         {
           "group_by": true,
+          "label": "Exclude from Simulation",
+          "name": "${EXCLUDE_FROM_SIM}",
+          "show": true
+        },
+        {
+          "group_by": true,
+          "label": "Exclude from Position Files",
+          "name": "${EXCLUDE_FROM_POS_FILES}",
+          "show": true
+        },
+        {
+          "group_by": true,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -618,14 +693,62 @@
           "label": "Datasheet",
           "name": "Datasheet",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Type",
+          "name": "Sim.Type",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Descripción",
+          "name": "Description",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "#",
+          "name": "${ITEM_NUMBER}",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Device",
+          "name": "Sim.Device",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Library",
+          "name": "Sim.Library",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Name",
+          "name": "Sim.Name",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Params",
+          "name": "Sim.Params",
+          "show": false
         }
       ],
       "filter_string": "",
       "group_symbols": true,
       "include_excluded_from_bom": true,
-      "name": "Default Editing",
+      "name": "",
       "sort_asc": true,
-      "sort_field": "Referencia"
+      "sort_field": "Reference"
     },
     "bus_aliases": {},
     "connection_grid_size": 50.0,
@@ -656,6 +779,14 @@
     "meta": {
       "version": 1
     },
+    "ngspice": {
+      "fix_include_paths": true,
+      "meta": {
+        "version": 0
+      },
+      "model_mode": 4,
+      "workbook_filename": "ampli.wbk"
+    },
     "page_layout_descr_file": "",
     "plot_directory": "",
     "reuse_designators": true,
@@ -663,18 +794,31 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "tp4_kp.kicad_sch",
-        "name": "",
-        "uuid": "6e3afa63-f028-47f2-924c-8197fca99bde"
+        "filename": "ampli.kicad_sch",
+        "name": "Raíz",
+        "uuid": "575d2c4d-166b-4823-8620-39df449a3f3f"
       }
     ],
-    "used_designators": "",
-    "variants": []
+    "used_designators": "#FLG1-2,C201-204,J107-110,Q201-207,R201-213,U201",
+    "variants": [
+      {
+        "description": "Para carga de 6Ohm 10W",
+        "name": "spk_10w"
+      },
+      {
+        "description": "Para carga de 4Ohm 3W",
+        "name": "spk_3w"
+      }
+    ]
   },
   "sheets": [
     [
-      "6e3afa63-f028-47f2-924c-8197fca99bde",
-      ""
+      "575d2c4d-166b-4823-8620-39df449a3f3f",
+      "Raíz"
+    ],
+    [
+      "5e788c1d-24ec-410a-ad5f-d3bba515788f",
+      "Amplificador"
     ]
   ],
   "text_variables": {},

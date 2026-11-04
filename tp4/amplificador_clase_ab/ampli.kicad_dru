@@ -1,0 +1,42 @@
+(version 1)
+
+# Reglas para placa simple faz hecha por planchado (TP4 EA2).
+# Van en este archivo porque KiCad reescribe el .kicad_pro al cerrar.
+
+(rule "Pistas y separacion para planchado"
+  (constraint track_width (min 0.8mm) (opt 1.0mm))
+  (constraint clearance (min 0.6mm)))
+
+(rule "Potencia"
+  (condition "A.hasNetclass('Potencia')")
+  (constraint track_width (min 1.2mm) (opt 1.5mm)))
+
+# Zonas de mordida de los cocodrilos: ahi solo puede pasar la red del pad.
+(rule "Mordida TP201"
+  (condition "A.intersectsArea('MORDIDA_TP201') && A.NetName != '/Amplificador/+15V'")
+  (constraint disallow track via))
+
+(rule "Mordida TP202"
+  (condition "A.intersectsArea('MORDIDA_TP202') && A.NetName != '/Amplificador/GND'")
+  (constraint disallow track via))
+
+(rule "Mordida TP203"
+  (condition "A.intersectsArea('MORDIDA_TP203') && A.NetName != '/Amplificador/-15V'")
+  (constraint disallow track via))
+
+(rule "Mordida TP204"
+  (condition "A.intersectsArea('MORDIDA_TP204') && A.NetName != '/Amplificador/OUT_RL'")
+  (constraint disallow track via))
+
+(rule "Mordida TP205"
+  (condition "A.intersectsArea('MORDIDA_TP205') && A.NetName != '/Amplificador/GND'")
+  (constraint disallow track via))
+
+(rule "Mordida TP206"
+  (condition "A.intersectsArea('MORDIDA_TP206') && A.NetName != '/Amplificador/V_{in}'")
+  (constraint disallow track via))
+
+(rule "Mordida TP207"
+  (condition "A.intersectsArea('MORDIDA_TP207') && A.NetName != '/Amplificador/GND'")
+  (constraint disallow track via))
+
