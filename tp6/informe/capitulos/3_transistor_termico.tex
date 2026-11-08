@@ -1,0 +1,106 @@
+\section{Punto de trabajo, SOA y disipadores}
+\label{sec:soa}
+
+\subsection{Exigencias sobre el transistor}
+Siguiendo el apunte~\cite[Sec.~6-8-3]{ap2}, el transistor se verifica con su tensión, corriente y potencia máximas. En funcionamiento normal, la mayor tensión colector-emisor se da con la fuente primaria al máximo y $\Vireg$ al mínimo (Ec.~6-77):
+\begin{equation}
+    V_{CE,\max} = V_{P,\max} - V_{i,\mathrm{reg},\min} = \SI{27,5}{\volt} - \SI{8,85}{\volt} = \SI{18,65}{\volt},
+\end{equation}
+y la potencia máxima en el colector es (Ec.~6-63)
+\begin{equation}
+    P_{C,\max} = V_{CE,\max}\, I_{C,\max} = \SI{18,65}{\volt} \times \SI{0,508}{\ampere} = \SI{9,5}{\watt}.
+\end{equation}
+Al encender la fuente, mientras se cargan $C_1$ y $C_2$, el transistor puede llegar a ver toda la tensión de la primaria, \SI{27,5}{\volt}. El TIP122 soporta \SI{100}{\volt}, \SI{5}{\ampere} y \SI{65}{\watt}~\cite{tip120}, con amplio margen en las tres magnitudes.
+
+En la condición nominal ($\Vp = \SI{25}{\volt}$, $I_L = \SI{0,5}{\ampere}$), la simulación da $V_{CE} = \valu{2}{\simVceVeinticinco}{\volt}$ y $P_C = \valu{2}{\simPqVeinticinco}{\watt}$ (Sección~\ref{sec:sim}).
+
+\subsection{Área de operación segura}
+La Fig.~\ref{fig:soa} reproduce la curva de continua del área de operación segura del TIP122, digitalizada de la Fig.~6 de su hoja de datos~\cite{tip120}. Tiene los tramos que describe el apunte~\cite[Sec.~6-8-3c]{ap2}: límite de corriente por los hilos de conexión (\SI{5}{\ampere}), límite térmico de \SI{65}{\watt} a $T_C = \SI{25}{\celsius}$, límite de segunda ruptura desde unos \SI{20}{\volt} y límite de tensión en $V_{CEO} = \SI{100}{\volt}$. Como la curva vale para $T_C = \SI{25}{\celsius}$, se agrega la curva reducida para la temperatura de carcasa con el disipador elegido más adelante, $T_C \approx \SI{80}{\celsius}$, en la que la potencia admisible baja a $65 - 0{,}52\times(80 - 25) \approx \SI{36}{\watt}$.
+
+Los puntos de trabajo nominal ($Q_{\mathrm{nom}}$) y de peor caso ($Q_{\max}$) quedan muy por debajo de ambas curvas, lejos de la zona de segunda ruptura. El punto de cortocircuito en la salida ($Q_{cc}$, \valu{2}{\simIscCorto}{\ampere} según la simulación) también queda dentro del área segura, aunque no puede sostenerse en el tiempo con el disipador elegido (Sección~\ref{sec:corto}).
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[
+    width=\columnwidth, height=6.8cm,
+    xlabel={$V_{CE}$ [\si{\volt}]}, ylabel={$I_C$ [\si{\ampere}]},
+    xmin=1, xmax=150, ymin=0.05, ymax=10,
+    grid=both, grid style={line width=.1pt, draw=gray!25},
+    major grid style={line width=.2pt, draw=gray!50},
+    legend pos=south west,
+    legend style={font=\scriptsize, fill=white, fill opacity=0.9, draw=gray!60},
+    tick label style={font=\footnotesize}, label style={font=\footnotesize},
+]
+    \addplot[blue!80!black, very thick] coordinates {(1,5) (13,5)};
+    \addlegendentry{SOA en continua, $T_C = \SI{25}{\celsius}$}
+    \addplot[blue!80!black, very thick, domain=13:20.2, samples=20, forget plot] {65/x};
+    \addplot[blue!80!black, very thick, domain=20.2:100, samples=40, forget plot] {3.1*(20.2/x)^1.58};
+    \addplot[blue!80!black, very thick, forget plot] coordinates {(100,0.247) (100,0.05)};
+    \addplot[teal!80!black, thick, dashed, domain=7.28:51.6, samples=40] {36.4/x};
+    \addlegendentry{Límite térmico a $T_C = \SI{80}{\celsius}$}
+    \addplot[teal!80!black, thick, dashed, forget plot] coordinates {(1,5) (7.28,5)};
+    \addplot[only marks, mark=*, mark size=2.4pt, red!85!black] coordinates {(\simVceVeinticinco, 0.505) (18.65, 0.508)};
+    \addlegendentry{Puntos de trabajo}
+    \addplot[only marks, mark=square*, mark size=2.2pt, orange!90!black] coordinates {(14.87, \simIscCorto)};
+    \addlegendentry{Cortocircuito en la salida}
+    \node[anchor=north, font=\scriptsize, text=red!80!black] at (axis cs:12,0.45) {$Q_{\mathrm{nom}}$};
+    \node[anchor=west, font=\scriptsize, text=red!80!black] at (axis cs:20,0.55) {$Q_{\max}$};
+    \node[anchor=east, font=\scriptsize, text=orange!90!black] at (axis cs:13.5,1.82) {$Q_{cc}$};
+    \node[anchor=south west, font=\scriptsize, text=blue!80!black] at (axis cs:25,2.3) {2.ª ruptura};
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{Área de operación segura en continua del TIP122 (digitalizada de~\cite[Fig.~6]{tip120}) y puntos de trabajo del diseño.}
+\label{fig:soa}
+\end{figure}
+
+\subsection{Disipador del transistor}
+La transferencia de calor se modela con el circuito térmico de la Fig.~\ref{fig:circuito_termico}, en el que las resistencias térmicas quedan en serie (Ec.~6-79 a 6-81 del apunte~\cite{ap2}):
+\begin{equation}
+    \frac{T_J - T_a}{P_C} = R_{th(j\text{-}mb)} + R_{th(mb\text{-}h)} + R_{th(h\text{-}a)}.
+    \label{eq:termica}
+\end{equation}
+Como en el Ejemplo~9 del apunte se toma $T_a = \SI{40}{\celsius}$, una temperatura de juntura de diseño de \SI{100}{\celsius}, menor que los \SI{150}{\celsius} admisibles, y $R_{th(mb\text{-}h)} = \SI{1,3}{\celsius\per\watt}$ para la mica más grasa, necesaria porque la aleta del TIP122 está unida al colector.
+
+\begin{figure}[!htb]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{circuitikz}[scale=0.92, transform shape]
+    \draw (0,0) node[ground]{} to[I, i=$P_C$] (0,2.2)
+          to[short, -*] (0.8,2.2) node[above=3pt]{$T_J$}
+          to[R, l=$R_{th(j\text{-}mb)}$, -*] (3.3,2.2) node[above=3pt]{$T_C$}
+          to[R, l=$R_{th(mb\text{-}h)}$, -*] (6.1,2.2) node[above=3pt]{$T_H$}
+          to[R, l=$R_{th(h\text{-}a)}$, -*] (8.6,2.2) node[above=3pt]{$T_a$}
+          to[V, v={$T_a = \SI{40}{\celsius}$}] (8.6,0) node[ground]{};
+\end{circuitikz}%
+}
+\caption{Circuito térmico equivalente~\cite[Fig.~6-44]{ap2}.}
+\label{fig:circuito_termico}
+\end{figure}
+
+Sin disipador, con $R_{\theta JA} = \SI{62,5}{\celsius\per\watt}$, la juntura llegaría a $40 + 62{,}5 \times 9{,}5 \approx \SI{630}{\celsius}$, así que el disipador es obligatorio. Despejando de la Ec.~\eqref{eq:termica}:
+\begin{equation}
+    R_{th(h\text{-}a)} \leq \frac{100 - 40}{9{,}5} - 1{,}92 - 1{,}3 = \SI{3,1}{\celsius\per\watt}.
+\end{equation}
+Del catálogo de International Aluel~\cite{aluel}, el que cita el apunte, se elige el perfil \textbf{ZD-28} (artículo 5075) cortado a \SI{75}{\milli\meter}, con $R_{th(h\text{-}a)} = \SI{2,9}{\celsius\per\watt}$. En el peor caso resulta
+\begin{equation}
+    T_J = \SI{40}{\celsius} + \SI{9,5}{\watt} \times (1{,}92 + 1{,}3 + 2{,}9)\,\si{\celsius\per\watt} = \SI{98}{\celsius},
+\end{equation}
+con la carcasa a $T_C \approx \SI{80}{\celsius}$. En la condición nominal ($P_C = \valu{2}{\simPqVeinticinco}{\watt}$) la juntura queda en unos \SI{86}{\celsius}.
+
+\subsection{Disipador del regulador}
+El regulador disipa la caída sobre él por la corriente de carga más la potencia de su corriente de polarización:
+\begin{equation}
+    P_{D} = (\Vireg - V_O)\, I_L + \Vireg\, I_d.
+\end{equation}
+Para el peor caso se toma la mayor $\Vireg$, \SI{10,8}{\volt}, que es la simulada con el Zener en $+\SI{5}{\percent}$ (Sección~\ref{sec:tolerancia}), y la corriente de polarización máxima: $P_D = 5{,}8 \times 0{,}5 + 10{,}8 \times 0{,}008 = \SI{3,0}{\watt}$. En la condición nominal la simulación da $P_D = \valu{2}{\simPregVeinticinco}{\watt}$, contra \valu{1}{\simPregSinVeinticinco}{\watt} si el regulador se conectara directo a \SI{25}{\volt}.
+
+Sin disipador, con los \SI{62,5}{\celsius\per\watt} de un encapsulado TO-220 en aire libre, la juntura superaría los \SI{220}{\celsius}. Con $R_{\theta JP} = \SI{3}{\celsius\per\watt}$ (juntura a aleta)~\cite{ua78} y la misma interfaz de \SI{1,3}{\celsius\per\watt}:
+\begin{equation}
+    R_{th(h\text{-}a)} \leq \frac{100 - 40}{3{,}0} - 3 - 1{,}3 = \SI{15,7}{\celsius\per\watt}.
+\end{equation}
+Alcanza con el perfil U \textbf{2125D} de Aluel, de \SI{10}{\celsius\per\watt}, el mismo del Ejemplo~9 del apunte, con el que $T_J = 40 + 3{,}0 \times 14{,}3 = \SI{83}{\celsius}$.
+
+\subsection{Cortocircuito en la salida}
+\label{sec:corto}
+Con la salida en cortocircuito, el LM7805 limita la corriente a \valu{2}{\simIscCorto}{\ampere} (simulación con $\Vireg = \valu{1}{\simViregCorto}{\volt}$). En ese estado el TIP122 disipa \valu{0}{\simPqCorto}{\watt} y el regulador \valu{0}{\simPregCorto}{\watt}. El punto queda dentro del área segura del transistor, pero con el disipador elegido su juntura subiría mucho más allá de \SI{150}{\celsius} si la falla se sostuviera. Lo que corta la falla es el regulador: con \valu{0}{\simPregCorto}{\watt} sobre un disipador de \SI{10}{\celsius\per\watt} su juntura supera los \SI{150}{\celsius} y actúa el corte térmico, que al anular su corriente de entrada también deja sin corriente al transistor. Para un uso de laboratorio conviene agregar un fusible en la fuente primaria; el modelo SPICE del regulador no representa el corte térmico, por lo que este comportamiento no se simula.

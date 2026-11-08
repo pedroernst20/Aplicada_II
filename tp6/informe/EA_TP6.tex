@@ -1,0 +1,100 @@
+\documentclass{plantilla}
+
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{array}
+% Ningun flotante puede quedar antes del lugar donde se lo declara: cada
+% figura o tabla va despues del parrafo que la cita.
+\usepackage{flafter}
+\usepgfplotslibrary{fillbetween,groupplots}
+\usetikzlibrary{calc}
+
+% Mas espacio para flotantes en cada columna y menos paginas solo de figuras
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\dblfloatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+
+\sisetup{
+    output-decimal-marker = {,},
+    group-digits = none,
+    per-mode = symbol
+}
+\DeclareSIUnit{\ohm}{\ensuremath{\Omega}}
+
+% Resultados de LTspice (generados por simulacion/correr_simulaciones.py)
+\input{datos/resultados.tex}
+% \val{decimales}{\simXxx}: numero simulado redondeado
+\newcommand{\val}[2]{\num[round-mode=places,round-precision=#1]{#2}}
+% \valu{decimales}{\simXxx}{unidad}: numero simulado con unidad
+\newcommand{\valu}[3]{\SI[round-mode=places,round-precision=#1]{#2}{#3}}
+\newcommand{\Vireg}{V_{i,\mathrm{reg}}}
+\newcommand{\Vp}{V_{P}}
+
+\materia{Electrónica Aplicada II}
+\comision{4R2}
+\titulo{Actividad Evaluativa Unidad 6: Fuente de \SI{5}{\volt} con LM7805 y Etapa Prereguladora (Consigna 6)}
+\autores{Grupo 6: Ernst Pedro (400624), López Demichelis Alejo (401900),\\ Polizze Tomás (400793), Rao Valentino (402308)}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Se diseña una fuente de \SI{5}{\volt} y \SI{0,5}{\ampere} con el regulador integrado LM7805 a partir de una fuente primaria de \SI{25}{\volt} de continua. Para que el regulador trabaje con una entrada de \SI{8}{\volt} a \SI{12}{\volt}, donde su regulación de línea es mejor, se antepone una etapa prereguladora serie formada por un Darlington TIP122 y un Zener 1N4741A de \SI{11}{\volt}, según la Fig.~6-71 del apunte de la cátedra. Se selecciona el transistor con su ganancia mínima garantizada, se verifica su punto de trabajo en el área de operación segura y se calculan los disipadores del transistor y del regulador. Todo el diseño se simula en LTspice, con los modelos que publican los fabricantes del transistor y del diodo de protección, un modelo a nivel transistor del LM7805 validado contra su hoja de datos y un modelo del Zener ajustado a la suya. Con la entrada del regulador en \valu{2}{\simViregVeinticinco}{\volt}, una variación de $\pm\SI{10}{\percent}$ de la fuente primaria cambia la salida en \valu{1}{\simdVoCon}{\micro\volt}, contra \valu{0}{\simdVoSin}{\micro\volt} cuando el LM7805 se conecta directo a \SI{25}{\volt}. Se informan todos los parámetros de calidad definidos en el apunte.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Fuente lineal, LM7805, etapa prereguladora, regulación de línea, área de operación segura, disipador, LTspice.
+\end{IEEEkeywords}
+
+\input{capitulos/1_introduccion.tex}
+\input{capitulos/2_diseno.tex}
+\input{capitulos/3_transistor_termico.tex}
+\input{capitulos/4_simulacion.tex}
+\input{capitulos/5_conclusiones.tex}
+
+\begin{thebibliography}{99}
+\bibitem{ap1}
+E. A. González, \emph{Introducción a las fuentes de alimentación de baja potencia, Parte I: rectificadores y filtros}. Apunte de la Unidad 6, Electrónica Aplicada II, UTN FRC (aula virtual).
+
+\bibitem{ap2}
+E. A. González, \emph{Introducción a las fuentes de alimentación de baja potencia, Parte II: circuitos reguladores lineales}. Apunte de la Unidad 6, Electrónica Aplicada II, UTN FRC (aula virtual).
+
+\bibitem{ap3}
+E. A. González, \emph{Introducción a las fuentes de alimentación de baja potencia, Parte III: circuitos reguladores lineales integrados}. Apunte de la Unidad 6, Electrónica Aplicada II, UTN FRC (aula virtual).
+
+\bibitem{coughlin}
+R. F. Coughlin y F. F. Driscoll, \emph{Amplificadores operacionales y circuitos integrados lineales}, 5.ª ed. México: Prentice Hall, 1999, cap. 15, ``Fuentes de alimentación''.
+
+\bibitem{ua78}
+Texas Instruments, \emph{$\mu$A78xx fixed positive voltage regulators}, hoja de datos SLVS056P, ene. 2015.
+
+\bibitem{tip120}
+onsemi, \emph{TIP120, TIP121, TIP122 (NPN); TIP125, TIP126, TIP127 (PNP) plastic medium-power complementary silicon transistors}, hoja de datos TIP120/D, rev. 10, jun. 2024.
+
+\bibitem{tip31}
+onsemi, \emph{TIP31A, TIP31B, TIP31C (NPN); TIP32A, TIP32B, TIP32C (PNP) complementary silicon plastic power transistors}, hoja de datos TIP31A/D.
+
+\bibitem{zener}
+onsemi, \emph{Zener diodes 1N4728A--1N4758A}, hoja de datos 1N4736AT/D, rev. 10, ago. 2021.
+
+\bibitem{modtip}
+onsemi (ex Fairchild), modelos PSpice \texttt{tip122.lib} (2008) y \texttt{tip31c.lib} (2003). [En línea]. Disponible: \url{https://www.onsemi.com/download/models/lib/tip122.lib}
+
+\bibitem{mod7805}
+Modelo a nivel transistor del LM7805 en la librería \texttt{regulators.lib} de la comunidad de LTspice. [En línea]. Disponible: \url{https://github.com/kafana/ltspice-misc}
+
+\bibitem{mod4002}
+Diodes Incorporated, modelo SPICE \texttt{1N4002G}. [En línea]. Disponible: \url{https://www.diodes.com/design/tools/spice-models}
+
+\bibitem{aluel}
+International Aluel, catálogo de disipadores de media y baja potencia. [En línea]. Disponible: \url{https://www.disipadores.com}
+\end{thebibliography}
+
+\end{document}

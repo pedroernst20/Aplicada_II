@@ -1,0 +1,7 @@
+_corridas/
+*.raw
+*.log
+*.net
+*.op.raw
+*.db
+__pycache__/

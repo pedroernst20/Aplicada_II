@@ -1,0 +1,276 @@
+\section{Simulación en LTspice y parámetros de calidad}
+\label{sec:sim}
+
+\subsection{Modelos y validación del LM7805}
+El circuito se simuló en LTspice~24 con los modelos de la Tabla~\ref{tab:modelos}. Los del TIP122 y del 1N4002 son los que publican sus fabricantes. El del LM7805 es un modelo a nivel transistor armado con el esquema interno de la familia 78XX: incluye la referencia, el amplificador de error, el par Darlington de salida, el limitador de corriente y la protección de área segura, pero no el corte térmico. Para el 1N4741A no hay modelo del fabricante (Diodes Inc. lo discontinuó y onsemi no lo publica), así que se ajustó uno a su hoja de datos: da \SI{11,01}{\volt} con \SI{23}{\milli\ampere}, $Z_{ZT} = \SI{7}{\ohm}$ y $Z_{ZK} = \SI{375}{\ohm}$, dentro de los máximos de \SI{8}{\ohm} y \SI{700}{\ohm}.
+
+\begin{table}[!htb]
+\centering
+\caption{Modelos SPICE utilizados (archivo \texttt{simulacion/modelos\_tp6.lib}).}
+\label{tab:modelos}
+\footnotesize
+\begin{tabular}{@{}l>{\raggedright}p{2.6cm}>{\raggedright\arraybackslash}p{3.6cm}@{}}
+\toprule
+\textbf{Componente} & \textbf{Modelo} & \textbf{Origen} \\
+\midrule
+LM7805 & Nivel transistor (18 BJT) & \texttt{regulators.lib}~\cite{mod7805}, con $V_{AF}$ agregado \\
+TIP122 & Darlington, subcircuito & onsemi/Fairchild~\cite{modtip} \\
+1N4741A & Diodo con ruptura & Ajustado a la hoja de datos~\cite{zener} \\
+1N4002 & Diodo rectificador & Diodes Inc.~\cite{mod4002} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Antes de usar el modelo del regulador se lo comparó con su hoja de datos, en los mismos ensayos que esta especifica (carpeta \texttt{simulacion/validacion\_7805}). El modelo original no tenía efecto Early en sus transistores y daba una regulación de línea irreal, de \SI{0,01}{\milli\volt} entre \SI{7}{} y \SI{25}{\volt}. Se agregaron tensiones de Early típicas de un proceso bipolar ($V_{AF} = \SI{100}{\volt}$ en los NPN y \SI{50}{\volt} en los PNP), sin ningún otro ajuste. La Tabla~\ref{tab:validacion} muestra el resultado: el modelo reproduce la regulación de línea, el rechazo de rizado, el coeficiente de temperatura, el \emph{dropout} y la corriente de polarización. En cambio, da una regulación de carga unas siete veces mejor que la típica, porque no incluye la resistencia de los terminales ni los gradientes térmicos del chip. Por eso la regulación de carga y la resistencia de salida simuladas más adelante son optimistas.
+
+\begin{table}[!htb]
+\centering
+\caption{Validación del modelo del LM7805 contra la hoja de datos del $\mu$A7805C~\cite{ua78}.}
+\label{tab:validacion}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}>{\raggedright}p{3.95cm}cc@{}}
+\toprule
+\textbf{Parámetro y condición} & \textbf{Simulado} & \textbf{Hoja de datos (típ.)} \\
+\midrule
+Tensión de salida, $V_I = \SI{10}{\volt}$, $I_O = \SI{0,5}{\ampere}$ & \valu{3}{\simvalVo}{\volt} & \SI{5}{\volt} (\SI{4,8}{}--\SI{5,2}{\volt}) \\
+Regulación de línea, $V_I = \SI{7}{}$ a \SI{25}{\volt} & \valu{2}{\simvalLineaAmplia}{\milli\volt} & \SI{3}{\milli\volt} \\
+Regulación de línea, $V_I = \SI{8}{}$ a \SI{12}{\volt} & \valu{2}{\simvalLineaCentral}{\milli\volt} & \SI{1}{\milli\volt} \\
+Rechazo de rizado, $V_I = \SI{10}{\volt} \pm \SI{1}{\volt}$, \SI{120}{\hertz} & \valu{1}{\simvalRR}{\deci\bel} & \SI{78}{\deci\bel} (mín.\ 62) \\
+Regulación de carga, $I_O = \SI{5}{\milli\ampere}$ a \SI{1,5}{\ampere} & \valu{2}{\simvalCargaAmplia}{\milli\volt} & \SI{15}{\milli\volt} \\
+Regulación de carga, $I_O = \SI{0,25}{}$ a \SI{0,75}{\ampere} & \valu{2}{\simvalCargaCentral}{\milli\volt} & \SI{5}{\milli\volt} \\
+Coef.\ de temperatura, $I_O = \SI{5}{\milli\ampere}$, \SI{0}{} a \SI{125}{\celsius} & \valu{2}{\simvalTempco}{\milli\volt\per\celsius} & \SI{-1,1}{\milli\volt\per\celsius} \\
+\emph{Dropout}, $I_O = \SI{1}{\ampere}$ ($V_O$ cae \SI{100}{\milli\volt}) & \valu{2}{\simvalDropout}{\volt} & \SI{2}{\volt} \\
+Corriente de polarización, $V_I = \SI{10}{\volt}$ & \valu{1}{\simvalIq}{\milli\ampere} & \SI{4,2}{\milli\ampere} (máx.\ 8) \\
+Corriente con la salida en corto, $V_I = \SI{10}{\volt}$ & \valu{2}{\simvalIscDiez}{\ampere} & \SI{2,2}{\ampere} (pico) \\
+Corriente con la salida en corto, $V_I = \SI{25}{}$ / \SI{35}{\volt} & \val{2}{\simvalIscVeinticinco} / \valu{2}{\simvalIscTreintaycinco}{\ampere} & \SI{0,75}{\ampere} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El rechazo de rizado se mide en un análisis transitorio, como cociente entre los rizados pico a pico de entrada y de salida, que es la definición del Coughlin~\cite[Sec.~15-8.5]{coughlin}. Con este modelo, el análisis \texttt{.ac} de LTspice da un rechazo de unos \SI{38}{\deci\bel}, que no coincide ni con la regulación de línea en continua ni con el ensayo transitorio, por lo que no se usa.
+
+El modelo del TIP122 da $V_{BE} = \valu{2}{\simVbeVeinticinco}{\volt}$ con \SI{0,5}{\ampere}, menos que los \SI{1,4}{\volt} supuestos en el cálculo. Por eso la $\Vireg$ simulada, \valu{2}{\simViregVeinticinco}{\volt}, es algo mayor que los \SI{9,6}{\volt} calculados. Ambos valores están dentro de la ventana de \SI{8}{} a \SI{12}{\volt}.
+
+Las simulaciones están en la carpeta \texttt{simulacion}, cada una en su esquemático: \texttt{c6\_linea}, \texttt{c6\_carga}, \texttt{c6\_rizado}, \texttt{c6\_temperatura}, \texttt{c6\_tolerancia} y \texttt{c6\_cortocircuito}. Los esquemáticos de línea, rizado y temperatura incluyen un segundo LM7805 conectado directo a la fuente primaria, con la misma carga, para comparar en una misma corrida. El script \texttt{correr\_simulaciones.py} las ejecuta en modo batch y genera las tablas y los datos de las figuras de esta sección.
+
+\subsection{Regulación de línea con $V_{in} = \SI{25}{\volt}$ y $V_{in} = \SI{10}{\volt}$}
+\label{sec:linea}
+La Fig.~\ref{fig:linea}(a) muestra el barrido de la fuente primaria de \SI{0}{} a \SI{30}{\volt} con $I_L = \SI{0,5}{\ampere}$. Mientras $\Vp$ supera la tensión del Zener, la base queda fija en unos \SI{11}{\volt} y $\Vireg$ casi no cambia: con la primaria en \SI{25}{\volt}, $\Vireg = \valu{2}{\simViregVeinticinco}{\volt}$, y entre \SI{22,5}{} y \SI{27,5}{\volt} varía apenas \valu{0}{\simdViregCon}{\milli\volt}. Por debajo de \SI{11}{\volt} el Zener deja de conducir y el transistor copia la tensión de la primaria. Aun así, con la primaria en \SI{10}{\volt}, $\Vireg = \valu{2}{\simViregDiez}{\volt}$, y la entrada del regulador queda dentro de la ventana mientras $\Vp \geq \valu{2}{\simVpVentana}{\volt}$. La Fig.~\ref{fig:linea}(b) amplía el cambio de la salida en los dos circuitos.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=1 by 2, vertical sep=1.9cm},
+    width=\columnwidth, height=4.9cm,
+    grid=both, grid style={line width=.1pt, draw=gray!25},
+    major grid style={line width=.2pt, draw=gray!50},
+    tick label style={font=\footnotesize}, label style={font=\footnotesize},
+    title style={font=\footnotesize},
+    legend style={font=\scriptsize, fill=white, fill opacity=0.92, draw=gray!60},
+]
+\nextgroupplot[
+    title={(a) Barrido de la fuente primaria},
+    xlabel={$\Vp$ [\si{\volt}]}, ylabel={Tensión [\si{\volt}]},
+    xmin=0, xmax=30, ymin=0, ymax=14, legend pos=south east]
+    \addplot[name path=top, draw=none, forget plot] coordinates {(0,12) (30,12)};
+    \addplot[name path=bot, draw=none, forget plot] coordinates {(0,8) (30,8)};
+    \addplot[green!25, opacity=0.5] fill between[of=top and bot];
+    \addlegendentry{Ventana de \SI{8}{} a \SI{12}{\volt}}
+    \addplot[orange!85!black, thick, dashed] table[x=vp, y=vb] {datos/linea.dat};
+    \addlegendentry{Base de $Q_1$}
+    \addplot[blue!80!black, very thick] table[x=vp, y=vireg] {datos/linea.dat};
+    \addlegendentry{$\Vireg$}
+    \addplot[red!85!black, very thick] table[x=vp, y=vo] {datos/linea.dat};
+    \addlegendentry{$V_O$}
+    \addplot[only marks, mark=*, mark size=2pt, blue!80!black, forget plot] coordinates {(10,\simViregDiez) (25,\simViregVeinticinco)};
+\nextgroupplot[
+    title={(b) Cambio de $V_O$ respecto del valor con $\Vp = \SI{25}{\volt}$},
+    xlabel={$\Vp$ [\si{\volt}]}, ylabel={$\Delta V_O$ [\si{\milli\volt}]},
+    xmin=9, xmax=29, ymin=-3, ymax=1, legend pos=south east]
+    \addplot[purple!80!black, very thick, dashed] table[x=vp, y=dvosin] {datos/linea_detalle.dat};
+    \addlegendentry{LM7805 directo a $\Vp$}
+    \addplot[blue!80!black, very thick] table[x=vp, y=dvocon] {datos/linea_detalle.dat};
+    \addlegendentry{Con etapa prereguladora}
+    \draw[gray, dashed] (axis cs:22.5,-3) -- (axis cs:22.5,1);
+    \draw[gray, dashed] (axis cs:27.5,-3) -- (axis cs:27.5,1);
+    \node[font=\scriptsize, gray, anchor=north] at (axis cs:25,0.95) {$\pm\SI{10}{\percent}$};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Regulación de línea simulada con $I_L = \SI{0,5}{\ampere}$ (\texttt{c6\_linea.asc}).}
+\label{fig:linea}
+\end{figure}
+
+La Tabla~\ref{tab:linea} compara las dos condiciones que pide la consigna, más la del LM7805 alimentado directamente con \SI{10}{\volt}. En los tres casos se aplica una variación de $\pm\SI{10}{\percent}$ a la tensión de entrada y se calcula la regulación de red con la Ec.~6-41 del apunte~\cite{ap2}:
+\begin{equation}
+    R_{\mathrm{red}} = \frac{V_{L(\text{red máx})} - V_{L(\text{red mín})}}{V_{L(\text{red mín})}} \times 100.
+\end{equation}
+
+\begin{table}[!htb]
+\centering
+\caption{Regulación de línea simulada para $\pm\SI{10}{\percent}$ de variación de la entrada, con $I_L = \SI{0,5}{\ampere}$.}
+\label{tab:linea}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}>{\raggedright}p{2.3cm}ccc@{}}
+\toprule
+\textbf{Caso} & \textbf{Entrada del LM7805} & $\boldsymbol{\Delta V_O}$ & $\boldsymbol{R_{\mathrm{red}}}$ \\
+\midrule
+LM7805 directo, $V_{in} = \SI{25}{\volt}$ & \SI{22,5}{} a \SI{27,5}{\volt} & \valu{1}{\simdVoSin}{\micro\volt} & \valu{4}{\simRredSin}{\percent} \\
+LM7805 directo, $V_{in} = \SI{10}{\volt}$ & \SI{9}{} a \SI{11}{\volt} & \valu{1}{\simdVoSinDiez}{\micro\volt} & \valu{4}{\simRredSinDiez}{\percent} \\
+Con etapa, $\Vp = \SI{25}{\volt}$ & \val{2}{\simViregMin} a \valu{2}{\simViregMax}{\volt} & \valu{1}{\simdVoCon}{\micro\volt} & \valu{4}{\simRredCon}{\percent} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La simulación confirma lo que anticipa la hoja de datos. El mismo regulador regula mejor con \SI{10}{\volt} en la entrada que con \SI{25}{\volt}: \valu{0}{\simdVoSinDiez}{\micro\volt} contra \valu{0}{\simdVoSin}{\micro\volt}. Con la etapa prereguladora la mejora es mucho mayor, porque además de trabajar cerca de \SI{10}{\volt}, el regulador recibe una variación de solo \valu{0}{\simdViregCon}{\milli\volt} en lugar de \SI{5}{\volt}: la salida cambia \valu{1}{\simdVoCon}{\micro\volt}, \val{0}{\simMejoraLinea} veces menos que con el regulador conectado directo a la primaria. Si la primaria recorre todo el intervalo de \SI{10}{} a \SI{25}{\volt}, la salida cambia \valu{0}{\simdVoCompleta}{\micro\volt} con la etapa y \valu{2}{\simdVoSinCompleta}{\micro\volt} sin ella, porque por debajo de \SI{11}{\volt} la etapa ya no regula.
+
+\subsection{Tolerancia del Zener}
+\label{sec:tolerancia}
+El esquemático \texttt{c6\_tolerancia} repite el barrido con la tensión del Zener en su mínimo, nominal y máximo ($\pm\SI{5}{\percent}$). Con la primaria en \SI{25}{\volt}, $\Vireg$ resulta \valu{2}{\simViregTolBajo}{\volt}, \valu{2}{\simViregTolNom}{\volt} y \valu{2}{\simViregTolAlto}{\volt}, siempre dentro de la ventana. Con la primaria en \SI{10}{\volt} el Zener no conduce y $\Vireg$ no depende de su tolerancia: queda en \valu{2}{\simViregTolDiezNom}{\volt}.
+
+\subsection{Regulación de carga y resistencia de salida}
+La Fig.~\ref{fig:carga} muestra el barrido de la corriente de carga con la primaria en \SI{25}{\volt}. Entre vacío y plena carga (\SI{0}{} a \SI{0,5}{\ampere}) la salida pasa de \valu{4}{\simVoVacio}{\volt} a \valu{4}{\simVoPlena}{\volt}. Con las Ec.~6-42 y 6-43 del apunte~\cite{ap2}:
+\begin{align}
+    R_{\mathrm{car}} &= \frac{V_{L(\text{car mín})} - V_{L(\text{car máx})}}{V_{L(\text{car máx})}} \times 100 = \valu{3}{\simRcar}{\percent}, \\
+    R_{\mathrm{sal}} &= \frac{V_{L(\text{car mín})} - V_{L(\text{car máx})}}{I_{L(\text{car máx})} - I_{L(\text{car mín})}} = \valu{1}{\simRsal}{\milli\ohm}.
+\end{align}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=1 by 2, vertical sep=0.5cm, xticklabels at=edge bottom},
+    width=\columnwidth, height=4.0cm,
+    xmin=0, xmax=1.5,
+    grid=both, grid style={line width=.1pt, draw=gray!25},
+    major grid style={line width=.2pt, draw=gray!50},
+    tick label style={font=\footnotesize}, label style={font=\footnotesize},
+    legend style={font=\scriptsize, fill=white, fill opacity=0.92, draw=gray!60},
+]
+\nextgroupplot[ylabel={$V_O - V_{O(I_L=0)}$ [\si{\milli\volt}]}, ymin=-3, ymax=0.5]
+    \addplot[red!85!black, very thick] table[x=il, y expr={(\thisrow{vo}-\simVoVacio)*1000}] {datos/carga.dat};
+    \draw[gray, dashed] (axis cs:0.5,-3) -- (axis cs:0.5,0.5);
+    \node[font=\scriptsize, gray, anchor=north west] at (axis cs:0.5,0.4) {$I_{L,\max}$};
+\nextgroupplot[xlabel={$I_L$ [\si{\ampere}]}, ylabel={Potencia [\si{\watt}]}, ymin=0, ymax=25, legend pos=north west]
+    \addplot[blue!80!black, very thick] table[x=il, y=pq] {datos/carga.dat};
+    \addlegendentry{TIP122}
+    \addplot[teal!80!black, very thick, dashed] table[x=il, y=preg] {datos/carga.dat};
+    \addlegendentry{LM7805}
+    \draw[gray, dashed] (axis cs:0.5,0) -- (axis cs:0.5,25);
+\end{groupplot}
+\end{tikzpicture}
+\caption{Regulación de carga y potencias disipadas con $\Vp = \SI{25}{\volt}$ (\texttt{c6\_carga.asc}).}
+\label{fig:carga}
+\end{figure}
+
+Por lo dicho en la validación, estos valores son optimistas: con la regulación de carga típica de la hoja de datos, \SI{15}{\milli\volt} entre \SI{5}{\milli\ampere} y \SI{1,5}{\ampere}, cabe esperar en la práctica unos \SI{10}{\milli\ohm}. La regulación de carga depende solo del regulador, porque la etapa prereguladora queda fuera de su lazo.
+
+La corriente del Zener casi no cambia con la carga: \valu{1}{\simIzVacio}{\milli\ampere} en vacío y \valu{1}{\simIzPlena}{\milli\ampere} a plena carga, porque el Darlington pide apenas \valu{2}{\simIbPlena}{\milli\ampere} de base. La Fig.~\ref{fig:carga} también muestra cómo se reparte la potencia: a plena carga el TIP122 disipa \valu{2}{\simPqPlena}{\watt} y el regulador \valu{2}{\simPregPlena}{\watt}. El barrido sigue hasta \SI{1,5}{\ampere} para mostrar el margen: a \SI{1}{\ampere} la salida vale todavía \valu{3}{\simVoUnAmper}{\volt}, aunque el transistor disiparía \valu{1}{\simPqUnAmper}{\watt}, más de lo que admite el disipador elegido.
+
+\subsection{Rizado y rechazo de rizado}
+En \texttt{c6\_rizado} se superponen \SI{2}{\volt} pico a pico a \SI{100}{\hertz} a los \SI{25}{\volt} de la primaria. La Fig.~\ref{fig:rizado} muestra la componente alterna en cada punto del circuito. A la entrada del regulador llegan \valu{1}{\simVrVireg}{\milli\volt} pico a pico, cerca de los \SI{20,4}{\milli\volt} de la Ec.~\eqref{eq:rizado_zener}, y a la salida \valu{1}{\simVrOut}{\micro\volt}. Con el LM7805 conectado directo a la primaria, el rizado de salida es de \valu{0}{\simVrOutSin}{\micro\volt}.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 2, horizontal sep=1.55cm, vertical sep=1.0cm,
+                 xticklabels at=edge bottom, xlabels at=edge bottom},
+    scale only axis, width=2.75cm, height=2.1cm,
+    xmin=0, xmax=20, xlabel={$t$ [\si{\milli\second}]},
+    grid=both, grid style={line width=.1pt, draw=gray!25},
+    major grid style={line width=.2pt, draw=gray!50},
+    tick label style={font=\scriptsize}, label style={font=\footnotesize},
+    title style={font=\footnotesize, yshift=-3pt},
+]
+\nextgroupplot[title={(a) Fuente primaria}, ylabel={$v_p$ [\si{\volt}]}, ymin=-1.2, ymax=1.2]
+    \addplot[black, thick] table[x=t, y=vp] {datos/rizado.dat};
+\nextgroupplot[title={(b) Entrada del LM7805}, ylabel={$v_{i,\mathrm{reg}}$ [\si{\milli\volt}]}, ymin=-14, ymax=14]
+    \addplot[blue!80!black, thick] table[x=t, y=vireg] {datos/rizado.dat};
+\nextgroupplot[title={(c) Salida sin etapa}, ylabel={$v_o$ [\si{\micro\volt}]}, ymin=-180, ymax=180]
+    \addplot[purple!80!black, thick] table[x=t, y=vosin] {datos/rizado.dat};
+\nextgroupplot[title={(d) Salida con etapa}, ylabel={$v_o$ [\si{\micro\volt}]}, ymin=-3, ymax=3]
+    \addplot[red!85!black, thick] table[x=t, y=vo] {datos/rizado.dat};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Componente alterna de las tensiones con \SI{2}{\volt} pico a pico a \SI{100}{\hertz} en la fuente primaria e $I_L = \SI{0,5}{\ampere}$ (\texttt{c6\_rizado.asc}). Notar las escalas: (b) en milivolts y (c) y (d) en microvolts.}
+\label{fig:rizado}
+\end{figure}
+
+Con la definición del Coughlin~\cite[Sec.~15-8.5]{coughlin}, $RR = 20\log(V_{r,\mathrm{ent}}/V_{r,\mathrm{sal}})$, el rechazo de la etapa es de \valu{1}{\simRRPre}{\deci\bel}, el del regulador de \valu{1}{\simRRReg}{\deci\bel} y el de la fuente completa de \valu{1}{\simRRTotal}{\deci\bel}, contra \valu{1}{\simRRSin}{\deci\bel} sin la etapa. Ambos superan los \SI{60}{\deci\bel} que el Coughlin da como valor característico de estos reguladores.
+
+El valor eficaz del rizado de salida, calculado sobre la forma de onda simulada, es de \valu{2}{\simVefOut}{\micro\volt}. Como el rizado de prueba es senoidal, vale $V_{r,pp}/(2\sqrt{2})$ y no $V_{r,pp}/3{,}464$, que es la relación de la Ec.~6-47 del apunte para una onda triangular. El factor de rizo resulta $V_{\mathrm{ef}}/V_O = \num[round-mode=figures,round-precision=2]{\simFactorRizo}\,\%$.
+
+\subsection{Coeficiente de temperatura}
+El esquemático \texttt{c6\_temperatura} barre la temperatura de todo el circuito de \SI{0}{} a \SI{55}{\celsius}, el rango que el apunte da como ejemplo~\cite[Sec.~6-6-3d]{ap2}. La Fig.~\ref{fig:temperatura} muestra la tensión de salida en ese rango. Con la Ec.~6-44:
+\begin{equation}
+    C.T. = \frac{V_{L(55)} - V_{L(0)}}{(55 - 0)\,V_{L(25)}} \times 100 = \valu{4}{\simCTCon}{\percent\per\celsius},
+\end{equation}
+es decir, \valu{2}{\simCTmVCon}{\milli\volt\per\celsius}, prácticamente igual que sin la etapa (\valu{4}{\simCTSin}{\percent\per\celsius}).
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\columnwidth, height=4.6cm,
+    xlabel={Temperatura [\si{\celsius}]}, ylabel={$V_O$ [\si{\volt}]},
+    xmin=0, xmax=55,
+    y tick label style={/pgf/number format/.cd, fixed, precision=3},
+    grid=both, grid style={line width=.1pt, draw=gray!25},
+    major grid style={line width=.2pt, draw=gray!50},
+    tick label style={font=\footnotesize}, label style={font=\footnotesize},
+    legend style={font=\scriptsize, fill=white, fill opacity=0.92, draw=gray!60},
+    legend pos=north east,
+]
+    \addplot[purple!80!black, very thick, dashed] table[x=t, y=vosin] {datos/temperatura.dat};
+    \addlegendentry{LM7805 directo a $\Vp$}
+    \addplot[blue!80!black, very thick] table[x=t, y=vo] {datos/temperatura.dat};
+    \addlegendentry{Con etapa prereguladora}
+\end{axis}
+\end{tikzpicture}
+\caption{Tensión de salida en función de la temperatura, con $\Vp = \SI{25}{\volt}$ e $I_L = \SI{0,5}{\ampere}$ (\texttt{c6\_temperatura.asc}).}
+\label{fig:temperatura}
+\end{figure}
+
+La entrada del regulador sí se mueve con la temperatura, \valu{1}{\simdViregTemp}{\milli\volt\per\celsius}, por el coeficiente positivo del Zener y el negativo de las dos junturas base-emisor, pero el regulador rechaza esa variación igual que una variación de línea. El coeficiente de la fuente queda fijado por la referencia interna del LM7805. La simulación supone todo el circuito a la temperatura ambiente; no incluye el calentamiento propio de cada componente.
+
+\subsection{Rendimiento}
+Con la Ec.~6-68 del apunte~\cite{ap2}, en la condición nominal la fuente primaria entrega \valu{2}{\simPinVeinticinco}{\watt} y la carga recibe \valu{2}{\simPlVeinticinco}{\watt}:
+\begin{equation}
+    \eta = \frac{P_L}{P_{in}} \times 100 = \valu{1}{\simRendimiento}{\percent}.
+\end{equation}
+El límite ideal de un regulador lineal es $V_O/V_{in} = \SI{20}{\percent}$ (Ec.~6-69). Sin la etapa, el rendimiento es casi el mismo (\valu{1}{\simRendimientoSin}{\percent}): la etapa no ahorra energía, solo agrega la rama del Zener. Lo que cambia es dónde se disipa: de los \valu{1}{\simPregSinVeinticinco}{\watt} que disiparía el LM7805 solo, pasa a disipar \valu{2}{\simPregVeinticinco}{\watt}, y el TIP122 toma \valu{2}{\simPqVeinticinco}{\watt}.
+
+\subsection{Resumen de parámetros de calidad}
+La Tabla~\ref{tab:resumen} reúne los parámetros de calidad definidos en el apunte~\cite[Sec.~6-6-3]{ap2}, junto con el rechazo de rizado y el rendimiento, para la fuente diseñada y para el LM7805 conectado directo a la fuente primaria.
+
+\begin{table}[!htb]
+\centering
+\caption{Parámetros de calidad simulados con $\Vp = \SI{25}{\volt}$ e $I_L = \SI{0,5}{\ampere}$. El rizado se mide con \SI{2}{\volt} pico a pico a \SI{100}{\hertz} en $\Vp$.}
+\label{tab:resumen}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}>{\raggedright}p{3.85cm}cc@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Con etapa} & \textbf{LM7805 directo} \\
+\midrule
+Tensión de salida $V_O$ & \valu{4}{\simVoVeinticinco}{\volt} & \valu{4}{\simVoSinVeinticinco}{\volt} \\
+Entrada del regulador ($\Vp \pm \SI{10}{\percent}$) & \val{2}{\simViregMin}--\valu{2}{\simViregMax}{\volt} & \SI{22,5}{}--\SI{27,5}{\volt} \\
+Regulación de red, $\Vp \pm \SI{10}{\percent}$ (Ec.~6-41) & \valu{4}{\simRredCon}{\percent} & \valu{4}{\simRredSin}{\percent} \\
+Regulación de carga, \SI{0}{} a \SI{0,5}{\ampere} (Ec.~6-42) & \valu{3}{\simRcar}{\percent} & igual$^{*}$ \\
+Resistencia de salida (Ec.~6-43) & \valu{1}{\simRsal}{\milli\ohm} & igual$^{*}$ \\
+Coef.\ de temperatura, \SI{0}{} a \SI{55}{\celsius} (Ec.~6-44) & \valu{4}{\simCTCon}{\percent\per\celsius} & \valu{4}{\simCTSin}{\percent\per\celsius} \\
+Rizado de salida pico a pico & \valu{1}{\simVrOut}{\micro\volt} & \valu{0}{\simVrOutSin}{\micro\volt} \\
+Rizado de salida eficaz & \valu{2}{\simVefOut}{\micro\volt} & \valu{1}{\simVefOutSin}{\micro\volt} \\
+Rechazo de rizado & \valu{1}{\simRRTotal}{\deci\bel} & \valu{1}{\simRRSin}{\deci\bel} \\
+Rendimiento (Ec.~6-68) & \valu{1}{\simRendimiento}{\percent} & \valu{1}{\simRendimientoSin}{\percent} \\
+Potencia en el LM7805 & \valu{2}{\simPregVeinticinco}{\watt} & \valu{2}{\simPregSinVeinticinco}{\watt} \\
+Potencia en el TIP122 & \valu{2}{\simPqVeinticinco}{\watt} & -- \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\parbox{\columnwidth}{\footnotesize $^{*}$ Depende del regulador y no de la etapa; no se simuló por separado. La hoja de datos indica unos \SI{10}{\milli\ohm}.}
+\end{table}
