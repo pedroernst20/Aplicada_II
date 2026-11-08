@@ -1,0 +1,157 @@
+\section{Diseño de la etapa prereguladora}
+
+\subsection{Topología}
+El apunte presenta dos circuitos para alimentar un regulador integrado desde una tensión mayor que la que admite, ambos con un transistor serie y un diodo Zener~\cite[Sec.~6-9-5g]{ap3}:
+\begin{enumerate}
+    \item \textbf{Zener entre base y masa (Fig.~6-71).} El Zener fija la tensión de base y el transistor trabaja como seguidor de emisor:
+    \begin{equation}
+        \Vireg = V_Z - V_{BE}.
+        \label{eq:vireg}
+    \end{equation}
+    El exceso de tensión $\Vp - \Vireg$ cae entre colector y emisor, y las variaciones de $\Vp$ llegan a la base atenuadas por el divisor que forman $R_Z$ y la impedancia dinámica del Zener.
+    \item \textbf{Zener entre colector y base (Fig.~6-72).} Resta a la entrada una tensión fija: $\Vireg = \Vp - (V_Z + V_{BE})$. Toda variación de $\Vp$ pasa sin atenuar a la entrada del regulador, y si $\Vp$ baja de $V_Z + V_{BE}$ el circuito deja de conducir.
+\end{enumerate}
+Como el objetivo es mejorar la regulación de línea, se adopta el circuito de la Fig.~6-71. La Fig.~\ref{fig:esquematico} muestra el circuito completo.
+
+\begin{figure*}[t]
+\centering
+\begin{circuitikz}[scale=0.92, transform shape, >=latex]
+    % Fuente primaria
+    \draw (0,0) node[ground]{} to[V, v<={$\Vp = \SI{25}{\volt}$}] (0,4)
+          to[short, -*] (2,4) coordinate (vp);
+    % Rz y Zener
+    \draw (vp) to[R, l^={$R_Z$\\\SI{680}{\ohm}\\\SI{1}{\watt}}, align=left] (2,2) coordinate (b);
+    \draw (2,0) node[ground]{} to[zzDo, l_={$D_Z$\\1N4741A\\\SI{11}{\volt}}, align=left, -*] (b);
+    % Transistor de paso
+    \draw (vp) -- (3.6,4);
+    \node[npn, rotate=90] (Q1) at (4.4,4) {};
+    \node[above, font=\small] at (4.4,4.6) {$Q_1$: TIP122};
+    \draw (3.6,4) -- (Q1.C);
+    \draw (b) -| (Q1.B);
+    \node[right, font=\footnotesize] at (4.4,2.6) {$I_B$};
+    % Nodo Vi,reg
+    \draw (Q1.E) to[short, -*] (7,4) coordinate (vi);
+    \node[above, font=\small] at (7,4.05) {$\Vireg$};
+    \draw (vi) to[C] (7,0) node[ground]{};
+    \node[left, align=right, font=\small] at (6.55,2) {$C_1$\\\SI{0,33}{\micro\farad}};
+    % Regulador
+    \draw (vi) -- (8.6,4);
+    \draw[thick, fill=blue!6] (8.6,3.3) rectangle (11,4.7);
+    \node[font=\bfseries\small] at (9.8,4.15) {LM7805};
+    \node[font=\scriptsize] at (9.0,3.75) {IN};
+    \node[font=\scriptsize] at (10.6,3.75) {OUT};
+    \node[font=\scriptsize] at (9.8,3.5) {GND};
+    \draw (9.8,3.3) -- (9.8,0) node[ground]{};
+    % Diodo de proteccion
+    \draw (11.6,4) -- (11.6,5.5) to[D, l_={$D_1$: 1N4002}] (8,5.5) -- (8,4);
+    \filldraw (8,4) circle (1.8pt);
+    % Salida
+    \draw (11,4) to[short, -*] (11.6,4) to[short, -*] (13,4) coordinate (c2);
+    \draw (c2) to[C] (13,0) node[ground]{};
+    \node[left, align=right, font=\small] at (12.55,2) {$C_2$\\\SI{0,1}{\micro\farad}};
+    \draw (c2) to[short, -*] (15,4) coordinate (vo);
+    \draw (vo) to[R, l_={Carga\\\SI{0}{}--\SI{0,5}{\ampere}}, align=right, v^>=$V_O$] (15,0) node[ground]{};
+    \draw (vo) to[short, -o] (16.2,4) node[right] {\SI{5}{\volt}};
+    % Recuadro de la etapa
+    \draw[dashed, rounded corners=4pt, color=orange!80!black, thick] (1.0,0.25) rectangle (5.6,5.25);
+    \node[font=\footnotesize\bfseries, color=orange!80!black] at (3.3,5.5) {Etapa prereguladora};
+\end{circuitikz}
+\caption{Fuente de \SI{5}{\volt} con etapa prereguladora serie. Es el mismo circuito que el de los esquemáticos de LTspice (\texttt{simulacion/c6\_*.asc}).}
+\label{fig:esquematico}
+\end{figure*}
+
+\subsection{Tensión de entrada del regulador}
+Se busca que $\Vireg$ quede en el centro de la ventana de \SI{8}{} a \SI{12}{\volt}, en torno a \SI{10}{\volt}, que además es la tensión de ensayo de la hoja de datos. Así queda margen para la tolerancia del Zener, para la dispersión de $V_{BE}$ y para el rizado. Con $\Vireg = \SI{10}{\volt}$, el regulador trabaja con $\Vireg - V_O = \SI{5}{\volt}$, por encima de los \SI{3}{\volt} de margen mínimo~\cite[Ec.~15-8]{coughlin}. En el ejemplo de diseño del apunte se adopta un criterio parecido: \SI{4}{\volt} sobre el regulador y $\Vireg = \SI{9}{\volt}$~\cite[Sec.~6-9-5h]{ap3}.
+
+\subsection{Selección del transistor de paso}
+\label{sec:seleccion_transistor}
+Por el transistor circula la corriente de carga más la de polarización del regulador:
+\begin{equation}
+    I_{C,\max} = I_{L,\max} + I_{d,\max} = \SI{0,5}{\ampere} + \SI{8}{\milli\ampere} = \SI{0,508}{\ampere}.
+\end{equation}
+La tensión y la potencia que debe soportar se calculan en la Sección~\ref{sec:soa}. Lo que define la elección es la corriente de base, porque el Zener debe absorberla sin salir de su zona de trabajo. El apunte fija la corriente del Zener en diez veces la corriente de base máxima~\cite[Sec.~6-9-5h]{ap3}:
+\begin{equation}
+    I_{Z} \geq 10\, I_{B,\max} = 10\, \frac{I_{C,\max}}{h_{FE,\min}}.
+    \label{eq:criterio_iz}
+\end{equation}
+En el ejemplo del apunte se usa un TIP31A con la ganancia típica de su curva, $h_{FE} = 100$. Pero la ganancia garantizada del TIP31C es mucho menor: $h_{FE} \geq 25$ con $I_C = \SI{1}{\ampere}$ y $V_{CE} = \SI{4}{\volt}$~\cite{tip31}. En el peor caso, $I_{B,\max} = \SI{0,508}{\ampere}/25 = \SI{20,3}{\milli\ampere}$ y la Ec.~\eqref{eq:criterio_iz} pide $I_Z \geq \SI{203}{\milli\ampere}$. Con la fuente primaria en su mínimo de \SI{22,5}{\volt} eso da $R_Z = (22{,}5 - 11)\,\si{\volt}/\SI{223}{\milli\ampere} \approx \SI{52}{\ohm}$, y sin carga y con la primaria en \SI{27,5}{\volt} el Zener disiparía unos \SI{3,5}{\watt} y $R_Z$ más de \SI{5}{\watt}. Un transistor simple no sirve.
+
+Se elige el Darlington \textbf{TIP122}, que garantiza $h_{FE} \geq 1000$ con $I_C = \SI{0,5}{\ampere}$ y $V_{CE} = \SI{3}{\volt}$~\cite{tip120}. Su corriente de base máxima es
+\begin{equation}
+    I_{B,\max} = \frac{\SI{0,508}{\ampere}}{1000} = \SI{0,51}{\milli\ampere},
+\end{equation}
+y alcanza con $I_Z \geq \SI{5,1}{\milli\ampere}$. La Tabla~\ref{tab:transistores} compara ambos transistores. La contrapartida del Darlington es que su $V_{BE}$ es la suma de dos junturas, de unos \SI{1,4}{\volt}, lo que se tiene en cuenta al elegir el Zener.
+
+\begin{table}[!htb]
+\centering
+\caption{Comparación de los transistores considerados~\cite{tip31,tip120}.}
+\label{tab:transistores}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Parámetro} & \textbf{Requerido} & \textbf{TIP31C} & \textbf{TIP122} \\
+\midrule
+$V_{CEO}$ & $> \SI{27,5}{\volt}$ & \SI{100}{\volt} & \SI{100}{\volt} \\
+$I_C$ continua & \SI{0,508}{\ampere} & \SI{3}{\ampere} & \SI{5}{\ampere} \\
+$P_D$ ($T_C = \SI{25}{\celsius}$) & \SI{9,5}{\watt} & \SI{40}{\watt} & \SI{65}{\watt} \\
+$h_{FE}$ mínima & -- & 25 (\SI{1}{\ampere}) & 1000 (\SI{0,5}{\ampere}) \\
+$I_{B,\max}$ a \SI{0,508}{\ampere} & -- & \SI{20,3}{\milli\ampere} & \SI{0,51}{\milli\ampere} \\
+$R_{\theta JC}$ & -- & \SI{3,125}{\celsius\per\watt} & \SI{1,92}{\celsius\per\watt} \\
+$R_{\theta JA}$ & -- & \SI{62,5}{\celsius\per\watt} & \SI{62,5}{\celsius\per\watt} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Selección del diodo Zener}
+De la Ec.~\eqref{eq:vireg}, con $V_{BE} \approx \SI{1,4}{\volt}$:
+\begin{equation}
+    V_Z = \Vireg + V_{BE} \approx \SI{10}{\volt} + \SI{1,4}{\volt} = \SI{11,4}{\volt}.
+\end{equation}
+Se elige el \textbf{1N4741A}: $V_Z = \SI{11}{\volt} \pm \SI{5}{\percent}$ con $I_{ZT} = \SI{23}{\milli\ampere}$, $Z_{ZT} \leq \SI{8}{\ohm}$, $Z_{ZK} \leq \SI{700}{\ohm}$ con $I_{ZK} = \SI{0,25}{\milli\ampere}$ y \SI{1}{\watt} de potencia~\cite{zener}. Con el valor nominal resulta $\Vireg \approx \SI{9,6}{\volt}$. En el peor caso, con $V_Z$ entre \SI{10,45}{} y \SI{11,55}{\volt} y $V_{BE}$ entre \SI{1,2}{} y \SI{1,6}{\volt}, $\Vireg$ queda entre \SI{8,85}{} y \SI{10,35}{\volt}, siempre dentro de la ventana. El Zener de \SI{10}{\volt} (1N4740A) dejaría $\Vireg$ en unos \SI{8,6}{\volt}, demasiado cerca del límite inferior.
+
+\subsection{Cálculo de $R_Z$}
+Para que el Zener trabaje con baja impedancia dinámica se fija su corriente cerca de $I_{ZT}$, en unos \SI{20}{\milli\ampere} con la primaria en \SI{25}{\volt} y plena carga:
+\begin{equation}
+    R_Z = \frac{\Vp - V_Z}{I_Z + I_{B,\max}} = \frac{\SI{25}{\volt} - \SI{11}{\volt}}{\SI{20}{\milli\ampere} + \SI{0,51}{\milli\ampere}} = \SI{683}{\ohm}.
+\end{equation}
+Se adopta $R_Z = \SI{680}{\ohm}$. El valor no supera el máximo que da la Ec.~6-49 del apunte~\cite{ap2}, en la que la corriente de base cumple el papel de la corriente de carga del Zener y $I_{Z,\min} = 10\,I_{B,\max}$:
+\begin{equation}
+    R_{Z,\max} = \frac{V_{P,\min} - V_Z}{I_{Z,\min} + I_{B,\max}} = \frac{\SI{22,5}{\volt} - \SI{11}{\volt}}{\SI{5,1}{\milli\ampere} + \SI{0,51}{\milli\ampere}} = \SI{2,05}{\kilo\ohm}.
+\end{equation}
+Con la primaria al mínimo y plena carga, el Zener conduce $(22{,}5 - 11)/680 - 0{,}51 = \SI{16,4}{\milli\ampere}$. La corriente máxima se da con la primaria en \SI{27,5}{\volt} y sin carga, cuando $I_B \approx 0$ (Ec.~6-51), y de ella sale la potencia máxima del Zener (Ec.~6-50):
+\begin{align}
+    I_{Z,\max} &= \frac{\SI{27,5}{\volt} - \SI{11}{\volt}}{\SI{680}{\ohm}} = \SI{24,3}{\milli\ampere}, \\
+    P_{Z,\max} &= I_{Z,\max}\, V_Z = \SI{0,27}{\watt}.
+\end{align}
+El 1N4741A admite \SI{1}{\watt}, casi cuatro veces más, y cumple el factor de seguridad de 2 que aconseja la Ec.~6-55~\cite{ap2}. En $R_Z$ se disipan, como máximo, $(27{,}5 - 11)^2/680 = \SI{0,40}{\watt}$, por lo que se usa una resistencia de \SI{1}{\watt}.
+
+La etapa también atenúa el rizado de la fuente primaria. Según la Ec.~6-76 del apunte~\cite{ap2}, el rizado que llega a la base es
+\begin{equation}
+    V_{Z,pp} = V_{r,pp} \frac{Z_{ZT}}{R_Z + Z_{ZT}} = \SI{2}{\volt} \times \frac{\SI{7}{\ohm}}{\SI{687}{\ohm}} = \SI{20,4}{\milli\volt},
+    \label{eq:rizado_zener}
+\end{equation}
+una atenuación de \SI{39,8}{\deci\bel} antes del regulador.
+
+\subsection{Capacitores y diodo de protección}
+$C_1 = \SI{0,33}{\micro\farad}$ y $C_2 = \SI{0,1}{\micro\farad}$, cerámicos, van soldados junto a los terminales del regulador. Son los del circuito básico del apunte~\cite[Fig.~6-62]{ap3} y los mismos con que la hoja de datos mide todas sus características~\cite{ua78}: $C_1$ filtra transitorios en la entrada y $C_2$ evita oscilaciones y mejora la respuesta transitoria. El diodo $D_1$ (1N4002), entre salida y entrada, protege al regulador si su entrada queda en cortocircuito o cae antes que la salida, siguiendo la fuente de \SI{5}{\volt} del Coughlin~\cite[Fig.~15-11]{coughlin}. La Tabla~\ref{tab:componentes} lista los componentes.
+
+\begin{table}[!htb]
+\centering
+\caption{Lista de componentes.}
+\label{tab:componentes}
+\footnotesize
+\begin{tabular}{@{}l>{\raggedright}p{3.3cm}>{\raggedright\arraybackslash}p{3.4cm}@{}}
+\toprule
+\textbf{Ref.} & \textbf{Componente} & \textbf{Observaciones} \\
+\midrule
+$Q_1$ & TIP122 (Darlington NPN) & Disipador Aluel ZD-28 de \SI{75}{\milli\meter}, con mica y grasa \\
+$U_1$ & LM7805 ($\mu$A7805C), TO-220 & Disipador Aluel 2125D \\
+$D_Z$ & 1N4741A, \SI{11}{\volt}, \SI{1}{\watt} & -- \\
+$R_Z$ & \SI{680}{\ohm}, \SI{5}{\percent} & \SI{1}{\watt} \\
+$C_1$ & \SI{0,33}{\micro\farad}, cerámico, \SI{50}{\volt} & Junto a IN y GND de $U_1$ \\
+$C_2$ & \SI{0,1}{\micro\farad}, cerámico, \SI{50}{\volt} & Junto a OUT y GND de $U_1$ \\
+$D_1$ & 1N4002 & Protección de $U_1$ \\
+\bottomrule
+\end{tabular}
+\end{table}

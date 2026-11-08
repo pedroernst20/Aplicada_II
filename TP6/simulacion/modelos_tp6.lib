@@ -1,0 +1,150 @@
+* =====================================================================
+*  Modelos SPICE - Consigna 6, Unidad 6 (Fuentes de alimentacion)
+*  Electronica Aplicada II - UTN FRC - Grupo 6
+* =====================================================================
+*
+* ---------------------------------------------------------------------
+*  LM7805 - regulador fijo de +5 V (In GND Out)
+*  Modelo a nivel transistor armado sobre el esquema interno de la
+*  familia LM78xx (QT1..QT18, limitador de corriente R18 = 0,25 ohm,
+*  proteccion de area segura DZ2/R19, referencia DZ1).
+*  Fuente: libreria "regulators.lib" de la comunidad de LTspice
+*  (compilacion Robertugo, 2005), repositorio kafana/ltspice-misc
+*  https://github.com/kafana/ltspice-misc/blob/master/models/regulators.lib
+*  Cambio respecto del original: se agrego tension de Early VAF = 100 V
+*  (NPN) y 50 V (PNP), valores tipicos de un proceso bipolar. Sin ella el
+*  modelo da una regulacion de linea irreal (0,01 mV de 7 a 25 V).
+*  No modela el corte termico. Validado contra la hoja de datos uA7805C
+*  (TI SLVS056P) en c6_validacion_7805.asc.
+* ---------------------------------------------------------------------
+
+.SUBCKT LM7805  1    2    3
+* In GND Out
+QT6          23  10  2   Q_NPN 0.1
+QT7          5   4   10  Q_NPN 0.1
+QT5          7   6   5   Q_NPN 0.1
+QT1          1   9   8   Q_NPN 0.1
+QT3          11  8   7   Q_NPN 0.1
+QT2          11  13  12  Q_NPN 0.1
+QT17         1   15  14  Q_NPN 10
+C2           10  23      4P
+R16          12  5       500
+R12          16  2       12.1K
+QT18         17  23  16  Q_NPN 0.1
+D1           18  19  	 D_D 
+R11          20  21      850
+R5           22  3       100
+QT14         24  18  2   Q_NPN 0.1
+R21          6   2       2.67K
+R20          3   6       640
+DZ2          25  26      D_5V1 
+R19          1   26      16K
+R18          14  3       250M
+R17          25  14      380
+R15          25  15      1.62K
+QT16         1   20  15  Q_NPN 1
+QT15         2   24  21  Q_PNP 0.1
+*OFF
+R14          21  24      4K
+C1           27  24      20P
+R13          19  2       4K
+QT13         24  27  18  Q_NPN 0.1
+QT12         20  25  22  Q_NPN 1 
+*OFF
+QT11         20  28  2   Q_NPN 0.1
+*OFF
+QT10         20  11  1   Q_PNP 0.1
+R10          17  27      16.5K
+R9           5   4       1.9K
+R8           4   23      26
+R7           10  2       1.2K
+R6           29  2       1K
+QT9          11  11  1   Q_PNP 0.1
+QT8          27  16  29  Q_NPN 0.1
+QT4          15  6   17  Q_NPN 0.1
+DZ1          2   9       D_5V6
+R4           1   9       80K
+R3           28  2       830
+R2           13  28      4.97K
+R1           8   13      7K
+*
+.MODEL D_5V1 D( IS=10F N=1.16 BV=5.1 IBV=0.5M CJ0 = 1P TT = 10p )
+.MODEL D_5V6 D( IS=10F N=1.16 BV=5.6 IBV=5U CJ0 = 1P TT = 10p )
+.MODEL Q_NPN NPN( IS=10F NF=1.16 NR=1.16 BF=80 VAF=100 CJC=1P CJE=2P  
++       TF=10P TR=1N )
+.MODEL Q_PNP PNP( IS=10F NF=1.16 NR=1.16 BF=80 VAF=50 CJC=1P CJE=2P  
++      TF=10P TR=1N )
+.MODEL D_D D( IS=1F N=1.16 CJ0 = 1P TT = 10p )
+
+.ENDS LM7805
+*
+* ---------------------------------------------------------------------
+*  TIP122 - Darlington NPN 100 V, 5 A, 65 W (C B E)
+*  Modelo oficial onsemi (ex Fairchild, Sep-02-2008, Rev 0.0)
+*  https://www.onsemi.com/download/models/lib/tip122.lib
+* ---------------------------------------------------------------------
+.SUBCKT TIP122  1  2  3
+Q1 1 2 4 Q1model
+Q2 1 4 3 Q2model 7.75
+D1 3 1 Dmodel
+R1 2 4 8.0E3
+R2 4 3 120
+.MODEL Dmodel D
++ IS=10.00E-15  RS=1.000E-3   N=1        XTI=3
++ CJO=10.00E-21 VJ=1          M=0.5      FC=0.5
+.MODEL Q1model NPN
++ IS=9.270E-9   BF=257        NF=1       VAF=100
++ IKF=0.1068    ISE=8.100E-9  NE=1.5     BR=0.0007915
++ NR=1          VAR=100       IKR=0.114  ISC=1.630E-10
++ NC=2.0        RB=0.00012    RE=0.00045 RC=1.58245
++ EG=1.110      CJE=1.10E-10  VJE=0.75   MJE=0.63
++ TF=1.000E-9   XTF=1         VTF=10     ITF=1.00E-2
++ CJC=1.75E-11 VJC=0.75       MJC=0.18    XCJC=0.9
++ FC=0.5        TR=1.000E-9
+.MODEL Q2model NPN
++ IS=9.270E-9   BF=257        NF=1       VAF=100
++ IKF=0.1068    ISE=8.100E-9  NE=1.5     BR=0.0007915
++ NR=1          VAR=100       IKR=0.114  ISC=1.630E-10
++ NC=2.0        RB=0.00012    RE=0.00045 RC=1.58245
++ EG=1.110      CJE=1.10E-10  VJE=0.75   MJE=0.63
++ TF=1.000E-9   XTF=1         VTF=10     ITF=1.00E-2
++ CJC=1.75E-11  VJC=0.75      MJC=0.18   XCJC=0.9
++ FC=0.5        TR=1.000E-9
+.ENDS TIP122
+*
+* ---------------------------------------------------------------------
+*  TIP31C - NPN 100 V, 3 A, 40 W (solo para comparar en la seleccion)
+*  Modelo oficial onsemi (MODPEX / Symmetry Design Systems, 2003)
+*  https://www.onsemi.com/download/models/lib/tip31c.lib
+* ---------------------------------------------------------------------
+.MODEL TIP31C npn
++IS=1e-09 BF=2530.91 NF=1.26029 VAF=10
++IKF=0.0647102 ISE=1.00058e-09 NE=1.836 BR=0.1
++NR=1.5 VAR=100 IKR=0.647102 ISC=1.00058e-09
++NC=1.45279 RB=6.98719 IRB=6.81966 RBM=0.001
++RE=0.0001 RC=0.0636828 XTB=15.7688 XTI=1
++EG=1.05 CJE=3.26476e-10 VJE=0.446174 MJE=0.464223
++TF=2.062e-09 XTF=15.0842 VTF=25.7317 ITF=0.001
++CJC=3.07593e-10 VJC=0.775484 MJC=0.476498 XCJC=0.750493
++FC=0.796407 CJS=0 VJS=0.75 MJS=0.5
++TR=1e-07 PTF=0 KF=0 AF=1
+*
+* ---------------------------------------------------------------------
+*  1N4741A - Zener 11 V, 1 W (DO-41)
+*  No hay modelo publicado por el fabricante (Diodes Inc. lo discontinuo
+*  y onsemi no lo ofrece). Modelo ajustado a la hoja de datos onsemi
+*  1N4736AT/D: VZ = 11 V @ IZT = 23 mA, ZZT <= 8 ohm, ZZK <= 700 ohm
+*  @ IZK = 0,25 mA, IR = 5 uA @ 8,4 V. Coeficiente termico +0,066 %/C
+*  (tipico de zeners de 11 V, igual al de las series Rohm de LTspice).
+*  Resultado del ajuste: ZZT = 7 ohm, ZZK = 370 ohm.
+* ---------------------------------------------------------------------
+.MODEL 1N4741A D(IS=2n RS=3 N=1.1 CJO=110p M=0.33 VJ=0.75 TT=50n
++ BV=10.931 IBV=23m NBV=3.55 TBV1=6.6e-4 Vpk=11 mfg=onsemi type=Zener)
+*
+* ---------------------------------------------------------------------
+*  1N4002 - diodo de proteccion del regulador (Coughlin, Fig. 15-11)
+*  Modelo oficial Diodes Inc. (1N4002G, rectificador 100 V 1 A)
+*  https://www.diodes.com/spice/download/336/1N4002G.spice.txt
+* ---------------------------------------------------------------------
+.MODEL 1N4002 D(IS=65.4p RS=42.2m BV=100 IBV=5.00u
++ CJO=14.8p M=0.333 N=1.36 TT=2.88u)
