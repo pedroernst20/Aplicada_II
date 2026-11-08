@@ -1,0 +1,163 @@
+\section{Diseño de la Etapa Prereguladora Serie}
+
+\subsection{Selección y Justificación de la Topología Prereguladora}
+Cuando la tensión provista por la fuente primaria ($V_{in} = \SI{25}{\volt}$) supera el rango óptimo de entrada del regulador monolítico ($V_{i,\text{reg}} \in [\SI{8}{\volt}, \SI{12}{\volt}]$), la Sección 6-9-5g del material de cátedra \cite{gonzalez_p3} presenta dos configuraciones circuitales posibles basadas en un transistor bipolar de paso serie $Q_1$ y un diodo Zener $D_Z$:
+\begin{enumerate}
+    \item \textbf{Topología de sustracción fija (Figura 6-72 de \cite{gonzalez_p3}):} Ubica al diodo Zener entre el colector (entrada $V_{in}$) y la base de $Q_1$, polarizándolo mediante un resistor hacia el emisor. La tensión resultante a la entrada del regulador integrado responde a la expresión:
+    \begin{equation}
+        V_{i,\text{reg}} \approx V_{in} - \left( V_Z + V_{BE(Q_1)} \right)
+        \label{eq:topologia_descartada}
+    \end{equation}
+    Si bien esta configuración reduce el valor continuo de $V_{i,\text{reg}}$ cuando $V_{in} = \SI{25}{\volt}$ (adoptando por ejemplo $V_Z = \SI{14}{\volt}$ para obtener $V_{i,\text{reg}} \approx \SI{10}{\volt}$), adolece de dos limitaciones críticas para los requerimientos de la Consigna 6:
+    \begin{itemize}
+        \item En primer lugar, al derivar la expresión~\eqref{eq:topologia_descartada} respecto de $V_{in}$ resulta $\Delta V_{i,\text{reg}} \approx \Delta V_{in}$; es decir, traslada íntegramente el \SI{100}{\percent} de las variaciones de tensión de línea y de ripple de la fuente primaria hacia la entrada del \texttt{LM7805C}.
+        \item En segundo término, al verificar la regulación de línea reduciendo la fuente primaria a $V_{in} = \SI{10}{\volt}$, resulta $V_{in} < V_Z + V_{BE(Q_1)}$, con lo cual el diodo Zener se apaga, el transistor $Q_1$ entra en corte y la fuente deja de funcionar por completo.
+    \end{itemize}
+
+    \item \textbf{Topología seguidor por emisor con referencia Zener a masa (Figura 6-71 de \cite{gonzalez_p3} y Figura 6-36 de \cite{gonzalez_p2}):} Conecta el cátodo del diodo Zener $D_Z$ a la base de $Q_1$ y su ánodo al terminal común de masa (GND), alimentándolo desde $V_{in}$ a través del resistor limitador $R_Z$. Aplicando la ley de tensiones de Kirchhoff en la malla base-emisor se obtiene:
+    \begin{equation}
+        V_{i,\text{reg}} = V_Z - V_{BE(Q_1)}
+        \label{eq:vireg_elegida}
+    \end{equation}
+    Esta estructura conforma un \textbf{regulador lineal serie discreto} previo al integrado: fija el potencial de base de $Q_1$ en un nivel constante $V_Z$ independiente de la magnitud de $V_{in}$. Así, el exceso de tensión $(V_{in} - V_{i,\text{reg}})$ cae íntegramente entre colector y emisor de $Q_1$, mientras que las fluctuaciones de línea $\Delta V_{in}$ resultan atenuadas por el divisor dinámico conformado por $R_Z$ y la impedancia dinámica del Zener $Z_{ZT}$ antes siquiera de ingresar al \texttt{LM7805C}. Por consiguiente, \textbf{se adopta la topología de la Figura 6-71}.
+\end{enumerate}
+
+En la Figura~\ref{fig:esquematico_completo} se presenta el diagrama esquemático completo de la fuente de alimentación diseñada, realizado de forma vectorial.
+
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{circuitikz}[scale=1.0, transform shape, >=latex]
+    % Fuente Primaria DC
+    \draw (0,0) node[ground]{} to[V, v=$V_{in}$, invert] (0,3.8)
+          to[short, -*] (1.8,3.8) coordinate (vin_node);
+    \node[above] at (0.85,3.8) {\footnotesize $\SI{25}{\volt}$ (\SI{10}{\volt})};
+
+    % Etapa Prereguladora: Rz, Dz, Q1
+    \draw (vin_node) to[R, l=$R_Z$, i>_=$I_{R_Z}$] (1.8,1.9) coordinate (base_node);
+    \draw (base_node) to[zzDo, l=$D_Z$, a={\footnotesize \texttt{1N5240B}}, i>_=$I_Z$, *-] (1.8,0) node[ground]{};
+    \node[left] at (1.65,1.95) {\footnotesize $V_Z = \SI{10}{\volt}$};
+
+    % Transistor de paso Q1 (NPN en horizontal arriba)
+    \draw (vin_node) -- (3.4,3.8);
+    \node[npn, rotate=90, xscale=-1] (Q1) at (4.2,3.8) {};
+    \node[above, font=\small\bfseries] at (4.2,4.15) {$Q_1$: \texttt{TIP31C}};
+    \node[above, font=\scriptsize] at (4.2,4.52) {$V_{CE} = V_{in} - V_{i,\text{reg}}$};
+    \draw (3.4,3.8) -- (Q1.C);
+    \draw (base_node) -| (Q1.B) node[pos=0.25, above, font=\footnotesize] {$I_B$};
+
+    % Nodo Vi_reg
+    \draw (Q1.E) to[short, -*, i=$I_E$] (7.8,3.8) coordinate (vireg_node);
+    \node[above, font=\small\bfseries, text=blue!75!black] at (7.8,4.05) {$V_{i,\text{reg}} \in [\SI{8}{\volt}, \SI{12}{\volt}]$};
+    \node[above, font=\scriptsize, text=blue!75!black] at (7.8,4.42) {($\approx \SI{9,3}{\volt}\text{--}\SI{9,5}{\volt}$ a \SI{25}{\volt})};
+
+    % Capacitor de entrada C1
+    \draw (vireg_node) to[C, l_={\footnotesize $C_1 = \SI{0,33}{\micro\farad}$}, *-] (7.8,0) node[ground]{};
+
+    % Bloque Regulador Integrado LM7805C
+    \draw (vireg_node) -- (9.6,3.8);
+    \draw[thick, fill=blue!6] (9.6,2.7) rectangle (12.2,4.5);
+    \node[font=\bfseries\small] at (10.9,3.95) {\texttt{LM7805C}};
+    \node[font=\scriptsize] at (9.95,3.5) {1: IN};
+    \node[font=\scriptsize] at (11.8,3.5) {3: OUT};
+    \node[font=\scriptsize] at (10.9,2.95) {2: GND};
+    \draw (10.9,2.7) to[short, i={$I_d \approx \SI{4,2}{\milli\ampere}$}] (10.9,0) node[ground]{};
+
+    % Salida del regulador y capacitores C2, C3
+    \draw (12.2,3.8) to[short, -*, i=$I_L$] (14.2,3.8) coordinate (c2_node);
+    \draw (c2_node) to[C, l_={\footnotesize $C_2 = \SI{0,1}{\micro\farad}$}, *-] (14.2,0) node[ground]{};
+    \draw (c2_node) to[short, -*] (16.5,3.8) coordinate (c3_node);
+    \draw (c3_node) to[eC, l_={\footnotesize $C_3 = \SI{10}{\micro\farad}$}, *-] (16.5,0) node[ground]{};
+
+    % Carga RL y salida Vo
+    \draw (c3_node) to[short, -*, i=$I_L$] (18.8,3.8) coordinate (vo_node);
+    \draw (vo_node) to[R, l_={\footnotesize $R_L = \SI{10}{\ohm}$}, v^>=$V_O$] (18.8,0) node[ground]{};
+    \draw (vo_node) to[short, -o] (20.0,3.8) node[right, font=\bfseries] {$+V_O = \SI{5,00}{\volt}$};
+
+    % Recuadro punteado etapa prereguladora
+    \draw[dashed, rounded corners=4pt, color=orange!80!black, thick] (0.95,0.45) rectangle (5.35,5.05);
+    \node[above, font=\footnotesize\bfseries, color=orange!80!black] at (3.15,5.05) {Etapa Prereguladora Serie ($V_{i,\text{reg}} = \SI{8}{\volt}\text{--}\SI{12}{\volt}$)};
+\end{circuitikz}%
+}
+\caption{Diagrama esquemático completo de la fuente de alimentación lineal de \SI{5}{\volt} con regulador integrado \texttt{LM7805C} y etapa prereguladora serie discreta.}
+\label{fig:esquematico_completo}
+\end{figure*}
+
+\subsection{Cálculo Analítico de la Etapa Prereguladora}
+
+\subsubsection{Definición de Corrientes de Operación y Tensión Intermedia $V_{i,\text{reg}}$}
+La hoja de datos del \texttt{LM7805C} (Tabla~\ref{tab:datasheet_7805}) especifica todos sus parámetros nominales para una corriente de salida de ensayo $I_{L,\text{nom}} = \SI{500}{\milli\ampere}$ ($R_{L,\text{nom}} = \SI{5,0}{\volt} / \SI{0,5}{\ampere} = \SI{10,0}{\ohm}$), siendo capaz de entregar hasta $I_{L,\max} = \SI{1,0}{\ampere}$ en régimen continuo ($R_{L,\min} = \SI{5,0}{\ohm}$). Asimismo, en el ejemplo de diseño de la Sección 6-9-5h del apunte de cátedra \cite{gonzalez_p3} se adopta una carga de $I_L = \SI{300}{\milli\ampere}$ ($R_L = \SI{16,67}{\ohm}$). En el presente diseño se dimensiona la etapa prereguladora para operar nominalmente a $I_{L,\text{nom}} = \SI{500}{\milli\ampere}$ y soportar hasta $I_{L,\max} = \SI{1,0}{\ampere}$ en forma continua, reportando los valores para los tres niveles de corriente (\SI{300}{\milli\ampere}, \SI{500}{\milli\ampere} y \SI{1,0}{\ampere}).
+
+La corriente total de emisor $I_E$ que debe suministrar el transistor de paso $Q_1$ hacia el terminal de entrada del \texttt{LM7805C} es la suma de la corriente de carga $I_L$ y la corriente de polarización interna (\emph{bias current}) $I_d$ del integrado:
+\begin{equation}
+    I_E = I_L + I_d
+    \label{eq:ie_prereg}
+\end{equation}
+Considerando $I_d = \SI{4,2}{\milli\ampere}$ típica (\SI{8,0}{\milli\ampere} máxima de hoja de datos), para el régimen nominal de $I_{L,\text{nom}} = \SI{500}{\milli\ampere}$ resulta $I_{E,\text{nom}} = \SI{504,2}{\milli\ampere}$ (\SI{508}{\milli\ampere} máx.), y para plena carga $I_{L,\max} = \SI{1,0}{\ampere}$ resulta $I_{E,\max} = \SI{1,008}{\ampere}$.
+
+Siguiendo el procedimiento de diseño de la Sección 6-9-5h \cite{gonzalez_p3}, se fija una caída de tensión operativa sobre el regulador integrado de $V_{\text{dropout(op)}} \approx \SI{4,3}{\volt}$ (holgadamente superior al mínimo $V_{DO} = \SI{2,0}{\volt}$), con lo cual la tensión continua de entrada al regulador integrado queda establecida dentro de $[\SI{8,0}{\volt}, \SI{12,0}{\volt}]$:
+\begin{equation}
+    V_{i,\text{reg}} = V_O + V_{\text{dropout(op)}} = \SI{5,0}{\volt} + \SI{4,3}{\volt} = \SI{9,3}{\volt}
+    \label{eq:vireg_calculo}
+\end{equation}
+
+\subsubsection{Selección del Diodo Zener $D_Z$}
+A partir de las ecuaciones~\eqref{eq:vireg_elegida} y~\eqref{eq:vireg_calculo}, adoptando una caída base-emisor típica en conducción activa para el transistor de potencia $V_{BE(Q_1)} \approx \SI{0,7}{\volt}\text{--}\SI{0,8}{\volt}$ (o la aproximación práctica de cátedra $V_{BE} \approx \SI{1,0}{\volt}$ para la cual $V_{i,\text{reg}} = \SI{9,0}{\volt}$), la tensión nominal requerida para el diodo Zener es:
+\begin{equation}
+    V_Z = V_{i,\text{reg}} + V_{BE(Q_1)} \approx \SI{9,3}{\volt} + \SI{0,7}{\volt} = \SI{10,0}{\volt}
+    \label{eq:vz_calculo}
+\end{equation}
+Del Apéndice 1 del material de cátedra \cite{gonzalez_p2} (familia de diodos reguladores de silicio \texttt{1N5221B}--\texttt{1N5272B} de \SI{500}{\milli\watt}, idéntica a la empleada en la Sección 6-9-5h) y de la serie estándar de \SI{1}{\watt} (\texttt{1N47xxA}), se seleccionan:
+\begin{itemize}
+    \item \textbf{Diodo Zener \texttt{1N5240B} (\SI{500}{\milli\watt}):} $V_Z = \SI{10,0}{\volt} \pm \SI{5}{\percent}$ medido a la corriente de prueba $I_{ZT} = \SI{20}{\milli\ampere}$, impedancia dinámica en la zona de trabajo $Z_{ZT} = \SI{17}{\ohm}$ ($Z_{ZK} = \SI{600}{\ohm}$ a $I_{ZK} = \SI{0,25}{\milli\ampere}$), coeficiente de temperatura $\alpha_{VZ} = \SI{+0,075}{\percent\per\celsius}$ y corriente máxima admisible (Ec. 6-54 de \cite{gonzalez_p2}):
+    \begin{equation}
+        I_{Z,\max d} = \frac{P_{Z,\max d}}{V_Z} = \frac{\SI{500}{\milli\watt}}{\SI{10,0}{\volt}} = \SI{50,0}{\milli\ampere}
+        \label{eq:izmax_5240}
+    \end{equation}
+    \item \textbf{Diodo Zener \texttt{1N4740A} (\SI{1,0}{\watt}) / \texttt{1N5347B} (\SI{5,0}{\watt}):} $V_Z = \SI{10,0}{\volt} \pm \SI{5}{\percent}$ a $I_{ZT} = \SI{25}{\milli\ampere}$, impedancia dinámica reducida $Z_{ZT} = \SI{7,0}{\ohm}$ y corriente máxima $I_{Z,\max d} = \SI{100}{\milli\ampere}$ (o \SI{500}{\milli\ampere} en el \texttt{1N5347B}).
+\end{itemize}
+
+\subsubsection{Cálculo del Resistor de Polarización $R_Z$}
+Se desarrollan a continuación los dos criterios complementarios de dimensionamiento vistos en la asignatura, los cuales se contrastan luego mediante simulación en la Sección~\ref{sec:simulaciones}:
+
+\paragraph{Criterio 1: Dimensionamiento en régimen nominal de \SI{25}{\volt} (Método de la Sección 6-9-5h \cite{gonzalez_p3} --- \texttt{Circuito B})}
+Con una ganancia de corriente estática típica del transistor \texttt{TIP31C} de $h_{FE} \approx 90\text{--}100$ en el rango de \SI{300}{\milli\ampere} a \SI{500}{\milli\ampere}, la corriente de base requerida para la corriente nominal $I_{C,\text{nom}} \approx \SI{500}{\milli\ampere}$ es (siendo $I_B = \SI{3,0}{\milli\ampere}$ para $I_L = \SI{300}{\milli\ampere}$):
+\begin{equation}
+    I_{B,\text{nom}} = \frac{I_{C,\text{nom}}}{h_{FE}} = \frac{\SI{500}{\milli\ampere}}{100} = \SI{5,0}{\milli\ampere}
+    \label{eq:ib_nom}
+\end{equation}
+Para independizar el punto de trabajo del diodo Zener respecto de las variaciones de corriente de base y garantizar baja impedancia dinámica $Z_{ZT}$, se fija una corriente por el Zener $I_Z = \SI{30,0}{\milli\ampere} > I_{ZT} = \SI{20,0}{\milli\ampere}$ (cumpliendo la regla práctica $I_Z \approx 6\text{ a }10 \cdot I_B$). El valor de $R_Z$ resulta:
+\begin{equation}
+    R_Z = \frac{V_{in} - V_Z}{I_Z + I_{B,\text{nom}}} = \frac{\SI{25,0}{\volt} - \SI{10,0}{\volt}}{\SI{30,0}{\milli\ampere} + \SI{5,0}{\milli\ampere}} = \SI{428,6}{\ohm}
+    \label{eq:rz_criterio1}
+\end{equation}
+Se adopta el valor comercial normalizado \textbf{$R_Z = \SI{430}{\ohm}$} (serie E24 al \SI{5}{\percent}, o \SI{422}{\ohm} en serie E96 al \SI{1}{\percent}). La potencia disipada en el diodo Zener a carga nominal (inferior a $P_{Z,\max d} = \SI{500}{\milli\watt}$) es:
+\begin{equation}
+    P_{DZ} = I_Z \cdot V_Z = \SI{30,0}{\milli\ampere} \times \SI{10,0}{\volt} = \SI{300,0}{\milli\watt}
+    \label{eq:pdz_criterio1}
+\end{equation}
+Y la potencia disipada por el resistor $R_Z$ (Ec. 6-53 de \cite{gonzalez_p2}), adoptando una disipación comercial de \SI{1,0}{\watt}, es:
+\begin{equation}
+    P_{R_Z} = \frac{\left(V_{in} - V_Z\right)^2}{R_Z} = \frac{\left(\SI{25,0}{\volt} - \SI{10,0}{\volt}\right)^2}{\SI{430}{\ohm}} = \SI{523,3}{\milli\watt}
+    \label{eq:prz_criterio1}
+\end{equation}
+
+\paragraph{Criterio 2: Dimensionamiento para rango extendido $V_{in} \in [\SI{10,0}{\volt}, \SI{25,0}{\volt}]$ (Método de la Sección 6-8-2 Ec. 6-52 \cite{gonzalez_p2} --- \texttt{Circuito A})}
+Si se requiere que la etapa prereguladora mantenga $V_{i,\text{reg}} \ge \SI{8,0}{\volt}$ (dentro de la ventana $[\SI{8}{\volt}, \SI{12}{\volt}]$) incluso cuando la tensión primaria se reduce drásticamente desde $V_{in,\max} = \SI{25,0}{\volt}$ hasta $V_{in,\min} = \SI{10,0}{\volt}$ durante el ensayo extremo de regulación de línea, debe limitarse la caída de tensión óhmica sobre $R_Z$ en la condición $V_{in,\min} = \SI{10,0}{\volt}$. En dicho extremo, para obtener $V_{i,\text{reg}(\min)} = \SI{8,05}{\volt}$ con $V_{BE(Q_1)} = \SI{0,72}{\volt}$, el potencial de base no debe caer por debajo de $V_{B,\min} = \SI{8,77}{\volt}$. Con $I_B = \SI{5,6}{\milli\ampere}$ ($h_{FE} = 90$), la resistencia máxima admisible (adoptando el valor comercial E12 \textbf{$R_Z = \SI{180}{\ohm}$}) es:
+\begin{equation}
+    R_{Z,\max} = \frac{V_{in,\min} - V_{B,\min}}{I_{B}} = \frac{\SI{10,0}{\volt} - \SI{8,77}{\volt}}{\SI{5,6}{\milli\ampere}} = \SI{219,6}{\ohm}
+    \label{eq:rz_criterio2}
+\end{equation}
+Con $R_Z = \SI{180}{\ohm}$, cuando la fuente primaria opera en su valor nominal máximo $V_{in,\max} = \SI{25,0}{\volt}$, la corriente total por el resistor es:
+\begin{equation}
+    I_{R_Z(\max)} = \frac{V_{in,\max} - V_Z}{R_Z} = \frac{\SI{25,0}{\volt} - \SI{10,25}{\volt}}{\SI{180}{\ohm}} = \SI{81,9}{\milli\ampere}
+    \label{eq:irz_max}
+\end{equation}
+En condición de mínima carga ($I_B \approx \SI{0,6}{\milli\ampere}$), la corriente máxima por el Zener asciende a $I_{Z,\max} = \SI{81,3}{\milli\ampere}$ y su disipación máxima es $P_{DZ,\max} = \SI{81,3}{\milli\ampere} \times \SI{10,25}{\volt} = \SI{833}{\milli\watt}$, lo cual es soportado por el diodo de \SI{1}{\watt} \textbf{\texttt{1N4740A}} (o con factor de seguridad $\ge 2$ según Ec. 6-55 mediante un Zener de \SI{5}{\watt} \textbf{\texttt{1N5347B}}). La disipación en $R_Z = \SI{180}{\ohm}$ a \SI{25}{\volt} es $P_{R_Z} = (\SI{14,75}{\volt})^2 / \SI{180}{\ohm} = \SI{1,21}{\watt}$, seleccionándose un resistor de alambre o óxido metálico de \textbf{\SI{2,0}{\watt}}.
+
+\subsection{ Selección de Capacitores de Desacoplo y Estabilidad}
+De acuerdo con la Sección 6-9-5 (Figuras 6-62 y 6-63 de \cite{gonzalez_p3}) y las notas de aplicación del fabricante \cite{ti_7805}:
+\begin{itemize}
+    \item \textbf{Capacitor de entrada $C_1 = \SI{0,33}{\micro\farad}$ (cerámico multicapa, \SI{50}{\volt}):} Conectado lo más próximo posible entre el pin \texttt{IN} (pata 1) y \texttt{GND} (pata 2) del \texttt{LM7805C}, compensa la inductancia distribuida entre la etapa prereguladora y el integrado, suprimiendo transitorios rápidos y previniendo autooscilaciones de alta frecuencia.
+    \item \textbf{Capacitores de salida $C_2 = \SI{0,1}{\micro\farad}$ (cerámico) y $C_3 = \SI{10}{\micro\farad}$ (electrolítico de aluminio o tantalio, \SI{25}{\volt}):} Disminuyen la impedancia dinámica de salida a frecuencias elevadas donde decae la ganancia de lazo del amplificador de error interno y amortiguan los sobrepicos transitorios ante variaciones bruscas de la corriente de carga.
+\end{itemize}
