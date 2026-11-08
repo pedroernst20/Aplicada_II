@@ -1,0 +1,582 @@
+** Drc report for EA2_TP2.kicad_pcb **
+** Created on 2026-11-02T21:12:41 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 146 DRC violations **
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(156.4300 mm, 94.0300 mm): Rectángulo de D1 en F.Silkscreen
+    @(162.0000 mm, 97.8300 mm): Campo de referencia de R30
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(180.0050 mm, 88.7650 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.8700 mm, 88.6700 mm): Campo de referencia de R13
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(180.8700 mm, 88.6700 mm): Campo de referencia de R13
+    @(180.0050 mm, 89.5000 mm): Segmento de Seg_der en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(162.3800 mm, 74.9200 mm): Campo de referencia de R11
+    @(157.3100 mm, 74.8300 mm): Rectángulo de R24 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(162.3800 mm, 73.8300 mm): Campo de referencia de R24
+    @(167.4500 mm, 73.9200 mm): Rectángulo de R11 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(162.3800 mm, 74.9200 mm): Campo de referencia de R11
+    @(162.3800 mm, 73.8300 mm): Campo de referencia de R24
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(174.0000 mm, 66.5000 mm): Segmento de JP1 en F.Silkscreen
+    @(174.0000 mm, 77.4350 mm): Campo de referencia de JP1
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(180.8800 mm, 84.1700 mm): Campo de referencia de R14
+    @(185.9400 mm, 87.6700 mm): Rectángulo de R13 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(175.9300 mm, 98.8300 mm): Rectángulo de R25 en F.Silkscreen
+    @(181.0000 mm, 102.5800 mm): Campo de referencia de R26
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(181.0000 mm, 107.3300 mm): Campo de referencia de R29
+    @(175.9300 mm, 103.5800 mm): Rectángulo de R26 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(181.0000 mm, 97.8300 mm): Campo de referencia de R25
+    @(172.6800 mm, 94.0300 mm): Rectángulo de D2 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(161.8700 mm, 107.3300 mm): Campo de referencia de R28
+    @(167.0700 mm, 107.4200 mm): Rectángulo de R27 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(162.0000 mm, 108.4200 mm): Campo de referencia de R27
+    @(156.8000 mm, 108.3300 mm): Rectángulo de R28 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(162.0000 mm, 108.4200 mm): Campo de referencia de R27
+    @(161.8700 mm, 107.3300 mm): Campo de referencia de R28
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(166.2500 mm, 121.1400 mm): Campo de referencia de Rect_amp
+    @(152.8400 mm, 121.2100 mm): Segmento de U5 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(163.1200 mm, 121.2100 mm): Segmento de U5 en F.Silkscreen
+    @(166.2500 mm, 121.1400 mm): Campo de referencia de Rect_amp
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(162.1800 mm, 43.0800 mm): Rectángulo de R33 en F.Silkscreen
+    @(171.0000 mm, 47.5800 mm): Campo de referencia de R2
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(181.0000 mm, 74.5000 mm): Campo de referencia de C4
+    @(175.9300 mm, 70.0800 mm): Rectángulo de R10 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(229.0050 mm, 68.2650 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 67.3900 mm): Campo de referencia de Integrador
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(229.0050 mm, 69.0000 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 67.3900 mm): Campo de referencia de Integrador
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(242.0000 mm, 79.8300 mm): Campo de referencia de R19
+    @(243.3800 mm, 79.8700 mm): Segmento de C3 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(242.0000 mm, 79.8300 mm): Campo de referencia de R19
+    @(250.6200 mm, 79.8700 mm): Segmento de C3 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(236.9300 mm, 80.8300 mm): Rectángulo de R19 en F.Silkscreen
+    @(247.0000 mm, 81.0000 mm): Campo de referencia de C3
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(194.4200 mm, 77.9300 mm): Rectángulo de R23 en F.Silkscreen
+    @(194.8300 mm, 83.1200 mm): Campo de referencia de R21
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(195.4200 mm, 83.0000 mm): Campo de referencia de R23
+    @(194.8300 mm, 83.1200 mm): Campo de referencia de R21
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(195.4200 mm, 83.0000 mm): Campo de referencia de R23
+    @(195.8300 mm, 88.1900 mm): Rectángulo de R21 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(199.8300 mm, 83.1200 mm): Campo de referencia de R20
+    @(195.8300 mm, 88.1900 mm): Rectángulo de R21 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(209.5000 mm, 66.8300 mm): Campo de referencia de R35
+    @(204.5600 mm, 62.3300 mm): Rectángulo de R17 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(200.8300 mm, 88.1900 mm): Rectángulo de R20 en F.Silkscreen
+    @(204.8300 mm, 83.1200 mm): Campo de referencia de R22
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(224.1200 mm, 81.2500 mm): Campo de referencia de JP3
+    @(221.1200 mm, 73.0000 mm): Segmento de JP3 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(186.2500 mm, 52.0800 mm): Campo de referencia de R5
+    @(185.9300 mm, 48.5800 mm): Rectángulo de R3 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(191.0000 mm, 47.5800 mm): Campo de referencia de R3
+    @(182.0500 mm, 43.0800 mm): Rectángulo de R34 en F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(230.2500 mm, 47.5000 mm): Campo de referencia de C1
+    @(235.0700 mm, 51.4200 mm): Rectángulo de R7 en F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(180.8700 mm, 88.6700 mm): Campo de referencia de R13
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(185.0000 mm, 89.5000 mm): Campo de referencia de Seg_der
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(162.3700 mm, 84.1700 mm): Campo de referencia de R12
+    @(162.3800 mm, 84.7500 mm): Pad PTH 8 [/+12] de U4
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(180.0050 mm, 90.2350 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(180.0050 mm, 90.2350 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(180.0050 mm, 90.2350 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(181.4356 mm, 90.2350 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(181.4950 mm, 90.2350 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(180.0050 mm, 88.7650 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(180.0050 mm, 89.5000 mm): Segmento de Seg_der en F.Silkscreen
+    @(180.7500 mm, 89.5000 mm): Pad PTH 1 [/Seg_der] de Seg_der
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.0000 mm, 66.5000 mm): Segmento de JP1 en F.Silkscreen
+    @(173.2500 mm, 85.7500 mm): Pad PTH 2 [Net-(U4B-+)] de R13
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.0000 mm, 66.5000 mm): Segmento de JP1 en F.Silkscreen
+    @(174.0000 mm, 92.3700 mm): Pad PTH 1 [/-12] de JP1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.0000 mm, 66.5000 mm): Segmento de JP1 en F.Silkscreen
+    @(173.2600 mm, 81.2500 mm): Pad PTH 2 [/Seg_der] de R14
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.0000 mm, 66.5000 mm): Segmento de JP1 en F.Silkscreen
+    @(173.3800 mm, 72.0000 mm): Pad PTH 1 [Net-(U4B--)] de R10
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.0000 mm, 66.5000 mm): Segmento de JP1 en F.Silkscreen
+    @(174.0000 mm, 66.5000 mm): Pad PTH 1 [/-12] de JP1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(175.5000 mm, 115.3900 mm): Campo de referencia de Rect
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.7550 mm, 116.2650 mm): Segmento de Rect en F.Silkscreen
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.7550 mm, 117.0000 mm): Segmento de Rect en F.Silkscreen
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.7550 mm, 117.7350 mm): Segmento de Rect en F.Silkscreen
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.7550 mm, 117.7350 mm): Segmento de Rect en F.Silkscreen
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(174.7550 mm, 117.7350 mm): Segmento de Rect en F.Silkscreen
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(176.2450 mm, 117.7350 mm): Segmento de Rect en F.Silkscreen
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(176.1856 mm, 117.7350 mm): Segmento de Rect en F.Silkscreen
+    @(175.5000 mm, 117.0000 mm): Pad PTH 1 [/Rect] de Rect
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(144.0000 mm, 114.7500 mm): Segmento de JP2 en F.Silkscreen
+    @(154.1700 mm, 114.7500 mm): Pad PTH 4 [/-12] de U5
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(144.0000 mm, 114.7500 mm): Segmento de JP2 en F.Silkscreen
+    @(144.0000 mm, 114.7500 mm): Pad PTH 1 [/-12] de JP2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(144.0000 mm, 114.7500 mm): Segmento de JP2 en F.Silkscreen
+    @(153.5000 mm, 114.7500 mm): Pad PTH 1 [/-12] de JP2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.0000 mm, 70.3900 mm): Campo de referencia de GND
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 71.2650 mm): Segmento de GND en F.Silkscreen
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 72.0000 mm): Segmento de GND en F.Silkscreen
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 72.7350 mm): Segmento de GND en F.Silkscreen
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 72.7350 mm): Segmento de GND en F.Silkscreen
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.6856 mm, 72.7350 mm): Segmento de GND en F.Silkscreen
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.7450 mm, 72.7350 mm): Segmento de GND en F.Silkscreen
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.0000 mm, 57.1400 mm): Campo de referencia de J1
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(146.0000 mm, 54.5000 mm): Segmento de JP_Vi en F.Silkscreen
+    @(146.0000 mm, 54.5000 mm): Pad PTH 1 [/Vi] de JP_Vi
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(146.0000 mm, 54.5000 mm): Segmento de JP_Vi en F.Silkscreen
+    @(151.2500 mm, 54.5000 mm): Pad PTH 1 [/Vi] de JP_Vi
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 58.0150 mm): Segmento de J1 en F.Silkscreen
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 58.7500 mm): Segmento de J1 en F.Silkscreen
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 59.4850 mm): Segmento de J1 en F.Silkscreen
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 59.4850 mm): Segmento de J1 en F.Silkscreen
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 59.4850 mm): Segmento de J1 en F.Silkscreen
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.6856 mm, 59.4850 mm): Segmento de J1 en F.Silkscreen
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.7450 mm, 59.4850 mm): Segmento de J1 en F.Silkscreen
+    @(120.0000 mm, 58.7500 mm): Pad PTH 1 [/+12] de J1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.0000 mm, 37.7500 mm): Campo de referencia de -12
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 36.7350 mm): Segmento de -12 en F.Silkscreen
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.6856 mm, 36.7350 mm): Segmento de -12 en F.Silkscreen
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.7450 mm, 36.7350 mm): Segmento de -12 en F.Silkscreen
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 35.2650 mm): Segmento de -12 en F.Silkscreen
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 36.0000 mm): Segmento de -12 en F.Silkscreen
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 36.7350 mm): Segmento de -12 en F.Silkscreen
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 36.7350 mm): Segmento de -12 en F.Silkscreen
+    @(120.0000 mm, 36.0000 mm): Pad PTH 1 [/-12] de -12
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(119.2550 mm, 72.7350 mm): Segmento de GND en F.Silkscreen
+    @(120.0000 mm, 72.0000 mm): Pad PTH 1 [GND] de GND
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(166.2500 mm, 121.1400 mm): Campo de referencia de Rect_amp
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(166.2500 mm, 121.1400 mm): Campo de referencia de Rect_amp
+    @(170.1300 mm, 122.7500 mm): Pad PTH 2 [/Rect_ampl] de R32
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(165.5050 mm, 122.0150 mm): Segmento de Rect_amp en F.Silkscreen
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(165.5050 mm, 122.7500 mm): Segmento de Rect_amp en F.Silkscreen
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(165.5050 mm, 123.4850 mm): Segmento de Rect_amp en F.Silkscreen
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(165.5050 mm, 123.4850 mm): Segmento de Rect_amp en F.Silkscreen
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(165.5050 mm, 123.4850 mm): Segmento de Rect_amp en F.Silkscreen
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(166.9356 mm, 123.4850 mm): Segmento de Rect_amp en F.Silkscreen
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(166.9950 mm, 123.4850 mm): Segmento de Rect_amp en F.Silkscreen
+    @(166.2500 mm, 122.7500 mm): Pad PTH 1 [/Rect_ampl] de Rect_amp
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(229.0050 mm, 68.2650 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(229.0050 mm, 69.0000 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(229.0050 mm, 69.7350 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(229.0050 mm, 69.7350 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(229.0050 mm, 69.7350 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(230.4356 mm, 69.7350 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(230.4950 mm, 69.7350 mm): Segmento de Integrador en F.Silkscreen
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(197.0000 mm, 69.6400 mm): Campo de referencia de Derivador
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(196.2550 mm, 70.5150 mm): Segmento de Derivador en F.Silkscreen
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(196.2550 mm, 71.2500 mm): Segmento de Derivador en F.Silkscreen
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(196.2550 mm, 71.9850 mm): Segmento de Derivador en F.Silkscreen
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(196.2550 mm, 71.9850 mm): Segmento de Derivador en F.Silkscreen
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(196.2550 mm, 71.9850 mm): Segmento de Derivador en F.Silkscreen
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(197.6856 mm, 71.9850 mm): Segmento de Derivador en F.Silkscreen
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(197.7450 mm, 71.9850 mm): Segmento de Derivador en F.Silkscreen
+    @(197.0000 mm, 71.2500 mm): Pad PTH 1 [/Derivador] de Derivador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(201.5000 mm, 55.8900 mm): Campo de referencia de Offset
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(209.6300 mm, 61.3300 mm): Campo de referencia de R17
+    @(208.1300 mm, 60.3700 mm): Pad PTH 5 [Net-(U2B-+)] de U2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(209.6300 mm, 61.3300 mm): Campo de referencia de R17
+    @(210.6700 mm, 60.3700 mm): Pad PTH 6 [Net-(U2B--)] de U2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(229.7500 mm, 67.3900 mm): Campo de referencia de Integrador
+    @(229.7500 mm, 69.0000 mm): Pad PTH 1 [/Integrador] de Integrador
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(221.1200 mm, 73.0000 mm): Segmento de JP3 en F.Silkscreen
+    @(227.1200 mm, 90.7500 mm): Pad PTH 1 [/-12] de R37
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(221.1200 mm, 73.0000 mm): Segmento de JP3 en F.Silkscreen
+    @(227.1200 mm, 93.5000 mm): Pad PTH 1 [/-12] de JP3
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(221.1200 mm, 73.0000 mm): Segmento de JP3 en F.Silkscreen
+    @(221.1200 mm, 73.0000 mm): Pad PTH 1 [/-12] de JP3
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(221.1200 mm, 73.0000 mm): Segmento de JP3 en F.Silkscreen
+    @(221.1200 mm, 75.7500 mm): Pad PTH 4 [/-12] de U3
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(200.7550 mm, 56.7650 mm): Segmento de Offset en F.Silkscreen
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(200.7550 mm, 57.5000 mm): Segmento de Offset en F.Silkscreen
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(200.7550 mm, 58.2350 mm): Segmento de Offset en F.Silkscreen
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(200.7550 mm, 58.2350 mm): Segmento de Offset en F.Silkscreen
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(202.1856 mm, 58.2350 mm): Segmento de Offset en F.Silkscreen
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(202.2450 mm, 58.2350 mm): Segmento de Offset en F.Silkscreen
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(200.7550 mm, 58.2350 mm): Segmento de Offset en F.Silkscreen
+    @(201.5000 mm, 57.5000 mm): Pad PTH 1 [/Offset] de Offset
+[lib_footprint_mismatch]: La huella 'DIP-8_W7.62mm_Socket' no coincide con la copia en la biblioteca 'Package_DIP'
+    Local override; warning
+    @(162.3800 mm, 92.3700 mm): Huella U4
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D3.0mm_Drill1.5mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(180.7500 mm, 89.5000 mm): Huella Seg_der
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D4.0mm_Drill2.0mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(120.0000 mm, 72.0000 mm): Huella GND
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D3.0mm_Drill1.5mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(201.5000 mm, 57.5000 mm): Huella Offset
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D3.0mm_Drill1.5mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(197.0000 mm, 71.2500 mm): Huella Derivador
+[lib_footprint_mismatch]: La huella 'DIP-8_W7.62mm_Socket' no coincide con la copia en la biblioteca 'Package_DIP'
+    Local override; warning
+    @(221.1200 mm, 83.3700 mm): Huella U3
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D3.0mm_Drill1.5mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(229.7500 mm, 69.0000 mm): Huella Integrador
+[lib_footprint_mismatch]: La huella 'DIP-8_W7.62mm_Socket' no coincide con la copia en la biblioteca 'Package_DIP'
+    Local override; warning
+    @(161.7900 mm, 114.7500 mm): Huella U5
+[lib_footprint_mismatch]: La huella 'DIP-8_W7.62mm_Socket' no coincide con la copia en la biblioteca 'Package_DIP'
+    Local override; warning
+    @(215.7500 mm, 52.7500 mm): Huella U2
+[lib_footprint_mismatch]: La huella 'DIP-8_W7.62mm_Socket' no coincide con la copia en la biblioteca 'Package_DIP'
+    Local override; warning
+    @(166.4200 mm, 64.1200 mm): Huella U1
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D3.0mm_Drill1.5mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(175.5000 mm, 117.0000 mm): Huella Rect
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D4.0mm_Drill2.0mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(120.0000 mm, 58.7500 mm): Huella J1
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D3.0mm_Drill1.5mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(166.2500 mm, 122.7500 mm): Huella Rect_amp
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D4.0mm_Drill2.0mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(120.0000 mm, 36.0000 mm): Huella -12
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D4.0mm_Drill2.0mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(120.0000 mm, 54.5000 mm): Huella Vi_IN
+[lib_footprint_mismatch]: La huella 'TestPoint_THTPad_D4.0mm_Drill2.0mm' no coincide con la copia en la biblioteca 'TestPoint'
+    Local override; warning
+    @(120.0000 mm, 84.0000 mm): Huella GND_SCOPE
+[lib_footprint_issues]: Huella 'Jumper_Horizontal_RM10.16mm' no encontrada en la biblioteca 'Jumper'
+    Local override; warning
+    @(148.6250 mm, 54.5000 mm): Huella JP_Vi
+[lib_footprint_issues]: Huella 'Jumper_Horizontal_RM10.16mm' no encontrada en la biblioteca 'Jumper'
+    Local override; warning
+    @(174.0000 mm, 79.4350 mm): Huella JP1
+[lib_footprint_issues]: Huella 'Jumper_Horizontal_RM10.16mm' no encontrada en la biblioteca 'Jumper'
+    Local override; warning
+    @(148.7500 mm, 114.7500 mm): Huella JP2
+[lib_footprint_issues]: Huella 'Jumper_Horizontal_RM10.16mm' no encontrada en la biblioteca 'Jumper'
+    Local override; warning
+    @(224.1200 mm, 83.2500 mm): Huella JP3
+[hole_to_hole]: Taladro demasiado cerca de otro taladro (restricciones de configuración de placa mínimo 0,2500 mm; real 0,0000 mm)
+    Rule: restricciones de configuración de placa; warning
+    @(153.5000 mm, 114.7500 mm): Pad PTH 1 [/-12] de JP2
+    @(154.1700 mm, 114.7500 mm): Pad PTH 4 [/-12] de U5
+[pth_inside_courtyard]: PTH inside courtyard
+    Local override; warning
+    @(153.5000 mm, 114.7500 mm): Pad PTH 1 [/-12] de JP2
+    @(161.7900 mm, 114.7500 mm): Huella U5
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **
