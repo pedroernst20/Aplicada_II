@@ -1,0 +1,20 @@
+* Ecualizador de 3 bandas - detector de recorte (EXTI y LED)
+* Entrada de 1 kHz, potes al medio (VEQ = 2,09 x entrada):
+*   0 a 0,2 s: 0,40 V pico (VEQ 0,84 V, sin recorte)
+*   0,2 a 0,3 s: 0,60 V pico (VEQ 1,25 V, recorte)
+*   0,3 a 0,6 s: 0,40 V pico (tiene que soltar)
+*   0,6 a 0,605 s: rafaga de 5 ms a 0,60 V pico (recorte corto: el LED tiene que quedar prendido un rato)
+*   0,605 a 1 s: 0,40 V pico
+.include eq_audio.inc
+.include eq_detectores.inc
+.param tolr=0 tolc=0
+.param gb=0.5 gm=0.5 gt=0.5
+
+B1 INL 0 V=if((time>=0.2 & time<0.3) | (time>=0.6 & time<0.605), 0.6, 0.4)*sin(2*pi*1k*time)
+VR INR INL 0
+
+* El modelo del TL08x no converge con Gmin stepping: se saltea y LTspice usa source stepping (mismo resultado, 8 veces mas rapido)
+.options gminsteps=0 plotwinsize=0
+.tran 0 1 0 2u
+.save V(VEQ) V(CC) V(REF) V(OK) V(EXTI) I(DLED)
+.end

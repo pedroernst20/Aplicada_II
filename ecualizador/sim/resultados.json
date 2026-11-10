@@ -1,0 +1,137 @@
+{
+  "plano": {
+    "ganancia_1k_dB": 6.31,
+    "max_dB": 6.45,
+    "min_dB": 6.29,
+    "ondulacion_dB": 0.16
+  },
+  "rango": {
+    "graves_50Hz": {
+      "realce_dB": 14.7,
+      "corte_dB": -13.8
+    },
+    "graves_100Hz": {
+      "realce_dB": 14.0,
+      "corte_dB": -11.3
+    },
+    "medios_1000Hz": {
+      "realce_dB": 13.9,
+      "corte_dB": -10.8
+    },
+    "agudos_10000Hz": {
+      "realce_dB": 14.1,
+      "corte_dB": -11.5
+    },
+    "agudos_5000Hz": {
+      "realce_dB": 12.3,
+      "corte_dB": -7.1
+    }
+  },
+  "franco": {
+    "plano_ondulacion_dB": 1.3,
+    "graves_realce_50Hz_dB": 13.2,
+    "graves_corte_50Hz_dB": -4.8,
+    "medios_con_graves_al_max_1k_dB": -6.7,
+    "agudos_con_graves_al_max_10k_dB": -14.9
+  },
+  "monte_carlo": {
+    "corridas": 100,
+    "ondulacion_plano_dB": {
+      "media": 0.29,
+      "peor": 0.53
+    },
+    "ganancia_1k_dB": {
+      "min": 6.03,
+      "max": 6.51
+    },
+    "corte_medios_1k_dB": {
+      "media": -10.8,
+      "peor": -10.4
+    }
+  },
+  "bandas": {
+    "centro": {
+      "100 Hz": {
+        "b": 0.58,
+        "m": 0.08,
+        "t": 0.02
+      },
+      "1 kHz": {
+        "b": 0.05,
+        "m": 0.6,
+        "t": 0.05
+      },
+      "8 kHz": {
+        "b": 0.02,
+        "m": 0.07,
+        "t": 0.53
+      },
+      "adc_max_V": 0.64,
+      "corriente_schottky_max_mA": 0.0,
+      "veq_max_V": 1.61,
+      "banda_max_V": 0.48,
+      "descarga_tau_ms": 51.8
+    },
+    "graves_max_medios_min": {
+      "100 Hz": {
+        "b": 3.17,
+        "m": 0.02,
+        "t": 0.02
+      },
+      "1 kHz": {
+        "b": 0.28,
+        "m": 0.11,
+        "t": 0.05
+      },
+      "8 kHz": {
+        "b": 0.02,
+        "m": 0.02,
+        "t": 0.53
+      },
+      "adc_max_V": 3.42,
+      "corriente_schottky_max_mA": 0.01,
+      "veq_max_V": 5.26,
+      "banda_max_V": 2.38,
+      "descarga_tau_ms": 51.7
+    },
+    "sobrecarga_1V5_graves_max": {
+      "100 Hz": {
+        "b": 3.51,
+        "m": 0.21,
+        "t": 0.02
+      },
+      "1 kHz": {
+        "b": 0.85,
+        "m": 1.81,
+        "t": 0.17
+      },
+      "8 kHz": {
+        "b": 0.03,
+        "m": 0.27,
+        "t": 1.69
+      },
+      "adc_max_V": 3.53,
+      "corriente_schottky_max_mA": 0.71,
+      "veq_max_V": 13.46,
+      "banda_max_V": 7.15,
+      "descarga_tau_ms": 49.4
+    }
+  },
+  "recorte": {
+    "ref_sin_recorte_V": 1.126,
+    "ref_con_recorte_V": 0.971,
+    "retardo_exti_us": 4.7,
+    "exti_bajo_V": 0.009,
+    "exti_alto_V": 3.3,
+    "led_mA": 7.3,
+    "sostiene_despues_del_recorte_ms": 51.0,
+    "rafaga_5ms_dura_ms": 66.5
+  },
+  "histeresis": {
+    "dispara_VEQ_pico_V": 1.14,
+    "suelta_VEQ_pico_V": 0.972,
+    "dispara_parlante_V": 5.67,
+    "dispara_potencia_W": 2.01,
+    "suelta_potencia_W": 1.46
+  }
+}

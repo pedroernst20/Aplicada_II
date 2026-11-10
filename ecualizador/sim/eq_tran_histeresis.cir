@@ -1,0 +1,16 @@
+* Ecualizador de 3 bandas - umbrales del detector de recorte
+* Entrada de 1 kHz con amplitud en rampa: 0,40 -> 0,70 V pico en 0,5 s y vuelta a 0,40 V pico en 0,5 s.
+* El pico retenido V(CC) cuando EXTI sube es el umbral de disparo; cuando baja, el de liberacion.
+.include eq_audio.inc
+.include eq_detectores.inc
+.param tolr=0 tolc=0
+.param gb=0.5 gm=0.5 gt=0.5
+
+B1 INL 0 V=(0.4 + 0.3*if(time<0.5, time/0.5, (1-time)/0.5))*sin(2*pi*1k*time)
+VR INR INL 0
+
+* El modelo del TL08x no converge con Gmin stepping: se saltea y LTspice usa source stepping (mismo resultado, 8 veces mas rapido)
+.options gminsteps=0 plotwinsize=0
+.tran 0 1 0 2u
+.save V(VEQ) V(CC) V(REF) V(EXTI)
+.end

@@ -1,0 +1,22 @@
+* Ecualizador de 3 bandas - detectores de pico hacia el ADC
+* Entrada (L = R): 100 Hz de 0 a 0,25 s, 1 kHz de 0,25 a 0,5 s, 8 kHz de 0,5 a 0,75 s y silencio hasta 1 s.
+* caso 1: 0,5 V pico, potes al medio
+* caso 2: 0,5 V pico, graves al maximo y medios al minimo (las barras tienen que seguir a los potes)
+* caso 3: 1,5 V pico con graves al maximo (sobrecarga: el detector pide ~11 V y el ADC no puede pasar de 3,3 V + Schottky)
+.include eq_audio.inc
+.include eq_detectores.inc
+.param tolr=0 tolc=0
+.step param caso 1 3 1
+.param gb = if(caso>=2,1,0.5)
+.param gm = if(caso==2,0,0.5)
+.param gt = 0.5
+.param amp = if(caso==3,1.5,0.5)
+
+B1 INL 0 V=amp*if(time<0.25, sin(2*pi*100*time), if(time<0.5, sin(2*pi*1k*time), if(time<0.75, sin(2*pi*8k*time), 0)))
+VR INR INL 0
+
+* El modelo del TL08x no converge con Gmin stepping: se saltea y LTspice usa source stepping (mismo resultado, 8 veces mas rapido)
+.options gminsteps=0 plotwinsize=0
+.tran 0 1 0 5u
+.save V(INL) V(VEQ) V(VBO) V(VMO) V(VTO) V(ADC_B) V(ADC_M) V(ADC_T) I(DCB) I(DCM) I(DCT)
+.end

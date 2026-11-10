@@ -1,0 +1,66 @@
+* Ecualizador de Franco tal cual (repo fpp3, tp4/sources/ampli.kicadproj/3band_eq.kicad_sch), para comparar
+* Potes RV301..RV303 de 500k conectados como resistencia variable (cursor unido a un extremo) + 10k en serie,
+* 100k a masa y no inversor x(1 + 470k/120k).
+* caso 1: los tres potes al medio (250k)
+* caso 2: graves al minimo de resistencia (realce maximo)
+* caso 3: graves al maximo de resistencia (corte maximo)
+.lib tl08x.lib
+.step param caso 1 3 1
+.param rgb = if(caso==2,1,if(caso==3,500k,250k))
+.param rgm = 250k
+.param rgt = 250k
+
+VCC VCC 0 15
+VEE VEE 0 -15
+VIN VI0 0 AC 1
+
+* Buffer
+XU301A VI0 VI VCC VEE VI TL08X_SINGLE
+* Graves: SK pasa-bajos 120k / 4n7
+R305 VI G1 120k
+R307 G1 G2 120k
+C310 G1 VB 4.7n
+C312 G2 0 4.7n
+XU301C G2 VB VCC VEE VB TL08X_SINGLE
+* Agudos: SK pasa-altos 4n7 / 8k2
+C309 VI A1 4.7n
+C311 A1 A2 4.7n
+R308 A1 VT 8.2k
+R309 A2 0 8.2k
+XU301D A2 VT VCC VEE VT TL08X_SINGLE
+* Medios: SK pasa-bajos 8k2 / 4n7 -> SK pasa-altos 4n7 / 120k -> inversor x1,2
+R301 VI M1 8.2k
+R302 M1 M2 8.2k
+C301 M1 ML 4.7n
+C302X M2 0 4.7n
+XU302A M2 ML VCC VEE ML TL08X_SINGLE
+C305 ML M3 4.7n
+C306 M3 M4 4.7n
+R303 M3 MH 120k
+R304 M4 0 120k
+XU302B M4 MH VCC VEE MH TL08X_SINGLE
+R306 MH M5 100k
+R310 M5 VM 120k
+XU302C 0 M5 VCC VEE VM TL08X_SINGLE
+* Sumador: potes en serie + 10k, 100k a masa, no inversor x4,92
+RV301 VB P1 {rgb}
+R312 P1 S 10k
+RV302 VM P2 {rgm}
+R313 P2 S 10k
+RV303 VT P3 {rgt}
+R314 P3 S 10k
+R315 S 0 100k
+R311 F 0 120k
+R316 F VO 470k
+XU302D S F VCC VEE VO TL08X_SINGLE
+
+* El modelo del TL08x no converge con Gmin stepping: se saltea y LTspice usa source stepping (mismo resultado, 8 veces mas rapido)
+.options gminsteps=0
+.ac dec 50 10 100k
+.save V(VO)
+.meas AC g50 FIND mag(V(VO)) AT 50
+.meas AC g1k FIND mag(V(VO)) AT 1k
+.meas AC g10k FIND mag(V(VO)) AT 10k
+.meas AC gmax MAX mag(V(VO)) FROM 20 TO 20k
+.meas AC gmin MIN mag(V(VO)) FROM 20 TO 20k
+.end

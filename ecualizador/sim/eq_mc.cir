@@ -1,0 +1,22 @@
+* Ecualizador de 3 bandas - Monte Carlo: resistencias 1 %, capacitores 5 %
+* k = 1..100: potes al medio (planitud)      k = 101..200: medios al minimo (profundidad del corte a 1 kHz)
+* Cada punto del .step sortea valores nuevos: la comparacion entre casos es contra el valor nominal.
+.include eq_audio.inc
+.param tolr=0.01 tolc=0.05
+.step param k 1 200 1
+.param caso = if(k>100,2,1)
+.param gb = 0.5
+.param gm = if(caso==2,0,0.5)
+.param gt = 0.5
+
+VINL INL 0 AC 1
+VINR INR 0 AC 1
+
+* El modelo del TL08x no converge con Gmin stepping: se saltea y LTspice usa source stepping (mismo resultado, 8 veces mas rapido)
+.options gminsteps=0
+.ac dec 20 20 20k
+.save V(EQOUT)
+.meas AC g1k FIND mag(V(EQOUT)) AT 1k
+.meas AC gmax MAX mag(V(EQOUT)) FROM 20 TO 20k
+.meas AC gmin MIN mag(V(EQOUT)) FROM 20 TO 20k
+.end
