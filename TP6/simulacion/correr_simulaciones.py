@@ -179,6 +179,31 @@ def main():
     R["valIscVeinticinco"] = interp(vi, isc, 25)
     R["valIscTreintaycinco"] = interp(vi, isc, 35)
 
+    # ---------------- VBE del TIP122 contra la hoja de datos -------------
+    # Curva "VBE @ VCE = 4,0 V" de la Fig. 11 de la hoja de datos TIP120/D
+    # (TJ = 25 C), digitalizada de la imagen del PDF a 300 dpi.
+    HOJA_VBE = [(0.12, 1.254), (0.2, 1.283), (0.3, 1.312), (0.5, 1.354),
+                (0.8, 1.404), (1.0, 1.438), (1.5, 1.506), (2.0, 1.577),
+                (3.0, 1.698), (5.0, 1.994)]
+    B = correr(os.path.join("validacion_tip122", "vbe_tip122.asc"))[0]
+    vb = B["VB"]
+    ic_or = [-x for x in B["I(VC1)"]]
+    ic_aj = [-x for x in B["I(VC2)"]]
+    vbe_or = lambda i: interp(ic_or, vb, i)
+    vbe_aj = lambda i: interp(ic_aj, vb, i)
+    R["VbeHojaMedio"] = dict(HOJA_VBE)[0.5]
+    R["VbeOrigMedio"] = vbe_or(0.5)
+    R["VbeAjMedio"] = vbe_aj(0.5)
+    R["VbeErrMaxAj"] = max(abs(vbe_aj(i) - v) for i, v in HOJA_VBE
+                           if i <= 3) * 1e3
+    R["VbeErrMaxOrig"] = max(abs(vbe_or(i) - v) for i, v in HOJA_VBE
+                             if i <= 3) * 1e3
+    corrientes = [0.01 * 10 ** (k / 40) for k in range(101)]   # 10 mA a 3 A
+    corrientes = [i for i in corrientes if i <= 3.0]
+    guardar_dat("vbe_tip122.dat", ["ic", "vbeorig", "vbeaj"],
+                [(i, vbe_or(i), vbe_aj(i)) for i in corrientes])
+    guardar_dat("vbe_hoja.dat", ["ic", "vbe"], HOJA_VBE)
+
     # ---------------- regulacion de linea --------------------------------
     L = correr("c6_linea.asc")[0]
     vp = L["V1"]
@@ -310,6 +335,11 @@ def main():
     R["ViregCorto"] = K["V(vireg)"][0]
     R["PqCorto"] = (25 - K["V(vireg)"][0]) * K["Ix(q1:1)"][0]
     R["PregCorto"] = K["V(vireg)"][0] * K["Ix(u1:1)"][0]
+    R["VceCorto"] = 25 - K["V(vireg)"][0]
+
+    # ---------------- temperatura de juntura del TIP122 ------------------
+    # Ta = 40 C, R(j-mb) = 1,92 C/W, mica y grasa 1,3 C/W, ZD-28 2,9 C/W
+    R["TjQNominal"] = 40 + R["PqVeinticinco"] * (1.92 + 1.3 + 2.9)
 
     # ---------------- exportar -------------------------------------------
     with open(os.path.join(DATOS, "resultados.json"), "w") as fj:

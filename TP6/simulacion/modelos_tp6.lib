@@ -113,6 +113,29 @@ R2 4 3 120
 .ENDS TIP122
 *
 * ---------------------------------------------------------------------
+*  TIP122_AJ - TIP122 con la VBE ajustada a la hoja de datos (C B E)
+*  El modelo de onsemi da VBE = 0,77 V con IC = 0,5 A y VCE = 4 V, y la
+*  curva "VBE @ VCE = 4,0 V" de la hoja de datos TIP120/D (Fig. 11,
+*  "On" Voltages, TJ = 25 C) indica 1,35 V. La diferencia no es
+*  constante: crece con la corriente, de 0,55 V a 0,12 A a 0,79 V a 3 A,
+*  porque la curva del modelo es mas plana que la real. Se corrige con
+*  una fuente en serie con la base y una resistencia en el emisor,
+*  ajustadas por minimos cuadrados a la Fig. 11 entre 0,12 y 3 A:
+*  VBE(hoja) = VBE(modelo) + 0,54 V + 83 mOhm * IC  (error < 5 mV).
+*  Es el que usan los esquematicos de la fuente. (Con un diodo en lugar
+*  de la fuente el modelo diverge por encima de 45 C, por la corriente
+*  de fuga del modelo, que no puede salir por la base.)
+*  Ajuste propuesto por Alejo Lopez Demichelis con una fuente fija de
+*  0,55 V; se le agrego la resistencia para seguir la pendiente.
+*  Validacion: validacion_tip122/vbe_tip122.asc
+* ---------------------------------------------------------------------
+.SUBCKT TIP122_AJ  1  2  3
+VBE 2 4 0.54
+X1 1 4 5 TIP122
+RE 5 3 0.083
+.ENDS TIP122_AJ
+*
+* ---------------------------------------------------------------------
 *  TIP31C - NPN 100 V, 3 A, 40 W (solo para comparar en la seleccion)
 *  Modelo oficial onsemi (MODPEX / Symmetry Design Systems, 2003)
 *  https://www.onsemi.com/download/models/lib/tip31c.lib

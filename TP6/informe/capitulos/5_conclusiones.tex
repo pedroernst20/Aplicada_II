@@ -1,10 +1,12 @@
+% En la ultima pagina las columnas no se estiran para emparejar el pie
+\raggedbottom
 \section{Conclusiones}
 \begin{enumerate}
     \item La etapa prereguladora de la Fig.~6-71 del apunte, con un Darlington TIP122 y un Zener 1N4741A de \SI{11}{\volt}, lleva la entrada del LM7805 a \valu{2}{\simViregVeinticinco}{\volt} con la primaria en \SI{25}{\volt}, y la mantiene dentro de la ventana de \SI{8}{} a \SI{12}{\volt} con la tolerancia del Zener y aun si la primaria baja a \SI{10}{\volt}.
     \item La regulación de línea pedida se verificó por simulación. El LM7805 solo regula mejor con \SI{10}{\volt} en la entrada que con \SI{25}{\volt}, como indica su hoja de datos, y con la etapa prereguladora la variación de la salida ante $\pm\SI{10}{\percent}$ de la primaria baja de \valu{0}{\simdVoSin}{\micro\volt} a \valu{1}{\simdVoCon}{\micro\volt}. El rechazo de rizado sube de \valu{0}{\simRRSin}{\deci\bel} a \valu{0}{\simRRTotal}{\deci\bel}.
     \item El transistor se eligió con su ganancia mínima garantizada. Con un TIP31C ($h_{FE} \geq 25$) el Zener debería conducir más de \SI{200}{\milli\ampere}; con el TIP122 ($h_{FE} \geq 1000$) alcanza con unos \SI{20}{\milli\ampere} y el Zener disipa como máximo \SI{0,27}{\watt}.
-    \item El TIP122 trabaja lejos de los límites de su área de operación segura. Necesita un disipador de \SI{3,1}{\celsius\per\watt} o menos (perfil Aluel ZD-28 de \SI{75}{\milli\meter}, \SI{2,9}{\celsius\per\watt}), y el LM7805 uno de \SI{15,7}{\celsius\per\watt} o menos (Aluel 2125D, \SI{10}{\celsius\per\watt}). La etapa no mejora el rendimiento, que sigue cerca del \SI{20}{\percent}, pero saca del regulador la mayor parte de la potencia: baja de \valu{1}{\simPregSinVeinticinco}{\watt} a \valu{1}{\simPregVeinticinco}{\watt}.
-    \item El modelo del LM7805 se validó contra la hoja de datos antes de usarlo. Reproduce la regulación de línea, el rechazo de rizado, el coeficiente de temperatura y el \emph{dropout}, pero subestima la regulación de carga, por lo que la resistencia de salida real será del orden de \SI{10}{\milli\ohm} y no de los \valu{1}{\simRsal}{\milli\ohm} simulados.
+    \item El TIP122 trabaja lejos de los límites de su área de operación segura. Necesita un disipador de \SI{3,1}{\celsius\per\watt} o menos (perfil Aluel ZD-28 de \SI{75}{\milli\meter}, \SI{2,9}{\celsius\per\watt}), y el LM7805 uno de \SI{17,1}{\celsius\per\watt} o menos (Aluel 2125D, \SI{10}{\celsius\per\watt}). La etapa no mejora el rendimiento, que sigue cerca del \SI{20}{\percent}, pero saca del regulador la mayor parte de la potencia: baja de \valu{1}{\simPregSinVeinticinco}{\watt} a \valu{1}{\simPregVeinticinco}{\watt}.
+    \item El modelo del TIP122 se corrigió para que su $V_{BE}$ siga la curva de la hoja de datos, con un error máximo de \valu{1}{\simVbeErrMaxAj}{\milli\volt} entre \SI{0,12}{} y \SI{3}{\ampere}; el de onsemi daba \SI{0,6}{\volt} menos en el punto de trabajo. El modelo del LM7805 se validó contra la hoja de datos antes de usarlo. Reproduce la regulación de línea, el rechazo de rizado, el coeficiente de temperatura y el \emph{dropout}, pero subestima la regulación de carga, por lo que la resistencia de salida real será del orden de \SI{10}{\milli\ohm} y no de los \valu{1}{\simRsal}{\milli\ohm} simulados.
 \end{enumerate}
 
 \section*{Apéndice: archivos de la simulación}
@@ -14,5 +16,6 @@ Todo el trabajo de simulación está en la carpeta \texttt{simulacion}, que se e
     \item \texttt{LM7805.asy}: símbolo del regulador para LTspice.
     \item \texttt{c6\_linea.asc}, \texttt{c6\_carga.asc}, \texttt{c6\_rizado.asc}, \texttt{c6\_temperatura.asc}, \texttt{c6\_tolerancia.asc} y \texttt{c6\_cortocircuito.asc}: un esquemático por análisis, todos con el circuito de la Fig.~\ref{fig:esquematico}. Se abren y se corren directamente desde LTspice.
     \item \texttt{validacion\_7805/}: ensayos del modelo del regulador según su hoja de datos.
+    \item \texttt{validacion\_tip122/}: comparación de la $V_{BE}$ del TIP122, original y ajustada, con su hoja de datos.
     \item \texttt{correr\_simulaciones.py}: corre todos los esquemáticos en modo batch y genera los datos de las figuras y los valores citados en este informe (carpeta \texttt{datos}).
 \end{itemize}
