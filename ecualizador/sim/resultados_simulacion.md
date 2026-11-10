@@ -133,8 +133,15 @@ Tono de 100 Hz, 1 kHz y 8 kHz (250 ms cada uno) y silencio. Tensión media al AD
 - Solo detecta los picos positivos. Para audio alcanza, porque la señal es simétrica.
 - El umbral depende de los +15 V (divisor 82k / 6k2): un 1 % de error en la fuente corre el umbral un 1 %.
 
-## Para la etapa 2 (esquemático)
+## Paridad con el esquemático de KiCad
 
-- **Conectores:** al TP4, KF2510 de 3 pines con el mismo orden que J108 (1 masa, 2 señal, 3 masa). ±15 V con KF2510 como P_POW y N_POW del TP4. Entrada: jack de 3,5 mm y pads para morder con cocodrilo para el generador.
-- **Pines del Blue Pill:** ADC en PA0, PA1 y PA2; recorte en PB0 (EXTI0, flanco ascendente). En el anteproyecto el pulsador de PB1 figura en `EXTI0_IRQHandler`, pero PB1 va por EXTI1: avisarle a TD2.
-- **Falta decidir:** si el Blue Pill se alimenta solo por USB o también desde +15 V con un 7805.
+`python paridad_kicad_ltspice.py` exporta el netlist de `../placa/ecualizador.kicad_sch` y lo compara con `eq_audio.inc` y `eq_detectores.inc`: **87 elementos y 57 nodos, cada nodo de LTspice es una sola red de KiCad y viceversa** (2026-11-10). Hay que volver a correrlo después de cualquier cambio en el esquemático o en la simulación.
+
+Correspondencia de referencias (LTspice → KiCad): RINL/RINR → R1/R2, CIN → C3, RBIAS → R3, RG1/RG2/CG1/CG2 → R4/R5/C4/C5, CA1/CA2/RA1/RA2 → C6/C7/R6/R7, CM1/CM2/RM1/RM2 → C8/C9/R8/R9, RM3/RM4/RM5/CM3/CM4 → R10/R11/R12/C10/C11, realce/corte → R13–R18 y RV1–RV3, sumador → R19–R22, ROUT → R23, detectores de banda → D3–D8, C18–C23, R24–R32, recorte → D9–D12, C24, R33–R40, Q1. El mapa completo está en el script.
+
+## Conexiones definidas en el esquemático
+
+- **Alimentación:** ±15 V de fuente de laboratorio por J1 (1 masa, 2 +15 V) y J2 (1 masa, 2 −15 V), igual que P_POW y N_POW del TP4, o por los pads para cocodrilo TP12–TP14. 1N4007 en paralelo y 47 µF por riel.
+- **Al TP4:** J4, KF2510 de 3 pines con el mismo orden que J108 (1 masa, 2 señal, 3 masa).
+- **Entrada:** jack de 3,5 mm (J3) y pads para cocodrilo del generador (TP1 señal, TP2 masa).
+- **Blue Pill:** alimentado por su USB. ADC en PA0, PA1 y PA2; recorte en PB0 (EXTI0, flanco ascendente); pulsador de modo en PB1 (EXTI1). OLED por I2C1 (PB6 SCL, PB7 SDA) en J7; UART1 (PA9 TX, PA10 RX) en J8 para un adaptador USB-TTL. En el anteproyecto el pulsador de PB1 figura en `EXTI0_IRQHandler`, pero PB1 va por EXTI1: avisarle a TD2.

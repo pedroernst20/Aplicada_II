@@ -1,0 +1,5 @@
+# Temporales de KiCad
+*-backups/
+fp-info-cache
+~*.lck
+*.kicad_prl
