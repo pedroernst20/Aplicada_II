@@ -42,7 +42,7 @@ Los puntos de trabajo nominal ($Q_{\mathrm{nom}}$) y de peor caso ($Q_{\max}$) q
     \addplot[teal!80!black, thick, dashed, forget plot] coordinates {(1,5) (7.28,5)};
     \addplot[only marks, mark=*, mark size=2.4pt, red!85!black] coordinates {(\simVceVeinticinco, 0.505) (18.65, 0.508)};
     \addlegendentry{Puntos de trabajo}
-    \addplot[only marks, mark=square*, mark size=2.2pt, orange!90!black] coordinates {(14.87, \simIscCorto)};
+    \addplot[only marks, mark=square*, mark size=2.2pt, orange!90!black] coordinates {(\simVceCorto, \simIscCorto)};
     \addlegendentry{Cortocircuito en la salida}
     \node[anchor=north, font=\scriptsize, text=red!80!black] at (axis cs:12,0.45) {$Q_{\mathrm{nom}}$};
     \node[anchor=west, font=\scriptsize, text=red!80!black] at (axis cs:20,0.55) {$Q_{\max}$};
@@ -86,20 +86,20 @@ Del catálogo de International Aluel~\cite{aluel}, el que cita el apunte, se eli
 \begin{equation}
     T_J = \SI{40}{\celsius} + \SI{9,5}{\watt} \times (1{,}92 + 1{,}3 + 2{,}9)\,\si{\celsius\per\watt} = \SI{98}{\celsius},
 \end{equation}
-con la carcasa a $T_C \approx \SI{80}{\celsius}$. En la condición nominal ($P_C = \valu{2}{\simPqVeinticinco}{\watt}$) la juntura queda en unos \SI{86}{\celsius}.
+con la carcasa a $T_C \approx \SI{80}{\celsius}$. En la condición nominal ($P_C = \valu{2}{\simPqVeinticinco}{\watt}$) la juntura queda en unos \valu{0}{\simTjQNominal}{\celsius}.
 
 \subsection{Disipador del regulador}
 El regulador disipa la caída sobre él por la corriente de carga más la potencia de su corriente de polarización:
 \begin{equation}
     P_{D} = (\Vireg - V_O)\, I_L + \Vireg\, I_d.
 \end{equation}
-Para el peor caso se toma la mayor $\Vireg$, \SI{10,8}{\volt}, que es la simulada con el Zener en $+\SI{5}{\percent}$ (Sección~\ref{sec:tolerancia}), y la corriente de polarización máxima: $P_D = 5{,}8 \times 0{,}5 + 10{,}8 \times 0{,}008 = \SI{3,0}{\watt}$. En la condición nominal la simulación da $P_D = \valu{2}{\simPregVeinticinco}{\watt}$, contra \valu{1}{\simPregSinVeinticinco}{\watt} si el regulador se conectara directo a \SI{25}{\volt}.
+Para el peor caso se toma la mayor $\Vireg$ calculada, \SI{10,35}{\volt} (Zener en $+\SI{5}{\percent}$ y $V_{BE}$ mínima), que cubre los \valu{2}{\simViregTolAlto}{\volt} simulados con el Zener en su máximo (Sección~\ref{sec:tolerancia}), y la corriente de polarización máxima: $P_D = 5{,}35 \times 0{,}5 + 10{,}35 \times 0{,}008 = \SI{2,8}{\watt}$. En la condición nominal la simulación da $P_D = \valu{2}{\simPregVeinticinco}{\watt}$, contra \valu{1}{\simPregSinVeinticinco}{\watt} si el regulador se conectara directo a \SI{25}{\volt}.
 
-Sin disipador, con los \SI{62,5}{\celsius\per\watt} de un encapsulado TO-220 en aire libre, la juntura superaría los \SI{220}{\celsius}. Con $R_{\theta JP} = \SI{3}{\celsius\per\watt}$ (juntura a aleta)~\cite{ua78} y la misma interfaz de \SI{1,3}{\celsius\per\watt}:
+Sin disipador, con los \SI{62,5}{\celsius\per\watt} de un encapsulado TO-220 en aire libre, la juntura superaría los \SI{200}{\celsius}. Con $R_{\theta JP} = \SI{3}{\celsius\per\watt}$ (juntura a aleta)~\cite{ua78} y la misma interfaz de \SI{1,3}{\celsius\per\watt}:
 \begin{equation}
-    R_{th(h\text{-}a)} \leq \frac{100 - 40}{3{,}0} - 3 - 1{,}3 = \SI{15,7}{\celsius\per\watt}.
+    R_{th(h\text{-}a)} \leq \frac{100 - 40}{2{,}8} - 3 - 1{,}3 = \SI{17,1}{\celsius\per\watt}.
 \end{equation}
-Alcanza con el perfil U \textbf{2125D} de Aluel, de \SI{10}{\celsius\per\watt}, el mismo del Ejemplo~9 del apunte, con el que $T_J = 40 + 3{,}0 \times 14{,}3 = \SI{83}{\celsius}$.
+Alcanza con el perfil U \textbf{2125D} de Aluel, de \SI{10}{\celsius\per\watt}, el mismo del Ejemplo~9 del apunte, con el que $T_J = 40 + 2{,}8 \times 14{,}3 = \SI{80}{\celsius}$.
 
 \subsection{Cortocircuito en la salida}
 \label{sec:corto}

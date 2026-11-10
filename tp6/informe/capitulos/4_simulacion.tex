@@ -2,7 +2,7 @@
 \label{sec:sim}
 
 \subsection{Modelos y validación del LM7805}
-El circuito se simuló en LTspice~24 con los modelos de la Tabla~\ref{tab:modelos}. Los del TIP122 y del 1N4002 son los que publican sus fabricantes. El del LM7805 es un modelo a nivel transistor armado con el esquema interno de la familia 78XX: incluye la referencia, el amplificador de error, el par Darlington de salida, el limitador de corriente y la protección de área segura, pero no el corte térmico. Para el 1N4741A no hay modelo del fabricante (Diodes Inc. lo discontinuó y onsemi no lo publica), así que se ajustó uno a su hoja de datos: da \SI{11,01}{\volt} con \SI{23}{\milli\ampere}, $Z_{ZT} = \SI{7}{\ohm}$ y $Z_{ZK} = \SI{375}{\ohm}$, dentro de los máximos de \SI{8}{\ohm} y \SI{700}{\ohm}.
+El circuito se simuló en LTspice con los modelos de la Tabla~\ref{tab:modelos}. Los del TIP122 y del 1N4002 son los que publican sus fabricantes. El del LM7805 es un modelo a nivel transistor armado con el esquema interno de la familia 78XX: incluye la referencia, el amplificador de error, el par Darlington de salida, el limitador de corriente y la protección de área segura, pero no el corte térmico. Para el 1N4741A no hay modelo del fabricante (Diodes Inc. lo discontinuó y onsemi no lo publica), así que se ajustó uno a su hoja de datos: da \SI{11,01}{\volt} con \SI{23}{\milli\ampere}, $Z_{ZT} = \SI{7}{\ohm}$ y $Z_{ZK} = \SI{375}{\ohm}$, dentro de los máximos de \SI{8}{\ohm} y \SI{700}{\ohm}.
 
 \begin{table}[!htb]
 \centering
@@ -14,7 +14,7 @@ El circuito se simuló en LTspice~24 con los modelos de la Tabla~\ref{tab:modelo
 \textbf{Componente} & \textbf{Modelo} & \textbf{Origen} \\
 \midrule
 LM7805 & Nivel transistor (18 BJT) & \texttt{regulators.lib}~\cite{mod7805}, con $V_{AF}$ agregado \\
-TIP122 & Darlington, subcircuito & onsemi/Fairchild~\cite{modtip} \\
+TIP122 & Darlington, subcircuito & onsemi/Fairchild~\cite{modtip}, con $V_{BE}$ ajustada \\
 1N4741A & Diodo con ruptura & Ajustado a la hoja de datos~\cite{zener} \\
 1N4002 & Diodo rectificador & Diodes Inc.~\cite{mod4002} \\
 \bottomrule
@@ -50,7 +50,33 @@ Corriente con la salida en corto, $V_I = \SI{25}{}$ / \SI{35}{\volt} & \val{2}{\
 
 El rechazo de rizado se mide en un análisis transitorio, como cociente entre los rizados pico a pico de entrada y de salida, que es la definición del Coughlin~\cite[Sec.~15-8.5]{coughlin}. Con este modelo, el análisis \texttt{.ac} de LTspice da un rechazo de unos \SI{38}{\deci\bel}, que no coincide ni con la regulación de línea en continua ni con el ensayo transitorio, por lo que no se usa.
 
-El modelo del TIP122 da $V_{BE} = \valu{2}{\simVbeVeinticinco}{\volt}$ con \SI{0,5}{\ampere}, menos que los \SI{1,4}{\volt} supuestos en el cálculo. Por eso la $\Vireg$ simulada, \valu{2}{\simViregVeinticinco}{\volt}, es algo mayor que los \SI{9,6}{\volt} calculados. Ambos valores están dentro de la ventana de \SI{8}{} a \SI{12}{\volt}.
+El modelo de onsemi del TIP122, en cambio, da una $V_{BE}$ demasiado baja. La Fig.~\ref{fig:vbe} la compara con la curva típica de la hoja de datos, medida con $V_{CE} = \SI{4}{\volt}$~\cite[Fig.~11]{tip120}: con \SI{0,5}{\ampere} el modelo da \valu{2}{\simVbeOrigMedio}{\volt} y la hoja de datos \valu{2}{\simVbeHojaMedio}{\volt}. Además, la diferencia crece con la corriente, porque la curva del modelo es más plana que la real. Para corregirla se armó el subcircuito \texttt{TIP122\_AJ}: una fuente de \SI{0,54}{\volt} en serie con la base y una resistencia de \SI{83}{\milli\ohm} en el emisor, ajustadas por mínimos cuadrados a la curva de la hoja de datos entre \SI{0,12}{} y \SI{3}{\ampere}. En ese rango el error máximo es de \valu{1}{\simVbeErrMaxAj}{\milli\volt}, contra \valu{0}{\simVbeErrMaxOrig}{\milli\volt} del modelo original. Con el ajuste, la $V_{BE}$ en el circuito es de \valu{2}{\simVbeVeinticinco}{\volt} y la $\Vireg$ simulada, \valu{2}{\simViregVeinticinco}{\volt}, coincide con los \SI{9,6}{\volt} calculados.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+    width=\columnwidth, height=5.2cm,
+    xlabel={$I_C$ [\si{\ampere}]}, ylabel={$V_{BE}$ [\si{\volt}]},
+    xmin=0.01, xmax=6, ymin=0.5, ymax=2.1,
+    log ticks with fixed point,
+    grid=both, grid style={line width=.1pt, draw=gray!25},
+    major grid style={line width=.2pt, draw=gray!50},
+    tick label style={font=\footnotesize}, label style={font=\footnotesize},
+    legend style={font=\scriptsize, fill=white, fill opacity=0.92, draw=gray!60},
+    legend pos=north west,
+]
+    \addplot[only marks, mark=*, mark size=1.8pt, red!85!black] table[x=ic, y=vbe] {datos/vbe_hoja.dat};
+    \addlegendentry{Hoja de datos (Fig.~11, típica)}
+    \addplot[blue!80!black, very thick] table[x=ic, y=vbeaj] {datos/vbe_tip122.dat};
+    \addlegendentry{Modelo ajustado \texttt{TIP122\_AJ}}
+    \addplot[purple!80!black, very thick, dashed] table[x=ic, y=vbeorig] {datos/vbe_tip122.dat};
+    \addlegendentry{Modelo de onsemi}
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{$V_{BE}$ del TIP122 con $V_{CE} = \SI{4}{\volt}$ y $T_J = \SI{25}{\celsius}$: curva típica de la hoja de datos~\cite[Fig.~11]{tip120}, modelo de onsemi y modelo ajustado (\texttt{validacion\_tip122/vbe\_tip122.asc}).}
+\label{fig:vbe}
+\end{figure}
 
 Las simulaciones están en la carpeta \texttt{simulacion}, cada una en su esquemático: \texttt{c6\_linea}, \texttt{c6\_carga}, \texttt{c6\_rizado}, \texttt{c6\_temperatura}, \texttt{c6\_tolerancia} y \texttt{c6\_cortocircuito}. Los esquemáticos de línea, rizado y temperatura incluyen un segundo LM7805 conectado directo a la fuente primaria, con la misma carga, para comparar en una misma corrida. El script \texttt{correr\_simulaciones.py} las ejecuta en modo batch y genera las tablas y los datos de las figuras de esta sección.
 
