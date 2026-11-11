@@ -1,0 +1,37 @@
+(version 1)
+
+# Placa simple faz (B.Cu) fresada por CNC: fresa de 0,5 mm o menos.
+# Van en este archivo porque KiCad reescribe el .kicad_pro al cerrar.
+
+(rule "Pistas y separacion"
+  (constraint track_width (min 0.8mm) (opt 1.0mm))
+  (constraint clearance (min 0.6mm)))
+
+(rule "Alimentacion"
+  (condition "A.hasNetclass('Alimentacion')")
+  (constraint track_width (min 1.2mm) (opt 1.5mm)))
+
+(rule "Borde"
+  (constraint edge_clearance (min 0.5mm)))
+
+# Zonas de mordida de los cocodrilos: ahi solo puede pasar la red del pad.
+(rule "Mordida TP1"
+  (condition "A.intersectsArea('MORDIDA_TP1') && A.NetName != 'Net-(J3-PadT)'")
+  (constraint disallow track via))
+
+(rule "Mordida TP2"
+  (condition "A.intersectsArea('MORDIDA_TP2') && A.NetName != 'GND'")
+  (constraint disallow track via))
+
+(rule "Mordida TP12"
+  (condition "A.intersectsArea('MORDIDA_TP12') && A.NetName != '+15V'")
+  (constraint disallow track via))
+
+(rule "Mordida TP13"
+  (condition "A.intersectsArea('MORDIDA_TP13') && A.NetName != 'GND'")
+  (constraint disallow track via))
+
+(rule "Mordida TP14"
+  (condition "A.intersectsArea('MORDIDA_TP14') && A.NetName != '-15V'")
+  (constraint disallow track via))
+
