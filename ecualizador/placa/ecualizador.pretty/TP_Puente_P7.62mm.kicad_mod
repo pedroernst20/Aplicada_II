@@ -1,0 +1,147 @@
+(footprint "TP_Puente_P7.62mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Test point de puente de 7.62 mm: alambre en U entre los dos agujeros; por debajo pueden pasar pistas (simple faz). Copia de Rao:TP_Puente_P5.08mm")
+	(tags "test point wire loop")
+	(property "Reference" "REF**"
+		(at 3.81 2.3 0)
+		(layer "F.SilkS")
+		(uuid "294a3d7b-c0b1-4f58-ac90-b30f426ba554")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TP_Puente_P7.62mm"
+		(at 1 -2.1 0)
+		(layer "F.Fab")
+		(uuid "ae298e7a-85f7-471d-8ad5-e1bd417d7e2e")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "eae2ebc8-f66f-4146-a8e2-9cde73a71b77")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "04158491-d57c-4d86-b50d-c5af751cbf23")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers yes)
+	(fp_line
+		(start -1.8 -1.8)
+		(end -1.8 1.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "99cbbd3b-9099-409b-9c65-f67a5c0150fa")
+	)
+	(fp_line
+		(start -1.8 -1.8)
+		(end 9.42 -1.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "dde30b8c-d243-474c-a017-235573ccf9b2")
+	)
+	(fp_line
+		(start 9.42 1.8)
+		(end -1.8 1.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "10da66ef-7477-41d0-bbbc-d6474fdc8d1c")
+	)
+	(fp_line
+		(start 9.42 1.8)
+		(end 9.42 -1.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "f95c2298-de2e-4869-990b-36cbb3b47fbc")
+	)
+	(fp_line
+		(start 7.62 0)
+		(end 0 0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "8621d39c-ef51-4342-9fbc-8fb1ab3f9dd1")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 3.81 2.3 0)
+		(layer "F.Fab")
+		(uuid "03ea4b11-864f-452b-9428-8bc8ae2dae0a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2.6 2.6)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "70d36281-5d90-45e1-ad6a-2a7413c6c18a")
+	)
+	(pad "1" thru_hole circle
+		(at 7.62 0)
+		(size 2.6 2.6)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "aca0293c-cbc2-4c5b-986e-89e6aff46be1")
+	)
+	(embedded_fonts no)
+	(model "${KICAD10_3DMODEL_DIR}/TestPoint.3dshapes/TestPoint_Bridge_Pitch5.08mm_Drill1.3mm.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
