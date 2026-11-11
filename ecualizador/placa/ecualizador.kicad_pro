@@ -566,7 +566,7 @@
       "version": 5
     },
     "net_colors": {},
-    "netclass_assignments": null,
+    "netclass_assignments": {},
     "netclass_patterns": [
       {
         "netclass": "Alimentacion",
