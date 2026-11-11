@@ -2,7 +2,7 @@
 	(version 20260306)
 	(generator "eeschema")
 	(generator_version "10.0")
-	(uuid "e406c166-9696-4679-81ed-99a47f2a9f19")
+	(uuid "325e9ce1-87c1-47fc-90ca-e863a47201f1")
 	(paper "A4")
 	(title_block
 		(title "Ecualizador de 3 bandas con analizador de espectro (EA2 - TD2)")
@@ -1248,49 +1248,49 @@
 		(at 45.72 53.34)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "e8442322-9bad-4556-9c7a-38ec0faf05c7")
+		(uuid "b84cacc0-aab7-4dbe-8e0a-28c148f3e4f0")
 	)
 	(junction
 		(at 45.72 91.44)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "de9a7be4-9827-49f8-a2ff-bcf889bdd7a1")
+		(uuid "84d4752c-c9f7-4960-9f8b-49047dfbd792")
 	)
 	(junction
 		(at 55.88 53.34)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "6d5ca348-d93e-4a4c-b668-3b08bc8c6483")
+		(uuid "1fe137cb-73a4-43d7-819e-dbd995db9b51")
 	)
 	(junction
 		(at 55.88 91.44)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "2d42c7c2-19ec-4db7-8cb7-55f7ef55e654")
+		(uuid "3da6ad1f-55b9-4d20-8434-8138ac941a32")
 	)
 	(junction
 		(at 71.12 53.34)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "b84cacc0-aab7-4dbe-8e0a-28c148f3e4f0")
+		(uuid "76209121-9941-4dff-99e4-ecd8bde0564c")
 	)
 	(junction
 		(at 71.12 91.44)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "84d4752c-c9f7-4960-9f8b-49047dfbd792")
+		(uuid "71ed67fe-ec98-40e8-8dac-de1190059df8")
 	)
 	(junction
 		(at 86.36 53.34)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "1fe137cb-73a4-43d7-819e-dbd995db9b51")
+		(uuid "8dbd5ab5-7231-4280-9809-5d6943bf95c5")
 	)
 	(junction
 		(at 86.36 91.44)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "3da6ad1f-55b9-4d20-8434-8138ac941a32")
+		(uuid "b7fb495d-67f0-4cca-8af3-a80c41153c09")
 	)
 	(wire
 		(pts
@@ -1300,7 +1300,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "76209121-9941-4dff-99e4-ecd8bde0564c")
+		(uuid "1ddcf66a-96f8-4f60-bfee-ce91a71b0af9")
 	)
 	(wire
 		(pts
@@ -1310,7 +1310,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "71ed67fe-ec98-40e8-8dac-de1190059df8")
+		(uuid "f75aa35e-6684-419d-98fb-a6a54f0a0c6a")
 	)
 	(wire
 		(pts
@@ -1320,7 +1320,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "8dbd5ab5-7231-4280-9809-5d6943bf95c5")
+		(uuid "2f39d7ea-b86f-4ec4-87a4-f759d32a336a")
 	)
 	(wire
 		(pts
@@ -1330,7 +1330,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "b7fb495d-67f0-4cca-8af3-a80c41153c09")
+		(uuid "ababba29-2a53-41fc-adc5-a7029ecc8e15")
 	)
 	(wire
 		(pts
@@ -1340,7 +1340,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "1ddcf66a-96f8-4f60-bfee-ce91a71b0af9")
+		(uuid "7a30689c-fb73-4fd5-98e8-1c42337a2518")
 	)
 	(wire
 		(pts
@@ -1350,7 +1350,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "f75aa35e-6684-419d-98fb-a6a54f0a0c6a")
+		(uuid "2c737c07-5a97-42a6-bfc7-3e33a266846d")
 	)
 	(wire
 		(pts
@@ -1360,7 +1360,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "2f39d7ea-b86f-4ec4-87a4-f759d32a336a")
+		(uuid "9046e8fe-68f4-461a-9f8d-5043fb3b9408")
 	)
 	(wire
 		(pts
@@ -1370,7 +1370,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "ababba29-2a53-41fc-adc5-a7029ecc8e15")
+		(uuid "b0b7a4ee-bf6e-4246-aa51-1ed1be77bb5e")
 	)
 	(wire
 		(pts
@@ -1380,7 +1380,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "7a30689c-fb73-4fd5-98e8-1c42337a2518")
+		(uuid "d4b83ace-d04b-47c5-bf3a-bb27fe393210")
 	)
 	(wire
 		(pts
@@ -1390,7 +1390,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "2c737c07-5a97-42a6-bfc7-3e33a266846d")
+		(uuid "151decec-c3e7-4c3e-8294-b92f345720df")
 	)
 	(wire
 		(pts
@@ -1400,7 +1400,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "9046e8fe-68f4-461a-9f8d-5043fb3b9408")
+		(uuid "9feed45c-23ac-4dfe-aa47-a591287a6e27")
 	)
 	(wire
 		(pts
@@ -1410,7 +1410,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "b0b7a4ee-bf6e-4246-aa51-1ed1be77bb5e")
+		(uuid "9f564f36-256b-45a6-8ef5-28226477d6a2")
 	)
 	(wire
 		(pts
@@ -1420,7 +1420,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "d4b83ace-d04b-47c5-bf3a-bb27fe393210")
+		(uuid "c80d879d-dfae-4d3d-8085-e0a51c709897")
 	)
 	(wire
 		(pts
@@ -1430,7 +1430,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "151decec-c3e7-4c3e-8294-b92f345720df")
+		(uuid "5c546bd5-0684-4628-b6f8-ad87705b97eb")
 	)
 	(text "Alimentación ±15 V (KF2510, mismo orden que P_POW y N_POW del TP4)"
 		(exclude_from_sim no)
@@ -1441,7 +1441,7 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "9feed45c-23ac-4dfe-aa47-a591287a6e27")
+		(uuid "0c3d93d7-517e-463c-a463-b5189c596c5d")
 	)
 	(text "D1 y D2: si se invierte la fuente conducen y la limitación de corriente la frena"
 		(exclude_from_sim no)
@@ -1452,7 +1452,7 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "9f564f36-256b-45a6-8ef5-28226477d6a2")
+		(uuid "7c186bed-b8a8-4b75-a450-5ee927128f5e")
 	)
 	(text "Pads para cocodrilo TP12-TP14: alimentación alternativa a J1/J2"
 		(exclude_from_sim no)
@@ -1463,7 +1463,7 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "c80d879d-dfae-4d3d-8085-e0a51c709897")
+		(uuid "868b80f0-4b87-4849-9c9f-c7072d5b627c")
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
@@ -1475,7 +1475,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "e6f6413c-5dca-499b-883f-3aa530300457")
+		(uuid "7bfaf4f2-878d-463c-8c37-f4b2c7ed9283")
 		(property "Reference" "J1"
 			(at 22.86 50.8 0)
 			(show_name no)
@@ -1530,14 +1530,14 @@
 			)
 		)
 		(pin "1"
-			(uuid "5c546bd5-0684-4628-b6f8-ad87705b97eb")
+			(uuid "6788f2fa-875c-49b9-9363-530631a68de3")
 		)
 		(pin "2"
-			(uuid "0c3d93d7-517e-463c-a463-b5189c596c5d")
+			(uuid "80b995a4-327c-48b0-b4dd-9c6d5296c595")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "J1")
 					(unit 1)
 				)
@@ -1554,8 +1554,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "29018e65-b5b3-402e-8260-da3feac32483")
-		(property "Reference" "#PWR063"
+		(uuid "be0fda23-b491-4b1f-81d3-0c461f0ece90")
+		(property "Reference" "#PWR065"
 			(at 38.1 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -1610,12 +1610,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "7c186bed-b8a8-4b75-a450-5ee927128f5e")
+			(uuid "9d816a57-bd11-48ad-9953-c0803b93f379")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR063")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR065")
 					(unit 1)
 				)
 			)
@@ -1631,8 +1631,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "325e9ce1-87c1-47fc-90ca-e863a47201f1")
-		(property "Reference" "#FLG064"
+		(uuid "e520261b-81bb-4650-9462-6b5814cd47b2")
+		(property "Reference" "#FLG066"
 			(at 45.72 59.69 0)
 			(hide yes)
 			(show_name no)
@@ -1687,12 +1687,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "868b80f0-4b87-4849-9c9f-c7072d5b627c")
+			(uuid "97c45686-1611-4752-962f-7f38d3076e31")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#FLG064")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#FLG066")
 					(unit 1)
 				)
 			)
@@ -1708,8 +1708,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "2b2df7b6-bfd4-4ba8-a5a8-e8ec7196e2a6")
-		(property "Reference" "#PWR065"
+		(uuid "07cc91c2-1620-4988-9a5a-78e15f65d39b")
+		(property "Reference" "#PWR067"
 			(at 55.88 59.69 0)
 			(hide yes)
 			(show_name no)
@@ -1764,12 +1764,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "6788f2fa-875c-49b9-9363-530631a68de3")
+			(uuid "4c09cdca-200e-4f5d-b768-b788df7b5cc9")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR065")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR067")
 					(unit 1)
 				)
 			)
@@ -1785,7 +1785,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "7bfaf4f2-878d-463c-8c37-f4b2c7ed9283")
+		(uuid "5e280500-9990-4cce-a9bd-fe6ab00a9805")
 		(property "Reference" "D1"
 			(at 77.47 55.88 90)
 			(show_name no)
@@ -1840,14 +1840,14 @@
 			)
 		)
 		(pin "1"
-			(uuid "80b995a4-327c-48b0-b4dd-9c6d5296c595")
+			(uuid "edbe9bdb-575c-49ac-a7b7-32e502c94fdd")
 		)
 		(pin "2"
-			(uuid "9d816a57-bd11-48ad-9953-c0803b93f379")
+			(uuid "e55efb5a-1d7e-40f5-97d1-5626ab6132d3")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "D1")
 					(unit 1)
 				)
@@ -1864,7 +1864,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "be0fda23-b491-4b1f-81d3-0c461f0ece90")
+		(uuid "54c0162b-1360-43b9-8e2e-c67ec6f71569")
 		(property "Reference" "C1"
 			(at 88.9 55.88 0)
 			(show_name no)
@@ -1921,14 +1921,14 @@
 			)
 		)
 		(pin "1"
-			(uuid "97c45686-1611-4752-962f-7f38d3076e31")
+			(uuid "c6d73d75-99b0-49a4-b714-0d5dd9db69b8")
 		)
 		(pin "2"
-			(uuid "4c09cdca-200e-4f5d-b768-b788df7b5cc9")
+			(uuid "470bded8-44db-4942-9109-151fb9f7a916")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "C1")
 					(unit 1)
 				)
@@ -1945,7 +1945,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "e520261b-81bb-4650-9462-6b5814cd47b2")
+		(uuid "a52b2d05-1137-4829-a987-ba74a810796e")
 		(property "Reference" "TP12"
 			(at 111.76 55.88 0)
 			(show_name no)
@@ -2000,11 +2000,11 @@
 			)
 		)
 		(pin "1"
-			(uuid "edbe9bdb-575c-49ac-a7b7-32e502c94fdd")
+			(uuid "6a4c6ee1-16c2-41ce-bc3b-cb31334a3d55")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "TP12")
 					(unit 1)
 				)
@@ -2021,8 +2021,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "07cc91c2-1620-4988-9a5a-78e15f65d39b")
-		(property "Reference" "#PWR066"
+		(uuid "55bc327b-ff0f-4782-98bd-075c328e3b69")
+		(property "Reference" "#PWR068"
 			(at 71.12 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -2077,12 +2077,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e55efb5a-1d7e-40f5-97d1-5626ab6132d3")
+			(uuid "c9aabf79-52d1-4da5-8755-2153922bd1c6")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR066")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR068")
 					(unit 1)
 				)
 			)
@@ -2098,8 +2098,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "5e280500-9990-4cce-a9bd-fe6ab00a9805")
-		(property "Reference" "#PWR067"
+		(uuid "3c697785-4c50-4b86-b82f-8b2cf66e8b7e")
+		(property "Reference" "#PWR069"
 			(at 86.36 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -2154,12 +2154,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c6d73d75-99b0-49a4-b714-0d5dd9db69b8")
+			(uuid "6f4857ee-644f-4420-a628-07873da057cb")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR067")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR069")
 					(unit 1)
 				)
 			)
@@ -2175,7 +2175,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "54c0162b-1360-43b9-8e2e-c67ec6f71569")
+		(uuid "48fa1d0a-9601-4231-95a1-b8c6e0b386ac")
 		(property "Reference" "J2"
 			(at 22.86 88.9 0)
 			(show_name no)
@@ -2230,14 +2230,14 @@
 			)
 		)
 		(pin "1"
-			(uuid "470bded8-44db-4942-9109-151fb9f7a916")
+			(uuid "b28530b2-c6b1-4ff8-9957-6344eb4b2e9f")
 		)
 		(pin "2"
-			(uuid "6a4c6ee1-16c2-41ce-bc3b-cb31334a3d55")
+			(uuid "4a2ef705-de01-43b5-89d8-f506f231d0c7")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "J2")
 					(unit 1)
 				)
@@ -2254,8 +2254,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "a52b2d05-1137-4829-a987-ba74a810796e")
-		(property "Reference" "#PWR068"
+		(uuid "58df20e7-e87b-4579-b0a0-4303e28536de")
+		(property "Reference" "#PWR070"
 			(at 38.1 105.41 0)
 			(hide yes)
 			(show_name no)
@@ -2310,12 +2310,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c9aabf79-52d1-4da5-8755-2153922bd1c6")
+			(uuid "9bae78b4-db2c-4b1a-9283-4a19881765dd")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR068")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR070")
 					(unit 1)
 				)
 			)
@@ -2331,8 +2331,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "55bc327b-ff0f-4782-98bd-075c328e3b69")
-		(property "Reference" "#FLG069"
+		(uuid "2be99771-4d7f-43ca-8466-2e5e4c906c26")
+		(property "Reference" "#FLG071"
 			(at 45.72 97.79 0)
 			(hide yes)
 			(show_name no)
@@ -2387,12 +2387,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "6f4857ee-644f-4420-a628-07873da057cb")
+			(uuid "7429bb10-0249-4d3b-a544-b66433ac7243")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#FLG069")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#FLG071")
 					(unit 1)
 				)
 			)
@@ -2408,8 +2408,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "3c697785-4c50-4b86-b82f-8b2cf66e8b7e")
-		(property "Reference" "#PWR070"
+		(uuid "a07e3897-20ce-4cb8-b1ea-27fd9af8a346")
+		(property "Reference" "#PWR072"
 			(at 55.88 97.79 0)
 			(hide yes)
 			(show_name no)
@@ -2464,12 +2464,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b28530b2-c6b1-4ff8-9957-6344eb4b2e9f")
+			(uuid "4947e6b5-1d9b-4b58-b904-fd58778d7057")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR070")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR072")
 					(unit 1)
 				)
 			)
@@ -2485,7 +2485,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "48fa1d0a-9601-4231-95a1-b8c6e0b386ac")
+		(uuid "8ce9b443-486e-4734-a802-7b3f1231d0c1")
 		(property "Reference" "D2"
 			(at 77.47 93.98 90)
 			(show_name no)
@@ -2540,14 +2540,14 @@
 			)
 		)
 		(pin "1"
-			(uuid "4a2ef705-de01-43b5-89d8-f506f231d0c7")
+			(uuid "5d491d3d-013e-44ff-8140-ff4462b4b31b")
 		)
 		(pin "2"
-			(uuid "9bae78b4-db2c-4b1a-9283-4a19881765dd")
+			(uuid "2fc4138d-cb15-42a0-85c2-74bee38a09da")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "D2")
 					(unit 1)
 				)
@@ -2564,7 +2564,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "58df20e7-e87b-4579-b0a0-4303e28536de")
+		(uuid "d46273be-66c3-4fa4-8500-faba7dbeed71")
 		(property "Reference" "C2"
 			(at 92.71 93.98 0)
 			(show_name no)
@@ -2619,14 +2619,14 @@
 			)
 		)
 		(pin "1"
-			(uuid "7429bb10-0249-4d3b-a544-b66433ac7243")
+			(uuid "3f949d35-6ac1-4361-bbfe-92e5da7d3b2d")
 		)
 		(pin "2"
-			(uuid "4947e6b5-1d9b-4b58-b904-fd58778d7057")
+			(uuid "3321b0ee-b0a5-444c-9b71-4f76823e1079")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "C2")
 					(unit 1)
 				)
@@ -2643,7 +2643,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "2be99771-4d7f-43ca-8466-2e5e4c906c26")
+		(uuid "f0506857-dd8f-44fb-a113-72e2f8aafb18")
 		(property "Reference" "TP14"
 			(at 111.76 93.98 0)
 			(show_name no)
@@ -2698,11 +2698,11 @@
 			)
 		)
 		(pin "1"
-			(uuid "5d491d3d-013e-44ff-8140-ff4462b4b31b")
+			(uuid "b1bc3b98-a034-4258-8d10-50c93ac799cc")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "TP14")
 					(unit 1)
 				)
@@ -2719,8 +2719,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "a07e3897-20ce-4cb8-b1ea-27fd9af8a346")
-		(property "Reference" "#PWR071"
+		(uuid "70195c20-b41f-48b7-95cc-f9fdf261fdb2")
+		(property "Reference" "#PWR073"
 			(at 71.12 105.41 0)
 			(hide yes)
 			(show_name no)
@@ -2775,12 +2775,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2fc4138d-cb15-42a0-85c2-74bee38a09da")
+			(uuid "bfa8a0aa-1e9b-444c-a3f0-b1852840c117")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR071")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR073")
 					(unit 1)
 				)
 			)
@@ -2796,8 +2796,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "8ce9b443-486e-4734-a802-7b3f1231d0c1")
-		(property "Reference" "#PWR072"
+		(uuid "7ba0c420-4b35-4eff-b199-4897241ec550")
+		(property "Reference" "#PWR074"
 			(at 86.36 105.41 0)
 			(hide yes)
 			(show_name no)
@@ -2852,12 +2852,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3f949d35-6ac1-4361-bbfe-92e5da7d3b2d")
+			(uuid "9ea31524-90ce-48a1-b2e7-2c1d87130cfb")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR072")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR074")
 					(unit 1)
 				)
 			)
@@ -2873,7 +2873,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "d46273be-66c3-4fa4-8500-faba7dbeed71")
+		(uuid "f17b9e5c-0ebe-483d-a7c6-097c38435235")
 		(property "Reference" "TP13"
 			(at 120.65 72.39 0)
 			(show_name no)
@@ -2930,11 +2930,11 @@
 			)
 		)
 		(pin "1"
-			(uuid "3321b0ee-b0a5-444c-9b71-4f76823e1079")
+			(uuid "9968a211-1a63-4f0e-aaab-c7731fe79d02")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "TP13")
 					(unit 1)
 				)
@@ -2951,8 +2951,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "f0506857-dd8f-44fb-a113-72e2f8aafb18")
-		(property "Reference" "#PWR073"
+		(uuid "796e5b2e-fcc2-4221-b94c-763cec274e72")
+		(property "Reference" "#PWR075"
 			(at 119.38 82.55 0)
 			(hide yes)
 			(show_name no)
@@ -3007,12 +3007,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b1bc3b98-a034-4258-8d10-50c93ac799cc")
+			(uuid "725c59e7-7108-43b9-b951-0f0d916079a7")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR073")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR075")
 					(unit 1)
 				)
 			)
@@ -3028,8 +3028,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "70195c20-b41f-48b7-95cc-f9fdf261fdb2")
-		(property "Reference" "#FLG074"
+		(uuid "ee801542-d391-473a-984d-ad0c948a2bce")
+		(property "Reference" "#FLG076"
 			(at 137.16 82.55 0)
 			(hide yes)
 			(show_name no)
@@ -3084,12 +3084,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "bfa8a0aa-1e9b-444c-a3f0-b1852840c117")
+			(uuid "72f79f26-ecaf-4f72-8c52-203473bf119a")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#FLG074")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#FLG076")
 					(unit 1)
 				)
 			)
@@ -3105,8 +3105,8 @@
 		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "7ba0c420-4b35-4eff-b199-4897241ec550")
-		(property "Reference" "#PWR075"
+		(uuid "43bba9fd-0197-4f35-bfcc-44be04776495")
+		(property "Reference" "#PWR077"
 			(at 137.16 82.55 0)
 			(hide yes)
 			(show_name no)
@@ -3161,12 +3161,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "9ea31524-90ce-48a1-b2e7-2c1d87130cfb")
+			(uuid "5c213965-c820-444f-9160-12521ae119ec")
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
-					(reference "#PWR075")
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
+					(reference "#PWR077")
 					(unit 1)
 				)
 			)
@@ -3182,7 +3182,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "f17b9e5c-0ebe-483d-a7c6-097c38435235")
+		(uuid "e8442322-9bad-4556-9c7a-38ec0faf05c7")
 		(property "Reference" "H1"
 			(at 27.94 152.4 0)
 			(show_name no)
@@ -3238,7 +3238,7 @@
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "H1")
 					(unit 1)
 				)
@@ -3255,7 +3255,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "796e5b2e-fcc2-4221-b94c-763cec274e72")
+		(uuid "de9a7be4-9827-49f8-a2ff-bcf889bdd7a1")
 		(property "Reference" "H2"
 			(at 43.18 152.4 0)
 			(show_name no)
@@ -3311,7 +3311,7 @@
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "H2")
 					(unit 1)
 				)
@@ -3328,7 +3328,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "ee801542-d391-473a-984d-ad0c948a2bce")
+		(uuid "6d5ca348-d93e-4a4c-b668-3b08bc8c6483")
 		(property "Reference" "H3"
 			(at 58.42 152.4 0)
 			(show_name no)
@@ -3384,7 +3384,7 @@
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "H3")
 					(unit 1)
 				)
@@ -3401,7 +3401,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "43bba9fd-0197-4f35-bfcc-44be04776495")
+		(uuid "2d42c7c2-19ec-4db7-8cb7-55f7ef55e654")
 		(property "Reference" "H4"
 			(at 73.66 152.4 0)
 			(show_name no)
@@ -3457,7 +3457,7 @@
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(reference "H4")
 					(unit 1)
 				)
@@ -3504,7 +3504,7 @@
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(page "2")
 				)
 			)
@@ -3525,7 +3525,7 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "acf8f161-7c96-4d2c-8ee9-2c531dbac8f6")
+		(uuid "03406d9e-d815-4851-b972-149848072c11")
 		(property "Sheetname" "Detectores"
 			(at 165.1 65.33 0)
 			(show_name no)
@@ -3550,7 +3550,7 @@
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(page "3")
 				)
 			)
@@ -3571,7 +3571,7 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "b00649b8-9051-460b-9ed6-443e36d60cbe")
+		(uuid "33353c21-5c2c-4b07-92dd-765522898017")
 		(property "Sheetname" "Blue Pill"
 			(at 165.1 90.73 0)
 			(show_name no)
@@ -3596,7 +3596,7 @@
 		)
 		(instances
 			(project "ecualizador"
-				(path "/e406c166-9696-4679-81ed-99a47f2a9f19"
+				(path "/325e9ce1-87c1-47fc-90ca-e863a47201f1"
 					(page "4")
 				)
 			)
