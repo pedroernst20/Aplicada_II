@@ -1,0 +1,28 @@
+ECUALIZADOR 3 BANDAS - EA2/TD2 - UTN FRC
+Placa DOBLE FAZ, SIN agujeros metalizados (solo fresado y perforado).
+
+Medidas: 178 x 105 mm (contorno en ecualizador-Edge_Cuts.gm1, cortar por fuera de la linea).
+
+Archivos
+  ecualizador-F_Cu.gtl      cobre de arriba (lado de los componentes), pocas pistas
+  ecualizador-B_Cu.gbl      cobre de abajo
+  ecualizador-Edge_Cuts.gm1 contorno
+  ecualizador.drl           agujeros (Excellon, mm)
+  ecualizador-drl_map.pdf   mapa de agujeros
+  ecualizador-job.gbrjob    archivo de trabajo de KiCad
+
+Fresado
+  - Separacion minima entre cobres: 0,6 mm. La fresa no puede pasar de 0,5 mm.
+  - Los dos Gerbers de cobre estan VISTOS DESDE ARRIBA (como los saca KiCad).
+    Para fresar la cara de abajo hay que espejarla en el CAM.
+  - Para alinear al dar vuelta la placa: los 4 agujeros de 3,2 mm de las esquinas.
+
+Agujeros (344 en total)
+  0,8 mm  x 206
+  0,9 mm  x 9
+  1,0 mm  x 98
+  1,1 mm  x 8
+  1,4 mm  x 5
+  1,8 mm  x 5
+  2,2 mm  x 9
+  3,2 mm  x 4   (fijacion y alineacion)

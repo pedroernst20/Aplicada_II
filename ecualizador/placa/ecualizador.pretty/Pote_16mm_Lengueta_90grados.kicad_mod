@@ -1,0 +1,279 @@
+(footprint "Pote_16mm_Lengueta_90grados"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Patas 1-2-3 de izquierda a derecha mirando el eje de frente (pata 1 = extremo antihorario). Potenciometro de 16 mm con lenguetas (Alfa 16S, 'minon') soldado a 90 grados: eje paralelo a la placa. Paso 5 mm. Cara del eje a 8 mm de la fila (estimado: solo mueve el dibujo del cuerpo, no los agujeros).")
+	(tags "potenciometro 16mm lengueta 90 grados horizontal")
+	(property "Reference" ""
+		(at -3.5 -5 90)
+		(layer "F.SilkS")
+		(uuid "f746326b-1029-425e-b815-b51ad45c39f1")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" "Pote_16mm_Lengueta_90grados"
+		(at 4 -5 0)
+		(layer "F.Fab")
+		(uuid "0eced0b8-1697-4f30-8c72-0140fff2435b")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f6231aa3-de77-45b2-8df0-c1f36c5bf452")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "8817176c-620e-4ce9-b362-d2cb114b0ede")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.8 -13.8)
+		(end 8.3 -13.8)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "6b03e1b3-d5ce-4a75-a927-782c6b3818cf")
+	)
+	(fp_line
+		(start -1.8 3.8)
+		(end -1.8 -13.8)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "d28ed2f3-c5a5-4c51-859a-58bad46099dd")
+	)
+	(fp_line
+		(start 8.3 -13.8)
+		(end 8.3 3.8)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "ff36899b-0873-40f5-a9d5-2d420b4427d2")
+	)
+	(fp_line
+		(start 8.3 3.8)
+		(end -1.8 3.8)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "44c1267d-8c70-4394-b44f-5501cf4fc69c")
+	)
+	(fp_line
+		(start -2.1 -14.1)
+		(end 8.6 -14.1)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "0ac6cdce-fcba-47c9-b110-d1406bfe0045")
+	)
+	(fp_line
+		(start -2.1 4.099999)
+		(end -2.1 -14.1)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "33de373b-54a9-45ff-99f9-96f6b922b438")
+	)
+	(fp_line
+		(start 8.6 -14.1)
+		(end 8.6 4.099999)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "8b754bb7-09fb-452b-928b-2070d009d5a6")
+	)
+	(fp_line
+		(start 8.6 4.099999)
+		(end -2.1 4.099999)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "c12998a8-ddbe-491d-b6a3-021370017f10")
+	)
+	(fp_line
+		(start -1.5 -13.5)
+		(end 8 -13.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d872dbd2-dacb-4900-bc3e-75a6b3b96651")
+	)
+	(fp_line
+		(start -1.5 3.5)
+		(end -1.5 -13.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "05c89cd5-10f2-474a-b993-4ffeb1143a00")
+	)
+	(fp_line
+		(start 8 -13.5)
+		(end 8 3.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "8e650277-175e-4d74-b9d6-fce74a2b49f1")
+	)
+	(fp_line
+		(start 8 -8.5)
+		(end 15 -8.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "8819d744-4d9f-4735-b805-244562bfb2ad")
+	)
+	(fp_line
+		(start 8 -1.5)
+		(end 8 -8.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "fcbd68d5-c2d7-4d3d-8a52-59a2240843c7")
+	)
+	(fp_line
+		(start 8 3.5)
+		(end -1.5 3.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d592ce8f-a5f7-4fb4-9248-dfd9fe51c225")
+	)
+	(fp_line
+		(start 15 -8.5)
+		(end 15 -1.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "f58f9f76-2b7f-4e84-b02d-6bbdd2299ca4")
+	)
+	(fp_line
+		(start 15 -8)
+		(end 30 -8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "22daab4d-2150-41b8-bd61-059af3600cc8")
+	)
+	(fp_line
+		(start 15 -2)
+		(end 15 -8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2580c71d-8d0b-46f7-ae6f-71a691c48b70")
+	)
+	(fp_line
+		(start 15 -1.5)
+		(end 8 -1.5)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "ab8e7d38-2901-4362-aed8-76c16f455530")
+	)
+	(fp_line
+		(start 30 -8)
+		(end 30 -2)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "3f6570aa-d88d-4aba-bd7b-684fb0db4145")
+	)
+	(fp_line
+		(start 30 -2)
+		(end 15 -2)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d44dca47-f04a-4a72-818a-c847a45956a7")
+	)
+	(pad "3" thru_hole oval
+		(at 0 -10)
+		(size 3.6 3.6)
+		(drill 2.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(thermal_bridge_angle 45)
+		(uuid "8dde030c-f51e-4a20-8a41-e8467afe0d95")
+	)
+	(pad "2" thru_hole oval
+		(at 0 -5)
+		(size 3.6 3.6)
+		(drill 2.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(thermal_bridge_angle 45)
+		(uuid "7d6a9fbd-6b5e-4a89-b910-796bb9615181")
+	)
+	(pad "1" thru_hole oval
+		(at 0 0)
+		(size 3.6 3.6)
+		(drill 2.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(thermal_bridge_angle 45)
+		(uuid "bb06eec6-72cf-4ca0-9ad4-216de1f1c79f")
+	)
+	(embedded_fonts no)
+)

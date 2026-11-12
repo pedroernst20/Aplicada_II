@@ -18,6 +18,7 @@
 VCC VCC 0 15
 VEE VEE 0 -15
 V33 V3V3 0 3.3
+V33A V3V3A 0 3.3
 
 * ---------------- Entrada: mezcla L+R y buffer (U1A) ----------------
 RINL INL MIX {mc(10k,tolr)}

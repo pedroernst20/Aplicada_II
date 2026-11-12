@@ -1,16 +1,17 @@
 * Ecualizador de 3 bandas (EA2-TD2) - detectores hacia el Blue Pill. Se incluye despues de eq_audio.inc.
-* Salidas: ADC_T (PA0), ADC_B (PA1), ADC_M (PA2) y EXTI (PB0). Usa los nodos VBO, VMO, VTO, VEQ, VCC, VEE y V3V3.
+* Salidas: ADC_B (PA0), ADC_M (PA1), ADC_T (PA2) y EXTI (PB12). Usa los nodos VBO, VMO, VTO, VEQ, VCC, VEE,
+* V3V3 (J6.18) y V3V3A (J5.1): son el mismo 3,3 V del Blue Pill, separados porque en la placa salen de pines distintos.
 
 * ---------------- Detectores de pico por banda -> ADC (U3B, U3C, U3D) ----------------
 * Detector de pico de precision con ganancia 1 + 33k/68k = 1,49; descarga por el divisor (101k * 470n = 47 ms)
-* Al ADC: 10k en serie, Schottky BAT41 a 3,3 V y 10 nF
+* Al ADC: 10k en serie, Schottky 1N5711 a 3,3 V y 10 nF
 XU3B VBO FBB VCC VEE OB TL08X_SINGLE
 DPB OB CB 1N4148
 CPB CB 0 470n
 RPB1 CB FBB 33k
 RPB2 FBB 0 68k
 RADB CB ADC_B 10k
-XDCB ADC_B V3V3 BAT41
+XDCB ADC_B V3V3A 1N5711
 CADB ADC_B 0 10n
 
 XU3C VMO FBM VCC VEE OM TL08X_SINGLE
@@ -19,7 +20,7 @@ CPM CM 0 470n
 RPM1 CM FBM 33k
 RPM2 FBM 0 68k
 RADM CM ADC_M 10k
-XDCM ADC_M V3V3 BAT41
+XDCM ADC_M V3V3A 1N5711
 CADM ADC_M 0 10n
 
 XU3D VTO FBT VCC VEE OT TL08X_SINGLE
@@ -28,7 +29,7 @@ CPT CT 0 470n
 RPT1 CT FBT 33k
 RPT2 FBT 0 68k
 RADT CT ADC_T 10k
-XDCT ADC_T V3V3 BAT41
+XDCT ADC_T V3V3 1N5711
 CADT ADC_T 0 10n
 
 * ---------------- Detector de recorte (U4 = TL082) ----------------

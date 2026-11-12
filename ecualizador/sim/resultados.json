@@ -53,16 +53,16 @@
     "centro": {
       "100 Hz": {
         "b": 0.58,
-        "m": 0.07,
-        "t": 0.0
+        "m": 0.08,
+        "t": 0.03
       },
       "1 kHz": {
         "b": 0.05,
-        "m": 0.6,
+        "m": 0.61,
         "t": 0.05
       },
       "8 kHz": {
-        "b": 0.0,
+        "b": 0.04,
         "m": 0.07,
         "t": 0.53
       },
@@ -70,68 +70,68 @@
       "corriente_schottky_max_mA": 0.0,
       "veq_max_V": 1.61,
       "banda_max_V": 0.48,
-      "descarga_tau_ms": 48.9
+      "descarga_tau_ms": 54.5
     },
     "graves_max_medios_min": {
       "100 Hz": {
         "b": 3.18,
-        "m": 0.01,
-        "t": 0.0
+        "m": 0.03,
+        "t": 0.03
       },
       "1 kHz": {
         "b": 0.28,
-        "m": 0.1,
+        "m": 0.11,
         "t": 0.05
       },
       "8 kHz": {
-        "b": 0.0,
-        "m": 0.0,
+        "b": 0.04,
+        "m": 0.04,
         "t": 0.53
       },
       "adc_max_V": 3.47,
       "corriente_schottky_max_mA": 0.01,
       "veq_max_V": 5.26,
       "banda_max_V": 2.38,
-      "descarga_tau_ms": 48.8
+      "descarga_tau_ms": 55.2
     },
     "sobrecarga_1V5_graves_max": {
       "100 Hz": {
-        "b": 3.6,
-        "m": 0.21,
-        "t": 0.0
+        "b": 3.66,
+        "m": 0.22,
+        "t": 0.03
       },
       "1 kHz": {
         "b": 0.85,
-        "m": 1.81,
+        "m": 1.82,
         "t": 0.17
       },
       "8 kHz": {
-        "b": 0.01,
+        "b": 0.04,
         "m": 0.27,
         "t": 1.69
       },
-      "adc_max_V": 3.65,
-      "corriente_schottky_max_mA": 0.7,
+      "adc_max_V": 3.71,
+      "corriente_schottky_max_mA": 0.69,
       "veq_max_V": 13.46,
       "banda_max_V": 7.15,
-      "descarga_tau_ms": 48.7
+      "descarga_tau_ms": 50.2
     }
   },
   "recorte": {
     "ref_sin_recorte_V": 1.126,
     "ref_con_recorte_V": 0.971,
-    "retardo_exti_us": 2.4,
+    "retardo_exti_us": 5.4,
     "exti_bajo_V": 0.009,
     "exti_alto_V": 3.3,
     "led_mA": 7.3,
-    "sostiene_despues_del_recorte_ms": 54.9,
-    "rafaga_5ms_dura_ms": 67.0
+    "sostiene_despues_del_recorte_ms": 53.5,
+    "rafaga_5ms_dura_ms": 67.4
   },
   "histeresis": {
-    "dispara_VEQ_pico_V": 1.134,
+    "dispara_VEQ_pico_V": 1.128,
     "suelta_VEQ_pico_V": 0.972,
-    "dispara_parlante_V": 5.63,
-    "dispara_potencia_W": 1.98,
+    "dispara_parlante_V": 5.6,
+    "dispara_potencia_W": 1.96,
     "suelta_potencia_W": 1.46
   }
 }

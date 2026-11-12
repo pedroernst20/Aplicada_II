@@ -3,7 +3,7 @@
 	(generator "pcbnew")
 	(generator_version "10.0")
 	(layer "F.Cu")
-	(descr "Jack 3,5 mm estereo para impreso, 5 patas con corte (PJ-307 / JK-3525 / DI3525 de Alfa y Dicomse). Plano: JW PJ-307-5. VERIFICAR con la pieza real antes de fresar.")
+	(descr "Jack 3,5 mm estereo para impreso, 5 patas con corte (PJ-307 / JK-3525 / DI3525 de Alfa y Dicomse). Plano: JW PJ-307-5.")
 	(tags "jack audio 3.5mm stereo PJ-307 JK-3525")
 	(property "Reference" ""
 		(at 5 -7.6 0)

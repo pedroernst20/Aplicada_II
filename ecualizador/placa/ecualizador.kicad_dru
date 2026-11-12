@@ -8,8 +8,11 @@
   (constraint clearance (min 0.6mm)))
 
 (rule "Alimentacion"
-  (condition "A.hasNetclass('Alimentacion')")
+  (condition "A.NetName == '+15V' || A.NetName == '-15V'")
   (constraint track_width (min 1.2mm) (opt 1.5mm)))
+
+(rule "Alivios termicos"
+  (constraint min_resolved_spokes 1))
 
 (rule "Borde"
   (constraint edge_clearance (min 0.5mm)))

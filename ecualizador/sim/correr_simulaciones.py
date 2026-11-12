@@ -233,7 +233,7 @@ def tran_bandas():
         res[nombre] = d
         if nombre != "sobrecarga_1V5_graves_max":
             fig, ax = plt.subplots(figsize=(8, 3.6))
-            for s, col, lab in (("B", "tab:red", "ADC graves (PA1)"), ("M", "tab:green", "ADC medios (PA2)"), ("T", "tab:blue", "ADC agudos (PA0)")):
+            for s, col, lab in (("B", "tab:red", "ADC graves (PA0)"), ("M", "tab:green", "ADC medios (PA1)"), ("T", "tab:blue", "ADC agudos (PA2)")):
                 ax.plot(t, c[f"V(ADC_{s})"], color=col, lw=1.3, label=lab)
             for x in (0.25, 0.5, 0.75):
                 ax.axvline(x, color="gray", lw=0.6, ls=":")
@@ -282,7 +282,7 @@ def tran_recorte():
     axs[0].set_ylabel("[V]")
     axs[0].legend(fontsize=8, loc="lower right", ncol=3)
     axs[1].plot(t, exti, color="tab:blue", lw=1.3)
-    axs[1].set_ylabel("EXTI (PB0) [V]")
+    axs[1].set_ylabel("EXTI (PB12) [V]")
     axs[2].plot(t, 1e3 * np.abs(c["I(DLED)"]), color="tab:red", lw=1.3)
     axs[2].set_ylabel("LED [mA]")
     axs[2].set_xlabel("Tiempo [s]")

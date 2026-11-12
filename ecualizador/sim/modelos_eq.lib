@@ -1,62 +1,16 @@
 * Modelos copiados de las bibliotecas estandar de LTspice 24 (lib/cmp/standard.dio y standard.bjt).
 * Se copian aca para que los netlists corran solos (un .cir no carga esas bibliotecas).
-* BAT41 (Schottky de 100 V en DO-35, el que se consigue en lugar del BAT46): modelo de Vishay, www.vishay.com/docs/85250/bat41.txt
+* 1N5711 (Schottky de 70 V en DO-35, en lugar del BAT46/BAT41): modelo de Diodes Inc, al final del archivo
 * (subcircuito: 1 = anodo, 2 = catodo).
 .model 1N4148 D(Is=2.52n Rs=.568 N=1.752 Cjo=4p M=.4 tt=20n Iave=200m Vpk=75 mfg=OnSemi type=silicon)
 .model QTLP690C D(Is=1e-22 Rs=6 N=1.5 Cjo=50p Xti=100 Iave=160m Vpk=5 mfg=Fairchild type=LED)
 .model BC547B NPN(IS=2.39E-14 NF=1.008 ISE=3.545E-15 NE=1.541 BF=294.3 IKF=0.1357 VAF=63.2 NR=1.004 ISC=6.272E-14 NC=1.243 BR=7.946 IKR=0.1144 VAR=25.9 RB=1 IRB=1.00E-06 RBM=1 RE=0.4683 RC=0.85 XTB=0 EG=1.11 XTI=3 CJE=1.358E-11 VJE=0.65 MJE=0.3279 TF=4.391E-10 XTF=120 VTF=2.643 ITF=0.7495 PTF=0 CJC=3.728E-12 VJC=0.3997 MJC=0.2955 XCJC=0.6193 TR=1.00E-32 CJS=0 VJS=0.75 MJS=0.333 FC=0.9579 Vceo=45 Icrating=100m mfg=NXP)
 
-********************************
-* Copyright:                   *
-* Vishay Intertechnology, Inc. *
-********************************
-*  Model for Vishay Schottky diode
-*  BAT41
-*  model is valid for 25 C to 125 C
-*
-*  VISHAY Semiconductor GmbH
-*  Hartmut Harmel, 10 July 2007
-*
-.SUBCKT BAT41 1 2
-.MODEL BAT41SD D (
-+ N=1.0
-+ IS=11E-9
-+ RS=90
-+ trs1=0.014
-+ IKF= 0.95
-+ CJO=2.0p
-+ VJ=0.805
-+ M=.36
-+ FC=0.5
-+ TT=2E-9
-+ BV=105
-+ ISR=2.5e-10
-+ NR=1.15
-+ IBV=10
-+ KF=0
-+ AF=1
-+ EG=0.66
-+ XTI=2
-+ TBV1=0.0006)
-.model BAT41AD D (
-+ N=1.80
-+ IS=1.89E-9
-+ RS=0.324
-+ trs1=-0.0002
-+ IKF= 0.097
-+ CJO=1.4p
-+ VJ=0.5
-+ M=.34
-+ FC=0.5
-+ TT=6E-8
-+ BV=105
-+ TBV1=0.0006
-+ ISR=6.4e-10
-+ NR=1200
-+ IBV=0.001
-+ KF=0
-+ AF=1
-+ EG=1.15)
-D1 1 2 BAT41SD
-D3 1 2 BAT41AD
+* 1N5711 (Schottky de 70 V en DO-35, reemplaza al BAT41 que no se consigue en Cordoba): modelo de Diodes Inc
+* para el 1N5711WS (mismo chip en SOD-323), www.diodes.com/spice/download/413/1N5711WS.spice.txt
+*SRC=1N5711WS;DI_1N5711WS;Diodes;Si;  70.0V  15.0mA  1.00ns   Diodes Inc.
+.MODEL DI_1N5711WS D  ( IS=315n RS=2.80 BV=70.0 IBV=10.0u
++ CJO=2.00p  M=0.333 N=2.03 TT=1.44n )
+.SUBCKT 1N5711 1 2
+D1 1 2 DI_1N5711WS
 .ENDS

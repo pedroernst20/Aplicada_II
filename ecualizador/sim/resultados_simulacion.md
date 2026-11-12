@@ -4,7 +4,7 @@
 
 **Archivos:** el circuito está en `eq_audio.inc` (de la entrada a `EQOUT`) y `eq_detectores.inc` (hacia el Blue Pill); cada `.cir` es una simulación. `python correr_simulaciones.py` corre todo en LTspice 24 (unos 7 min), escribe `resultados.json` y las figuras de `figuras/`.
 
-**Modelos:** TL084/TL082 de TI (`tl08x.lib`, el mismo del TP4). Contra la hoja de datos: GBW = 282,8 µS / (2π · 15 pF) = 3,0 MHz y SR = 195 µA / 15 pF = 13 V/µs, iguales a los típicos (3 MHz y 13 V/µs). 1N4148, BC547B y el LED rojo QTLP690C salen de las bibliotecas estándar de LTspice; el BAT41 es el modelo de Vishay (`bat41.txt`). Todos están en `modelos_eq.lib`.
+**Modelos:** TL084/TL082 de TI (`tl08x.lib`, el mismo del TP4). Contra la hoja de datos: GBW = 282,8 µS / (2π · 15 pF) = 3,0 MHz y SR = 195 µA / 15 pF = 13 V/µs, iguales a los típicos (3 MHz y 13 V/µs). 1N4148, BC547B y el LED rojo QTLP690C salen de las bibliotecas estándar de LTspice; el 1N5711 es el modelo de Diodes Inc para el 1N5711WS (mismo chip); contra la hoja de datos del 1N5711 da 0,43 V a 1 mA (máximo 0,41 V) y 0,61 V a 15 mA (máximo 1 V), o sea que cae un poco más que el diodo real y el resultado del ADC queda del lado seguro. Todos están en `modelos_eq.lib`.
 
 **Condiciones:** ±15 V; entrada de 0,5 V pico en L y R (el nivel del anteproyecto); carga = entrada del TP4 (C207 470 nF + R214 100 kΩ).
 
@@ -32,7 +32,7 @@
 | Sumador | Inversor | 3 × 10k, Rf = 22k | ×2,2. Los medios llegan invertidos dos veces (MFB y realce/corte) y los graves y agudos una: queda la polaridad relativa que hace plana la suma |
 | Salida al TP4 | 100 Ω en serie | — | Aísla el operacional de la capacidad del cable |
 | Detector de banda (×3) | Detector de pico de precisión con ganancia | 1N4148, 470 nF, 33k + 68k | Ganancia 1 + 33k/68k = 1,49; descarga 101k · 470 nF = 47 ms |
-| Protección del ADC (×3) | 10k en serie, Schottky a 3,3 V, 10 nF a masa | BAT41 (el BAT46 no se consiguió) | El detector nunca da tensión negativa, así que alcanza un solo diodo |
+| Protección del ADC (×3) | 10k en serie, Schottky a 3,3 V, 10 nF a masa | 1N5711 (el BAT46 y el BAT41 no se consiguieron) | El detector nunca da tensión negativa, así que alcanza un solo diodo |
 | Detector de recorte | Detector de pico de VEQ + comparador con histéresis | 1N4148, 220 nF // 1M; umbral 82k / 6k2 desde +15 V, 1M de realimentación | Umbral: 5,66 V pico en el parlante (2 W en 8 Ω) / 4,97 (ganancia del TP4) = 1,14 V pico |
 | Salida del recorte | Comparador → 1N4148 → 22k → BC547B (47k base-emisor), 10k a 3,3 V; LED rojo con 1k5 y 1N4148 hacia la salida del comparador | — | Sin recorte el BC547 conduce y EXTI queda en 0 V. Con recorte la salida del comparador baja a −13 V: EXTI sube a 3,3 V y el LED prende |
 
@@ -88,7 +88,7 @@ El anteproyecto pide al menos ±10 dB por banda: se cumple en el centro de cada 
 
 Tono de 100 Hz, 1 kHz y 8 kHz (250 ms cada uno) y silencio. Tensión media al ADC en los últimos 25 ms de cada tono:
 
-| Caso | Tono | Graves (PA1) | Medios (PA2) | Agudos (PA0) |
+| Caso | Tono | Graves (PA0) | Medios (PA1) | Agudos (PA2) |
 |---|---|---|---|---|
 | 0,5 V pico, potes al medio | 100 Hz | **0,58 V** | 0,08 V | 0,02 V |
 | | 1 kHz | 0,05 V | **0,60 V** | 0,05 V |
@@ -104,7 +104,7 @@ Tono de 100 Hz, 1 kHz y 8 kHz (250 ms cada uno) y silencio. Tensión media al AD
 - Las barras siguen a los potes: con los graves al máximo, la barra de graves sube de 0,58 V a 3,17 V.
 - Descarga: la tensión cae al 37 % en 49 ms (diseño: 47 ms; se suman los 10k y los 10 nF del ADC).
 - Con 0,5 V pico y los potes al medio la barra queda en unos 0,6 V: el fondo de escala se usa recién con realce. Con 12 bits son unas 740 cuentas, resolución de sobra para barras en dB.
-- **Sobrecarga** (1,5 V pico con graves al máximo): el detector querría unos 11 V, pero el pin no pasa de **3,65 V** y por el Schottky circulan **0,70 mA**. El BAT41 cae un poco más que el BAT46 (con el BAT46 eran 3,53 V), así que el pin pasa apenas los 3,6 V (3,3 + 0,3 V); la hoja del STM32 lo admite mientras la corriente inyectada quede limitada, y los 10k la dejan en 0,70 mA contra 5 mA permitidos por pin.
+- **Sobrecarga** (1,5 V pico con graves al máximo): el detector querría unos 11 V, pero el pin no pasa de **3,71 V** y por el Schottky circulan **0,69 mA**. El 1N5711 cae más que el BAT46 (3,53 V) y que el BAT41 (3,65 V), así que el pin pasa unos 0,1 V los 3,6 V (3,3 + 0,3 V); la hoja del STM32 lo admite mientras la corriente inyectada quede limitada, y los 10k la dejan en 0,69 mA contra 5 mA permitidos por pin. El modelo es pesimista: con la caída máxima de la hoja (0,41 V a 1 mA) el pin quedaría en unos 3,68 V.
 - En el peor caso de uso normal (0,5 V pico, graves al máximo) las salidas de banda llegan a 2,4 V pico y VEQ a 5,3 V pico: ningún operacional satura.
 
 ### Detector de recorte (`eq_tran_recorte.cir`, `eq_tran_histeresis.cir`)
@@ -144,4 +144,4 @@ Correspondencia de referencias (LTspice → KiCad): RINL/RINR → R1/R2, CIN →
 - **Alimentación:** ±15 V de fuente de laboratorio por J1 (1 masa, 2 +15 V) y J2 (1 masa, 2 −15 V), igual que P_POW y N_POW del TP4, o por los pads para cocodrilo TP12–TP14. 1N4007 en paralelo y 47 µF por riel.
 - **Al TP4:** J4, KF2510 de 3 pines con el mismo orden que J108 (1 masa, 2 señal, 3 masa).
 - **Entrada:** jack de 3,5 mm (J3) y pads para cocodrilo del generador (TP1 señal, TP2 masa).
-- **Blue Pill:** alimentado por su USB. ADC en PA0 (agudos), PA1 (graves) y PA2 (medios), en ese orden para que las tres líneas entren al zócalo sin cruzarse; recorte en PB0 (EXTI0, flanco ascendente); pulsador de modo en PB1 (EXTI1). OLED por I2C1 (PB6 SCL, PB7 SDA) en J7; UART1 (PA9 TX, PA10 RX) en J8 para un adaptador USB-TTL. En el anteproyecto el pulsador de PB1 figura en `EXTI0_IRQHandler`, pero PB1 va por EXTI1: avisarle a TD2.
+- **Blue Pill:** alimentado por su USB. ADC en PA0 (graves), PA1 (medios) y PA2 (agudos). Recorte en PB12 (EXTI12, flanco ascendente) y pulsador de modo en PB5 (EXTI5): los dos salen por la fila de J5 para que en la placa no se crucen con el ADC. OLED por I2C1 (PB6 SCL, PB7 SDA) en J7, alimentado desde J5.1 (+3.3VA, el mismo 3,3 V que J6.18). UART1 (PA9 TX, PA10 RX) en J8 para un adaptador USB-TTL. Avisarle a TD2 de estos pines.
