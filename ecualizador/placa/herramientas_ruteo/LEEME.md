@@ -13,6 +13,7 @@ Los scripts de KiCad se corren con `C:\Users\valen\AppData\Local\Programs\KiCad\
 | `chaflan.py entrada salida [tope_mm]` | Pasa a 45° los codos y las uniones en T a 90°. |
 | `gotas.py placa.kicad_pcb` | Activa las gotas en pads y vías; el DRC con `--refill-zones` las genera. |
 | `cuenta_df.py placa.kicad_pcb` | Cuenta vías y pads que llevan soldadura arriba. |
+| `espejar_gerber.py entrada salida eje_mm` | Espeja un Gerber de cobre de izquierda a derecha (python común). El B.Cu del zip para la CNC sale con `python herramientas_ruteo/espejar_gerber.py Gerbers/ecualizador-B_Cu.gbl Gerbers/ecualizador-B_Cu_ESPEJADO.gbl 129` (129 mm es el centro de la placa en coordenadas del Gerber). |
 | `mapa_soldadura.py` | Rehace `imagenes/doble_faz_como_se_suelda.png` y `doble_faz_montaje.md` (dos pasos, ver el encabezado). |
 
 Regla de la doble faz sin metalizar: las pistas de arriba solo llegan a pads que se pueden soldar de ese lado (resistencias, diodos, cerámicos de disco, TO-92, puntos de prueba). Zócalos, tiras de pines, potes, jack, pulsador, LED, electrolíticos, capacitores de caja y pads de cocodrilo van solo abajo. El plano de masa va solo abajo.

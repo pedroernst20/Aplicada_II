@@ -5,17 +5,20 @@ Medidas: 178 x 105 mm (contorno en ecualizador-Edge_Cuts.gm1, cortar por fuera d
 
 Archivos
   ecualizador-F_Cu.gtl      cobre de arriba (lado de los componentes), pocas pistas
-  ecualizador-B_Cu.gbl      cobre de abajo
+  ecualizador-B_Cu_ESPEJADO.gbl  cobre de abajo, YA ESPEJADO (visto desde abajo)
   ecualizador-Edge_Cuts.gm1 contorno
   ecualizador.drl           agujeros (Excellon, mm)
   ecualizador-drl_map.pdf   mapa de agujeros
-  ecualizador-job.gbrjob    archivo de trabajo de KiCad
 
 Fresado
   - Separacion minima entre cobres: 0,6 mm. La fresa no puede pasar de 0,5 mm.
-  - Los dos Gerbers de cobre estan VISTOS DESDE ARRIBA (como los saca KiCad).
-    Para fresar la cara de abajo hay que espejarla en el CAM.
-  - Para alinear al dar vuelta la placa: los 4 agujeros de 3,2 mm de las esquinas.
+  - El cobre de abajo ya viene espejado: NO espejarlo de nuevo en el CAM.
+    Se espejo de izquierda a derecha sobre el eje vertical del centro de la placa
+    (a 89 mm del borde izquierdo), asi que el contorno queda en el mismo lugar.
+  - El cobre de arriba, el contorno y los agujeros estan vistos desde arriba.
+  - Para alinear al dar vuelta la placa (de izquierda a derecha): los 2 agujeros
+    de 3,2 mm de abajo (a 4 mm de cada costado y a 3,5 mm del borde de abajo),
+    que son simetricos respecto de ese eje. Los otros 2 de 3,2 mm no lo son.
 
 Agujeros (344 en total)
   0,8 mm  x 206
@@ -25,4 +28,4 @@ Agujeros (344 en total)
   1,4 mm  x 5
   1,8 mm  x 5
   2,2 mm  x 9
-  3,2 mm  x 4   (fijacion y alineacion)
+  3,2 mm  x 4   (fijacion; los 2 de abajo sirven para alinear)
