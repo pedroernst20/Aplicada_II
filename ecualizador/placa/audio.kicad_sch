@@ -4675,7 +4675,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_THT:C_Rect_L13.0mm_W6.0mm_P10.00mm_FKS3_FKP3_MKS4"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W5.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2"
 			(at 57.15 49.53 90)
 			(hide yes)
 			(show_name no)
@@ -7907,7 +7907,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Potentiometer_THT:Potentiometer_Piher_PC-16_Single_Vertical"
+		(property "Footprint" "Ecualizador:Pote_16mm_Lengueta_Vertical"
 			(at 271.78 35.56 90)
 			(hide yes)
 			(show_name no)
@@ -8419,7 +8419,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Potentiometer_THT:Potentiometer_Piher_PC-16_Single_Vertical"
+		(property "Footprint" "Ecualizador:Pote_16mm_Lengueta_Vertical"
 			(at 271.78 86.36 90)
 			(hide yes)
 			(show_name no)
@@ -8854,7 +8854,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Potentiometer_THT:Potentiometer_Piher_PC-16_Single_Vertical"
+		(property "Footprint" "Ecualizador:Pote_16mm_Lengueta_Vertical"
 			(at 271.78 137.16 90)
 			(hide yes)
 			(show_name no)
