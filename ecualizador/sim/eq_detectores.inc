@@ -1,5 +1,5 @@
 * Ecualizador de 3 bandas (EA2-TD2) - detectores hacia el Blue Pill. Se incluye despues de eq_audio.inc.
-* Salidas: ADC_B, ADC_M, ADC_T (PA0..PA2) y EXTI (PB0). Usa los nodos VBO, VMO, VTO, VEQ, VCC, VEE y V3V3.
+* Salidas: ADC_T (PA0), ADC_B (PA1), ADC_M (PA2) y EXTI (PB0). Usa los nodos VBO, VMO, VTO, VEQ, VCC, VEE y V3V3.
 
 * ---------------- Detectores de pico por banda -> ADC (U3B, U3C, U3D) ----------------
 * Detector de pico de precision con ganancia 1 + 33k/68k = 1,49; descarga por el divisor (101k * 470n = 47 ms)

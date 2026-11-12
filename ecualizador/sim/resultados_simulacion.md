@@ -88,7 +88,7 @@ El anteproyecto pide al menos ±10 dB por banda: se cumple en el centro de cada 
 
 Tono de 100 Hz, 1 kHz y 8 kHz (250 ms cada uno) y silencio. Tensión media al ADC en los últimos 25 ms de cada tono:
 
-| Caso | Tono | Graves (PA0) | Medios (PA1) | Agudos (PA2) |
+| Caso | Tono | Graves (PA1) | Medios (PA2) | Agudos (PA0) |
 |---|---|---|---|---|
 | 0,5 V pico, potes al medio | 100 Hz | **0,58 V** | 0,08 V | 0,02 V |
 | | 1 kHz | 0,05 V | **0,60 V** | 0,05 V |
@@ -144,4 +144,4 @@ Correspondencia de referencias (LTspice → KiCad): RINL/RINR → R1/R2, CIN →
 - **Alimentación:** ±15 V de fuente de laboratorio por J1 (1 masa, 2 +15 V) y J2 (1 masa, 2 −15 V), igual que P_POW y N_POW del TP4, o por los pads para cocodrilo TP12–TP14. 1N4007 en paralelo y 47 µF por riel.
 - **Al TP4:** J4, KF2510 de 3 pines con el mismo orden que J108 (1 masa, 2 señal, 3 masa).
 - **Entrada:** jack de 3,5 mm (J3) y pads para cocodrilo del generador (TP1 señal, TP2 masa).
-- **Blue Pill:** alimentado por su USB. ADC en PA0, PA1 y PA2; recorte en PB0 (EXTI0, flanco ascendente); pulsador de modo en PB1 (EXTI1). OLED por I2C1 (PB6 SCL, PB7 SDA) en J7; UART1 (PA9 TX, PA10 RX) en J8 para un adaptador USB-TTL. En el anteproyecto el pulsador de PB1 figura en `EXTI0_IRQHandler`, pero PB1 va por EXTI1: avisarle a TD2.
+- **Blue Pill:** alimentado por su USB. ADC en PA0 (agudos), PA1 (graves) y PA2 (medios), en ese orden para que las tres líneas entren al zócalo sin cruzarse; recorte en PB0 (EXTI0, flanco ascendente); pulsador de modo en PB1 (EXTI1). OLED por I2C1 (PB6 SCL, PB7 SDA) en J7; UART1 (PA9 TX, PA10 RX) en J8 para un adaptador USB-TTL. En el anteproyecto el pulsador de PB1 figura en `EXTI0_IRQHandler`, pero PB1 va por EXTI1: avisarle a TD2.

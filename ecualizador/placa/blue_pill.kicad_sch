@@ -2896,7 +2896,7 @@
 		)
 		(uuid "e205254b-0a31-4491-a8fd-6eee4bb251da")
 	)
-	(global_label "ADC_B"
+	(global_label "ADC_T"
 		(shape input)
 		(at 160.02 68.58 180)
 		(fields_autoplaced yes)
@@ -2920,7 +2920,7 @@
 			)
 		)
 	)
-	(global_label "ADC_M"
+	(global_label "ADC_B"
 		(shape input)
 		(at 160.02 71.12 180)
 		(fields_autoplaced yes)
@@ -2944,7 +2944,7 @@
 			)
 		)
 	)
-	(global_label "ADC_T"
+	(global_label "ADC_M"
 		(shape input)
 		(at 160.02 73.66 180)
 		(fields_autoplaced yes)
