@@ -4,7 +4,7 @@
 
 **Archivos:** el circuito está en `eq_audio.inc` (de la entrada a `EQOUT`) y `eq_detectores.inc` (hacia el Blue Pill); cada `.cir` es una simulación. `python correr_simulaciones.py` corre todo en LTspice 24 (unos 7 min), escribe `resultados.json` y las figuras de `figuras/`.
 
-**Modelos:** TL084/TL082 de TI (`tl08x.lib`, el mismo del TP4). Contra la hoja de datos: GBW = 282,8 µS / (2π · 15 pF) = 3,0 MHz y SR = 195 µA / 15 pF = 13 V/µs, iguales a los típicos (3 MHz y 13 V/µs). 1N4148, BAT46WJ, BC547B y el LED rojo QTLP690C salen de las bibliotecas estándar de LTspice (`modelos_eq.lib`).
+**Modelos:** TL084/TL082 de TI (`tl08x.lib`, el mismo del TP4). Contra la hoja de datos: GBW = 282,8 µS / (2π · 15 pF) = 3,0 MHz y SR = 195 µA / 15 pF = 13 V/µs, iguales a los típicos (3 MHz y 13 V/µs). 1N4148, BC547B y el LED rojo QTLP690C salen de las bibliotecas estándar de LTspice; el BAT41 es el modelo de Vishay (`bat41.txt`). Todos están en `modelos_eq.lib`.
 
 **Condiciones:** ±15 V; entrada de 0,5 V pico en L y R (el nivel del anteproyecto); carga = entrada del TP4 (C207 470 nF + R214 100 kΩ).
 
@@ -32,7 +32,7 @@
 | Sumador | Inversor | 3 × 10k, Rf = 22k | ×2,2. Los medios llegan invertidos dos veces (MFB y realce/corte) y los graves y agudos una: queda la polaridad relativa que hace plana la suma |
 | Salida al TP4 | 100 Ω en serie | — | Aísla el operacional de la capacidad del cable |
 | Detector de banda (×3) | Detector de pico de precisión con ganancia | 1N4148, 470 nF, 33k + 68k | Ganancia 1 + 33k/68k = 1,49; descarga 101k · 470 nF = 47 ms |
-| Protección del ADC (×3) | 10k en serie, Schottky a 3,3 V, 10 nF a masa | BAT46 | El detector nunca da tensión negativa, así que alcanza un solo diodo |
+| Protección del ADC (×3) | 10k en serie, Schottky a 3,3 V, 10 nF a masa | BAT41 (el BAT46 no se consiguió) | El detector nunca da tensión negativa, así que alcanza un solo diodo |
 | Detector de recorte | Detector de pico de VEQ + comparador con histéresis | 1N4148, 220 nF // 1M; umbral 82k / 6k2 desde +15 V, 1M de realimentación | Umbral: 5,66 V pico en el parlante (2 W en 8 Ω) / 4,97 (ganancia del TP4) = 1,14 V pico |
 | Salida del recorte | Comparador → 1N4148 → 22k → BC547B (47k base-emisor), 10k a 3,3 V; LED rojo con 1k5 y 1N4148 hacia la salida del comparador | — | Sin recorte el BC547 conduce y EXTI queda en 0 V. Con recorte la salida del comparador baja a −13 V: EXTI sube a 3,3 V y el LED prende |
 
@@ -102,9 +102,9 @@ Tono de 100 Hz, 1 kHz y 8 kHz (250 ms cada uno) y silencio. Tensión media al AD
 ![Detectores con graves al máximo y medios al mínimo](figuras/bandas_graves_max_medios_min.png)
 
 - Las barras siguen a los potes: con los graves al máximo, la barra de graves sube de 0,58 V a 3,17 V.
-- Descarga: la tensión cae al 37 % en 52 ms (diseño: 47 ms; se suman los 10k y los 10 nF del ADC).
+- Descarga: la tensión cae al 37 % en 49 ms (diseño: 47 ms; se suman los 10k y los 10 nF del ADC).
 - Con 0,5 V pico y los potes al medio la barra queda en unos 0,6 V: el fondo de escala se usa recién con realce. Con 12 bits son unas 740 cuentas, resolución de sobra para barras en dB.
-- **Sobrecarga** (1,5 V pico con graves al máximo): el detector querría unos 11 V, pero el pin no pasa de **3,53 V** (el máximo del STM32 es 3,3 + 0,3 V) y por el Schottky circulan **0,71 mA** (la hoja admite 5 mA de inyección por pin).
+- **Sobrecarga** (1,5 V pico con graves al máximo): el detector querría unos 11 V, pero el pin no pasa de **3,65 V** y por el Schottky circulan **0,70 mA**. El BAT41 cae un poco más que el BAT46 (con el BAT46 eran 3,53 V), así que el pin pasa apenas los 3,6 V (3,3 + 0,3 V); la hoja del STM32 lo admite mientras la corriente inyectada quede limitada, y los 10k la dejan en 0,70 mA contra 5 mA permitidos por pin.
 - En el peor caso de uso normal (0,5 V pico, graves al máximo) las salidas de banda llegan a 2,4 V pico y VEQ a 5,3 V pico: ningún operacional satura.
 
 ### Detector de recorte (`eq_tran_recorte.cir`, `eq_tran_histeresis.cir`)

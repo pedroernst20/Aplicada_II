@@ -18,5 +18,5 @@ VR INR INL 0
 * El modelo del TL08x no converge con Gmin stepping: se saltea y LTspice usa source stepping (mismo resultado, 8 veces mas rapido)
 .options gminsteps=0 plotwinsize=0
 .tran 0 1 0 5u
-.save V(INL) V(VEQ) V(VBO) V(VMO) V(VTO) V(ADC_B) V(ADC_M) V(ADC_T) I(DCB) I(DCM) I(DCT)
+.save V(INL) V(VEQ) V(VBO) V(VMO) V(VTO) V(ADC_B) V(ADC_M) V(ADC_T) I(RADB) I(RADM) I(RADT) I(CADB) I(CADM) I(CADT)
 .end

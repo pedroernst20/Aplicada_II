@@ -39,11 +39,11 @@ MAPA = {
     "XU3A": OPA("U3", 3, 2, 1), "ROUT": ("R23", [1, 2], False),
     # detectores de banda
     "XU3B": OPA("U4", 5, 6, 7), "DPB": ("D3", [2, 1], True), "CPB": ("C18", [1, 2], False), "RPB1": ("R24", [1, 2], False),
-    "RPB2": ("R25", [1, 2], False), "RADB": ("R26", [1, 2], False), "DCB": ("D4", [2, 1], True), "CADB": ("C19", [1, 2], False),
+    "RPB2": ("R25", [1, 2], False), "RADB": ("R26", [1, 2], False), "XDCB": ("D4", [2, 1], True), "CADB": ("C19", [1, 2], False),
     "XU3C": OPA("U4", 3, 2, 1), "DPM": ("D5", [2, 1], True), "CPM": ("C20", [1, 2], False), "RPM1": ("R27", [1, 2], False),
-    "RPM2": ("R28", [1, 2], False), "RADM": ("R29", [1, 2], False), "DCM": ("D6", [2, 1], True), "CADM": ("C21", [1, 2], False),
+    "RPM2": ("R28", [1, 2], False), "RADM": ("R29", [1, 2], False), "XDCM": ("D6", [2, 1], True), "CADM": ("C21", [1, 2], False),
     "XU3D": OPA("U4", 10, 9, 8), "DPT": ("D7", [2, 1], True), "CPT": ("C22", [1, 2], False), "RPT1": ("R30", [1, 2], False),
-    "RPT2": ("R31", [1, 2], False), "RADT": ("R32", [1, 2], False), "DCT": ("D8", [2, 1], True), "CADT": ("C23", [1, 2], False),
+    "RPT2": ("R31", [1, 2], False), "RADT": ("R32", [1, 2], False), "XDCT": ("D8", [2, 1], True), "CADT": ("C23", [1, 2], False),
     # recorte
     "XU4A": OPA("U3", 12, 13, 14), "DPC": ("D9", [2, 1], True), "CPC": ("C24", [1, 2], False), "RPC": ("R33", [1, 2], False),
     "XU4B": OPA("U3", 10, 9, 8), "RR1": ("R34", [1, 2], False), "RR2": ("R35", [1, 2], False), "RRH": ("R36", [1, 2], False),
@@ -80,7 +80,7 @@ def elementos_ltspice():
             if nombre in SOLO_SIMULACION:
                 continue
             if nombre[0] == "X":
-                nodos = partes[1:6]
+                nodos = partes[1:-1]   # todo menos el nombre del subcircuito
             elif nombre[0] == "Q":
                 nodos = partes[1:4]
             else:

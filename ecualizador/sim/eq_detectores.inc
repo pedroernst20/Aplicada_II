@@ -3,14 +3,14 @@
 
 * ---------------- Detectores de pico por banda -> ADC (U3B, U3C, U3D) ----------------
 * Detector de pico de precision con ganancia 1 + 33k/68k = 1,49; descarga por el divisor (101k * 470n = 47 ms)
-* Al ADC: 10k en serie, Schottky a 3,3 V y 10 nF
+* Al ADC: 10k en serie, Schottky BAT41 a 3,3 V y 10 nF
 XU3B VBO FBB VCC VEE OB TL08X_SINGLE
 DPB OB CB 1N4148
 CPB CB 0 470n
 RPB1 CB FBB 33k
 RPB2 FBB 0 68k
 RADB CB ADC_B 10k
-DCB ADC_B V3V3 BAT46WJ
+XDCB ADC_B V3V3 BAT41
 CADB ADC_B 0 10n
 
 XU3C VMO FBM VCC VEE OM TL08X_SINGLE
@@ -19,7 +19,7 @@ CPM CM 0 470n
 RPM1 CM FBM 33k
 RPM2 FBM 0 68k
 RADM CM ADC_M 10k
-DCM ADC_M V3V3 BAT46WJ
+XDCM ADC_M V3V3 BAT41
 CADM ADC_M 0 10n
 
 XU3D VTO FBT VCC VEE OT TL08X_SINGLE
@@ -28,7 +28,7 @@ CPT CT 0 470n
 RPT1 CT FBT 33k
 RPT2 FBT 0 68k
 RADT CT ADC_T 10k
-DCT ADC_T V3V3 BAT46WJ
+XDCT ADC_T V3V3 BAT41
 CADT ADC_T 0 10n
 
 * ---------------- Detector de recorte (U4 = TL082) ----------------

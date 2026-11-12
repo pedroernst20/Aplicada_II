@@ -222,7 +222,8 @@ def tran_bandas():
         for tono, (a, b) in tramos.items():
             d[tono] = {s: round(media(t, c[f"V(ADC_{s[0].upper()})"], a, b), 2) for s in ("b", "m", "t")}
         d["adc_max_V"] = round(float(max(c["V(ADC_B)"].max(), c["V(ADC_M)"].max(), c["V(ADC_T)"].max())), 2)
-        d["corriente_schottky_max_mA"] = round(1e3 * float(max(np.abs(c["I(DCB)"]).max(), np.abs(c["I(DCM)"]).max(), np.abs(c["I(DCT)"]).max())), 2)
+        # corriente por cada Schottky = la que llega por los 10k menos la que carga los 10 nF
+        d["corriente_schottky_max_mA"] = round(1e3 * float(max(np.abs(c[f"I(RAD{s})"] - c[f"I(CAD{s})"]).max() for s in "BMT")), 2)
         d["veq_max_V"] = round(float(np.abs(c["V(VEQ)"]).max()), 2)
         d["banda_max_V"] = round(float(max(np.abs(c["V(VBO)"]).max(), np.abs(c["V(VMO)"]).max(), np.abs(c["V(VTO)"]).max())), 2)
         # descarga del agudo despues de cortar el tono (0,75 s): tiempo hasta 37 %
