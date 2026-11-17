@@ -1,0 +1,36 @@
+\begin{tikzpicture}[
+    block/.style={draw=marino, line width=1pt, rectangle, rounded corners=3pt, minimum height=1.25cm, align=center, font=\sffamily\large, fill=tarjeta, text=marino},
+    prot/.style={block, fill=tenue!14, draw=marino},
+    line/.style={line width=1pt, -{Latex[length=3mm]}}
+]
+    \node[font=\Large] (vin) at (-1.2, 3.6) {$V_I$};
+    \node[font=\Large] (vout) at (9.6, 3.6) {$V_O$};
+    \node[block, minimum width=3.2cm] (pass) at (2.4, 3.6) {Elemento serie\\Darlington};
+    \node[block, minimum width=1.1cm, minimum height=0.8cm] (rcl) at (5.5, 3.6) {$R_{CL}$};
+    \draw[line width=1pt] (vin) -- (pass.west);
+    \draw[line width=1pt] (pass.east) -- (rcl.west);
+    \draw[line width=1pt] (rcl.east) -- (vout);
+    \coordinate (J) at (2.4, 1.6);
+    \draw[line] (J) -- (pass.south);
+    \filldraw (J) circle (2.2pt);
+    \node[prot, minimum width=2.0cm] (term) at (-0.5, 1.6) {Corte\\térmico};
+    \draw[line] (term.east) -- (J);
+    \node[prot, minimum width=3.6cm] (lim) at (5.9, 1.6) {Límite de corriente\\y protección SOA};
+    \draw[line] (lim.west) -- (J);
+    \filldraw (4.7, 3.6) circle (2.2pt);
+    \filldraw (6.3, 3.6) circle (2.2pt);
+    \draw[line width=1pt] (4.7, 3.6) -- (4.7, 2.23);
+    \draw[line width=1pt] (6.3, 3.6) -- (6.3, 2.23);
+    \node[block, minimum width=2.8cm] (amp) at (2.4, -0.5) {Amplificador\\de error};
+    \draw[line] (amp.north) -- (J);
+    \node[block, minimum width=2.8cm] (ref) at (2.4, -2.5) {Referencia\\interna};
+    \draw[line] (ref.north) -- (amp.south);
+    \node[block, minimum width=2.2cm] (samp) at (8.4, -0.5) {Muestreo\\$R_1$, $R_2$};
+    \filldraw (8.4, 3.6) circle (2.2pt);
+    \draw[line width=1pt] (8.4, 3.6) -- (samp.north);
+    \draw[line] (samp.west) -- (amp.east);
+    \draw[line width=1pt] (-1.2, -3.8) -- (9.6, -3.8);
+    \draw[line width=1pt] (ref.south) -- (2.4, -3.8);
+    \draw[line width=1pt] (samp.south) -- (8.4, -3.8);
+    \node[font=\sffamily, text=tenue] at (5.6, -4.25) {GND};
+\end{tikzpicture}

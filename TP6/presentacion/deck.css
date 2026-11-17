@@ -1,0 +1,220 @@
+/* ==========================================================================
+   Sistema de diapositivas del grupo (UTN FRC · Electrónica Aplicada II)
+   Lienzo fijo de 1920 x 1080 px. Todas las medidas están en px de ese lienzo.
+   ========================================================================== */
+
+@font-face { font-family: "Space Grotesk"; src: url("assets/fonts/SpaceGrotesk-Variable.ttf") format("truetype"); font-weight: 300 700; }
+@font-face { font-family: "IBM Plex Sans"; src: url("assets/fonts/IBMPlexSans-Regular.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "IBM Plex Sans"; src: url("assets/fonts/IBMPlexSans-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "IBM Plex Sans"; src: url("assets/fonts/IBMPlexSans-Medium.woff2") format("woff2"); font-weight: 500; }
+@font-face { font-family: "IBM Plex Sans"; src: url("assets/fonts/IBMPlexSans-SemiBold.woff2") format("woff2"); font-weight: 600; }
+@font-face { font-family: "IBM Plex Sans"; src: url("assets/fonts/IBMPlexSans-Bold.woff2") format("woff2"); font-weight: 700; }
+@font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.woff2") format("woff2"); font-weight: 500; }
+
+:root {
+  /* Fondos */
+  --marino: #13213a;        /* portada, separadores, tarjetas oscuras */
+  --crema: #f6f4ef;         /* fondo de las diapositivas de contenido */
+  --crema-2: #ece8df;       /* fondo de las diapositivas de respaldo, encabezado de tablas */
+  --tarjeta: #fffdf9;       /* tarjetas claras */
+  --linea: #dcd6ca;         /* bordes y filetes */
+  /* Texto */
+  --titulo: #13213a;
+  --cuerpo: #3d4a5c;
+  --tenue: #5e6675;
+  --tenue-oscuro: #b9c3d3;  /* texto secundario sobre fondo marino */
+  /* Las dos series: SIEMPRE el mismo color para el mismo caso en todo el mazo */
+  --azul: #1f5fbf;
+  --naranja: #d9640f;       /* trazos y marcas */
+  --naranja-texto: #b4520a; /* texto naranja sobre fondo claro */
+  --azul-claro: #6a8dcc;    /* azul sobre fondo marino */
+  --naranja-claro: #f08a3c; /* naranja sobre fondo marino */
+  --verde: #0b6b5d;         /* criterio de la cátedra / tercera categoría */
+  /* Tintes de fondo para notas y píldoras */
+  --tinte-azul: #e3ecfa;
+  --tinte-naranja: #fbe9dc;
+  --tinte-verde: #e3f1ee;
+  --tinte-neutro: #ece8df;
+
+  --display: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  --texto: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: #0b1220; }
+body { font-family: var(--texto); color: var(--cuerpo); -webkit-font-smoothing: antialiased; }
+
+/* ------------------------------------------------------------------ lienzo */
+.slide {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: var(--crema); padding: 104px 120px 0 120px;
+  display: flex; flex-direction: column;
+  font-size: 24px; line-height: 1.45;
+}
+.slide > .cuerpo { flex: 1 1 auto; min-height: 0; margin-top: 44px; margin-bottom: 128px; display: flex; flex-direction: column; }
+.slide.centrado > .cuerpo { justify-content: center; }
+
+.kicker { font-family: var(--mono); font-size: 21px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--tenue); line-height: 1; }
+.slide > h2 { font-family: var(--display); font-weight: 500; font-size: 52px; line-height: 1.12; letter-spacing: -0.012em; color: var(--titulo); margin-top: 18px; }
+
+/* Pie: lo genera deck.js. Izquierda: data-pie del <body>. Derecha: data-expone de la diapositiva. */
+.pie { position: absolute; left: 120px; right: 120px; bottom: 44px; height: 60px; border-top: 1.5px solid var(--linea);
+       display: flex; justify-content: space-between; align-items: flex-end; font-size: 20px; color: var(--tenue); line-height: 1; padding-bottom: 6px; }
+.pie b { font-weight: 500; color: var(--titulo); }
+
+/* ---------------------------------------------------------------- utilidades */
+.fila { display: flex; gap: 40px; }
+.fila > * { min-width: 0; }
+.col { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.crece { flex: 1 1 0; }
+.w40 { flex: 0 0 40%; } .w45 { flex: 0 0 45%; } .w50 { flex: 0 0 50%; } .w55 { flex: 0 0 55%; } .w60 { flex: 0 0 60%; }
+.centro-v { align-items: center; }
+.azul { color: var(--azul); } .naranja { color: var(--naranja-texto); } .verde { color: var(--verde); }
+.tenue { color: var(--tenue); } .chico { font-size: 20px; }
+strong, b { font-weight: 600; color: var(--titulo); }
+.mono { font-family: var(--mono); }
+
+ul.lista { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+ul.lista li { position: relative; padding-left: 26px; }
+ul.lista li::before { content: ""; position: absolute; left: 4px; top: 0.62em; width: 7px; height: 7px; border-radius: 50%; background: var(--cuerpo); }
+
+/* ------------------------------------------------------------------ tarjetas */
+.tarjeta { background: var(--tarjeta); border: 1.5px solid #ebe6db; border-radius: 6px; padding: 30px 32px; }
+.tarjeta h3 { font-family: var(--texto); font-weight: 600; font-size: 25px; color: var(--titulo); line-height: 1.25; }
+.tarjeta h3.azul { color: var(--azul); } .tarjeta h3.naranja { color: var(--naranja-texto); }
+.tarjeta .sub { font-family: var(--mono); font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tenue); margin-top: 8px; }
+.tarjeta p { font-size: 21px; margin-top: 12px; }
+.oscura { background: var(--marino); border-color: var(--marino); color: var(--tenue-oscuro); }
+.oscura strong, .oscura b, .oscura h3 { color: #fff; }
+
+/* Tarjeta de bloque del recorrido (número grande naranja + expositor abajo) */
+.bloque { display: flex; flex-direction: column; min-height: 560px; }
+.bloque .num { font-family: var(--display); font-weight: 500; font-size: 52px; color: var(--naranja); line-height: 1; }
+.bloque .sub { margin-top: 26px; }
+.bloque h3 { margin-top: 18px; }
+.bloque .quien { margin-top: auto; padding-top: 22px; border-top: 1.5px solid var(--linea); font-weight: 600; font-size: 20px; color: var(--titulo); }
+
+/* --------------------------------------------------------------- dato grande */
+.dato { border-left: 4px solid var(--marino); padding: 4px 0 4px 26px; }
+.dato .rotulo { font-size: 22px; color: var(--tenue); }
+.dato .valor { font-family: var(--display); font-weight: 500; font-size: 42px; line-height: 1.2; color: var(--titulo); margin-top: 6px; }
+.dato .nota { font-size: 22px; color: var(--cuerpo); margin-top: 6px; }
+.dato.azul { border-color: var(--azul); } .dato.azul .valor { color: var(--azul); }
+.dato.naranja { border-color: var(--naranja); } .dato.naranja .valor { color: var(--naranja-texto); }
+.datos { display: flex; flex-direction: column; gap: 40px; }
+
+/* Dato dentro de tarjeta (sin barra): rótulo chico + valor */
+.kv .rotulo { font-size: 19px; color: var(--tenue); }
+.kv .valor { font-family: var(--display); font-weight: 500; font-size: 32px; color: var(--titulo); line-height: 1.25; margin-top: 4px; }
+.oscura .kv .rotulo, .oscura .rotulo { color: var(--tenue-oscuro); }
+.oscura .kv .valor, .oscura .valor { color: #fff; }
+.oscura .valor.grande, .valor.grande { font-family: var(--display); font-weight: 600; font-size: 48px; line-height: 1.15; margin-top: 8px; }
+.tarjeta .valor.grande.naranja { color: var(--naranja-texto); } .tarjeta .valor.grande.azul { color: var(--azul); }
+
+/* ---------------------------------------------------------- pasos numerados */
+.paso .sub { margin-top: 0; }
+.paso h3 { margin-top: 12px; font-size: 24px; }
+.paso p { margin-top: 8px; font-size: 22px; line-height: 1.4; }
+
+/* -------------------------------------------------------------------- notas */
+.nota-barra { border-left: 4px solid var(--marino); padding: 2px 0 2px 20px; font-size: 21px; }
+.nota-barra.azul { border-color: var(--azul); color: var(--cuerpo); } .nota-barra.naranja { border-color: var(--naranja); color: var(--cuerpo); }
+.aviso { border-radius: 6px; padding: 20px 24px; font-size: 21px; background: var(--tinte-neutro); }
+.aviso.azul { background: var(--tinte-azul); color: var(--cuerpo); }
+.aviso.naranja { background: var(--tinte-naranja); color: var(--cuerpo); }
+.aviso.verde { background: var(--tinte-verde); color: var(--verde); } .aviso.verde b { color: var(--verde); }
+.aviso.oscuro { background: var(--marino); color: #e8ecf3; } .aviso.oscuro b { color: #fff; }
+.pildora { display: inline-block; border-radius: 999px; padding: 5px 16px; font-size: 18px; font-weight: 600; background: var(--tinte-neutro); color: var(--cuerpo); }
+.pildora.azul { background: var(--tinte-azul); color: #1a51a3; } .pildora.naranja { background: var(--tinte-naranja); color: #9a4407; }
+.pildora.verde { background: var(--tinte-verde); color: var(--verde); }
+
+/* ------------------------------------------------------------------- tablas */
+table.tabla { width: 100%; border-collapse: collapse; font-size: 22px; background: var(--tarjeta); }
+table.tabla th, table.tabla td { border: 1.5px solid #cfc9bc; padding: 10px 16px; text-align: right; font-variant-numeric: tabular-nums; }
+table.tabla th:first-child, table.tabla td:first-child { text-align: left; }
+table.tabla th { background: var(--crema-2); font-weight: 600; color: var(--titulo); }
+table.tabla tbody tr:nth-child(even) td { background: #f1eee7; }
+table.tabla th.azul { color: var(--azul); } table.tabla th.naranja { color: var(--naranja-texto); }
+table.tabla tr.destacada-azul td { background: var(--tinte-azul) !important; }
+table.tabla tr.destacada-naranja td { background: var(--tinte-naranja) !important; }
+table.tabla tr.destacada-verde td { background: var(--tinte-verde) !important; }
+table.tabla.compacta { font-size: 20px; } table.tabla.compacta th, table.tabla.compacta td { padding: 8px 14px; }
+/* Tabla de dos columnas "rótulo → cálculo" (se fija / se calcula / comercial) */
+table.tabla.pasos td { text-align: left; } table.tabla.pasos td:first-child { width: 28%; color: var(--tenue); background: #f1eee7; }
+
+/* ------------------------------------------------------- figuras y fórmulas */
+figure { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 0; }
+figure img, figure svg { max-width: 100%; max-height: 100%; display: block; }
+figure.marco { background: var(--tarjeta); border: 1.5px solid #ebe6db; border-radius: 6px; padding: 30px; }
+figcaption { font-size: 19px; color: var(--tenue); margin-top: 16px; text-align: center; }
+.formula { font-size: 30px; color: var(--titulo); }
+.formula.grande { font-size: 36px; }
+.katex { font-size: 1.08em; }
+.katex-display { margin: 0.4em 0; text-align: left; }
+.katex-display > .katex { text-align: left; }
+
+/* --------------------------------------------------- portada y separadores */
+.slide.oscura-total { background: var(--marino); color: var(--tenue-oscuro); padding-top: 96px; }
+.slide.oscura-total .kicker { color: var(--naranja-claro); }
+.slide.oscura-total .pie { border-color: #2c3a55; color: #8691a4; }
+.slide.oscura-total .pie b { color: #fff; }
+
+.portada .encabezado { display: flex; gap: 44px; align-items: center; }
+.portada .encabezado img { height: 112px; }
+.portada .encabezado .kicker { font-size: 24px; letter-spacing: 0.17em; }
+.portada .encabezado p { font-size: 24px; margin-top: 14px; color: #fff; line-height: 1.2; }
+.portada .encabezado p + p { color: var(--tenue-oscuro); margin-top: 12px; }
+.portada h1 { font-family: var(--display); font-weight: 700; font-size: 100px; line-height: 1.06; letter-spacing: -0.02em; color: #f6f4ef; margin-top: 72px; max-width: 1560px; }
+.portada h1.largo { font-size: 80px; }
+.portada .bajada { font-size: 38px; font-weight: 300; color: var(--tenue-oscuro); margin-top: 36px; }
+.portada .fondo { position: absolute; left: 0; right: 0; bottom: 190px; height: 290px; width: 100%; }
+.portada .autores { position: absolute; left: 120px; right: 120px; bottom: 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.portada .autores div { border-top: 1.5px solid #34425f; padding-top: 26px; }
+.portada .autores b { display: block; font-size: 28px; font-weight: 600; color: #fff; line-height: 1.2; }
+.portada .autores span { display: block; font-family: var(--mono); font-size: 23px; color: var(--tenue-oscuro); margin-top: 10px; }
+
+.separador > .cuerpo { justify-content: center; margin-top: 0; }
+.separador h1 { font-family: var(--display); font-weight: 600; font-size: 84px; line-height: 1.12; letter-spacing: -0.018em; color: #f6f4ef; margin-top: 40px; max-width: 1500px; }
+.separador .claves { display: flex; gap: 56px; margin-top: 64px; }
+.separador .claves div { border-left: 3px solid var(--naranja-claro); padding-left: 22px; }
+.separador .claves span { display: block; font-size: 21px; color: var(--tenue-oscuro); }
+.separador .claves b { display: block; font-size: 25px; font-weight: 600; color: #fff; margin-top: 8px; }
+.cierre h1 { font-family: var(--display); font-weight: 700; font-size: 100px; color: #f6f4ef; margin-top: 76px; line-height: 1; }
+.cierre .pregunta { font-family: var(--display); font-weight: 500; font-size: 56px; color: var(--naranja-claro); margin-top: 22px; }
+
+/* Diapositivas de respaldo (después del cierre): fondo un tono más oscuro */
+.slide.respaldo { background: var(--crema-2); }
+
+/* ------------------------------------------------- pantalla (modo exposición) */
+@media screen {
+  body { overflow: hidden; height: 100vh; }
+  #escenario { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .slide { position: absolute; top: 50%; left: 50%; transform-origin: center center; display: none; }
+  .slide.activa { display: flex; }
+  body.todas { overflow: auto; height: auto; }
+  body.todas #escenario { position: static; display: block; }
+  body.todas .slide { position: relative; top: auto; left: auto; display: flex; transform: none !important; margin: 0; }
+}
+/* ------------------------------------------------------------------ impresión */
+@page { size: 1920px 1080px; margin: 0; }
+@media print {
+  html, body { background: none; }
+  .slide { display: flex !important; position: relative !important; transform: none !important; top: auto !important; left: auto !important;
+           break-after: page; page-break-after: always; break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ---------------------------------------------------- agregados del TP6 */
+table.tabla tr.destacada td { background: #e6e1d5 !important; font-weight: 600; color: var(--titulo); }
+table.tabla td.izq, table.tabla th.izq { text-align: left; }
+.portada img.fondo { object-fit: fill; }
+.tarjeta .kv + .kv { margin-top: 0; }
+.tarjeta .g2.kvs, .tarjeta .g3.kvs { gap: 22px 28px; margin-top: 20px; }
+.topologia figure { height: 300px; margin: 18px 0 10px; }
+.topologia .formula { font-size: 28px; margin-top: 6px; }
+.cascada { display: flex; align-items: center; gap: 0; }

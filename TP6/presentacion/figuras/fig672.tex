@@ -1,0 +1,11 @@
+\begin{circuitikz}[font=\Large]
+  \draw (0,4) node[left]{$V_P$} to[short, o-*] (1.6,4) coordinate (c);
+  \draw (c) -- (2.6,4);
+  \node[npn, rotate=90] (Q) at (3.4,4) {};
+  \draw (2.6,4) -- (Q.C);
+  \coordinate (b) at (1.6,2.1);
+  \draw (b) to[zzDo, l^=$D_Z$, *-] (c);
+  \draw (b) to[R, l_=$R$] (1.6,0) node[ground]{};
+  \draw (b) -| (Q.B);
+  \draw (Q.E) to[short, -o] (5.6,4) node[right]{$V_{i,\mathrm{reg}}$};
+\end{circuitikz}

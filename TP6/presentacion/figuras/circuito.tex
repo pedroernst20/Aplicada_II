@@ -1,0 +1,44 @@
+\begin{circuitikz}[>=latex, font=\large]
+    % primaria
+    \draw (0,0) node[ground]{} to[V] (0,4.4) to[short, -*] (2.8,4.4) coordinate (vp);
+    \node[left, align=right] at (-0.55,2.2) {$V_P$\\\SI{25}{\volt}};
+    % RZ y Zener
+    \draw (vp) to[R] (2.8,2.3) coordinate (b);
+    \node[right, align=left] at (3.15,3.55) {$R_Z$ \color{azul}\SI{680}{\ohm}, \SI{1}{\watt}};
+    \draw (2.8,0) node[ground]{} to[zzDo, -*] (b);
+    \node[right, align=left] at (3.15,1.05) {$D_Z$ \color{azul}1N4741A, \SI{11}{\volt}};
+    % transistor
+    \draw (vp) -- (5.0,4.4);
+    \node[npn, rotate=90] (Q1) at (5.8,4.4) {};
+    \node[above] at (5.8,5.0) {$Q_1$ \color{azul}TIP122};
+    \draw (5.0,4.4) -- (Q1.C);
+    \draw (b) -| (Q1.B);
+    % entrada del regulador
+    \draw (Q1.E) to[short, -*] (9.2,4.4) coordinate (vi);
+    \node[above] at (9.2,4.45) {$V_{i,\mathrm{reg}}$};
+    \draw (vi) to[C] (9.2,0) node[ground]{};
+    \node[right, align=left] at (9.6,2.2) {$C_1$\\\color{azul}\SI{0,33}{\micro\farad}};
+    % regulador
+    \draw (vi) -- (11.6,4.4);
+    \draw[line width=1.1pt, fill=tarjeta] (11.6,3.6) rectangle (14.4,5.2);
+    \node[font=\bfseries\large] at (13.0,4.55) {LM7805};
+    \node[font=\footnotesize] at (12.05,3.85) {IN};
+    \node[font=\footnotesize] at (13.9,3.85) {OUT};
+    \node[font=\footnotesize] at (13.0,3.85) {GND};
+    \draw (13.0,3.6) -- (13.0,0) node[ground]{};
+    % diodo de proteccion
+    \draw (15.0,4.4) -- (15.0,6.1) to[D] (10.6,6.1) -- (10.6,4.4);
+    \node[above] at (12.8,6.35) {$D_1$ \color{azul}1N4002};
+    \filldraw (10.6,4.4) circle (1.8pt);
+    % salida
+    \draw (14.4,4.4) to[short, -*] (15.0,4.4) to[short, -*] (16.6,4.4) coordinate (c2);
+    \draw (c2) to[C] (16.6,0) node[ground]{};
+    \node[right, align=left] at (17.0,2.2) {$C_2$\\\color{azul}\SI{0,1}{\micro\farad}};
+    \draw (c2) to[short, -*] (19.6,4.4) coordinate (vo);
+    \draw (vo) to[R] (19.6,0) node[ground]{};
+    \node[right, align=left] at (20.0,2.2) {$R_L$\\\color{azul}0 a \SI{0,5}{\ampere}};
+    \draw (vo) to[short, -o] (21.4,4.4) node[right] {$V_O = \SI{5}{\volt}$};
+    % recuadro de la etapa
+    \draw[dashed, rounded corners=5pt, color=azul, line width=1.4pt] (1.9,-0.25) rectangle (8.1,5.75);
+    \node[font=\bfseries, color=azul, anchor=south] at (5.0,5.85) {Etapa prereguladora};
+\end{circuitikz}

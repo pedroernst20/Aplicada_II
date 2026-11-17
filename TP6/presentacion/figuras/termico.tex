@@ -1,0 +1,8 @@
+\begin{circuitikz}[font=\huge, line width=1.1pt]
+    \draw (0,0) node[ground]{} to[I, l=$P$] (0,2.6)
+          to[short, -*] (0.8,2.6) node[above=6pt]{$T_J$}
+          to[R, l_=$R_{\theta JC}$, -*] (4.6,2.6) node[above=6pt]{$T_C$}
+          to[R, l_=$R_{th(mb\text{-}h)}$, -*] (8.4,2.6) node[above=6pt]{$T_H$}
+          to[R, l_=$R_{th(h\text{-}a)}$, -*] (12.2,2.6) node[above=6pt]{$T_a$}
+          to[V, v={\SI{40}{\celsius}}] (12.2,0) node[ground]{};
+\end{circuitikz}

@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+    blk/.style={draw=marino, line width=1pt, rounded corners=3pt, minimum height=1.3cm, minimum width=3.0cm, align=center, font=\sffamily\LARGE, fill=tarjeta},
+    lin/.style={line width=1.4pt, -{Latex[length=3.5mm]}},
+    lab/.style={font=\LARGE, above=3pt}
+]
+  % con etapa (azul)
+  \node[font=\sffamily\bfseries\LARGE, text=azul, anchor=west] at (0,2.15) {Con etapa prereguladora};
+  \node[font=\sffamily\LARGE, text=marino, anchor=west] (p1) at (0,0.6) {Primaria};
+  \node[blk, draw=azul, text=azul] (e1) at (6.2,0.6) {Etapa\\TIP122 + Zener};
+  \node[blk] (r1) at (12.6,0.6) {LM7805};
+  \draw[lin, color=marino] (2.9,0.6) -- node[lab]{\SI{25}{\volt}} (e1.west);
+  \draw[lin, color=azul] (e1.east) -- node[lab, text=azul]{$\approx\SI{10}{\volt}$} (r1.west);
+  \draw[lin, color=marino] (r1.east) -- node[lab]{\SI{5}{\volt}} (17.6,0.6);
+  % directo (naranja)
+  \node[font=\sffamily\bfseries\LARGE, text=naranja!85!black, anchor=west] at (0,-1.45) {LM7805 directo a la primaria};
+  \node[font=\sffamily\LARGE, text=marino, anchor=west] (p2) at (0,-3.0) {Primaria};
+  \node[blk, draw=naranja, text=marino] (r2) at (12.6,-3.0) {LM7805};
+  \draw[lin, color=naranja] (2.9,-3.0) -- node[lab, text=naranja!85!black]{\SI{25}{\volt}} (r2.west);
+  \draw[lin, color=marino] (r2.east) -- node[lab]{\SI{5}{\volt}} (17.6,-3.0);
+\end{tikzpicture}

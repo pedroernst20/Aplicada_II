@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Fuente de 5 V con LM7805</title>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="deck.css">
+</head>
+<!-- Código de color de todo el mazo:
+     azul    = fuente diseñada, con etapa prereguladora
+     naranja = LM7805 conectado directo a la primaria de 25 V
+     Magnitudes internas (base, entrada del regulador, potencias de cada componente) en marino, gris o verde. -->
+<body data-pie="Grupo 6 · 4R2 · Electrónica Aplicada II">
+<div id="escenario">
+
+<!-- ================================================================ PORTADA -->
+<section class="slide oscura-total portada" data-sin-pie>
+  <div class="encabezado">
+    <img src="assets/utn.svg" alt="UTN">
+    <div>
+      <div class="kicker">UTN · Facultad Regional Córdoba · Ingeniería Electrónica</div>
+      <p>Electrónica Aplicada II · Curso 4R2 · Año 2026</p>
+      <p>Docentes: Carlos Enrique Olmos y Pablo Gabriel Miklosa</p>
+    </div>
+  </div>
+  <h1>Fuente de 5 V con LM7805 y etapa prereguladora</h1>
+  <p class="bajada">Actividad Evaluativa · Unidad 6 · Consigna 6 · Grupo 6</p>
+  <img class="fondo" src="figuras/portada_fondo.svg" alt="">
+  <div class="autores">
+    <div><b>Alejo López Demichelis</b><span>Legajo 401900</span></div>
+    <div><b>Tomás Polizze</b><span>Legajo 400793</span></div>
+    <div><b>Pedro Ernst</b><span>Legajo 400624</span></div>
+    <div><b>Valentino Rao</b><span>Legajo 402308</span></div>
+  </div>
+</section>
+
+<!-- ======================================================= BLOQUE 1 · ALEJO -->
+<section class="slide" data-expone="Alejo López Demichelis">
+  <div class="kicker">Recorrido</div>
+  <h2>La exposición se divide en cuatro bloques</h2>
+  <div class="cuerpo">
+    <div class="g4">
+      <div class="tarjeta bloque"><div class="num">01</div><div class="sub">Planteo</div><h3>Consigna y criterio</h3><p>Qué se pide, cómo lo interpretamos, el LM7805 por dentro y por qué conviene una entrada de 8 a 12 V.</p><div class="quien">Alejo López Demichelis</div></div>
+      <div class="tarjeta bloque"><div class="num">02</div><div class="sub">Diseño</div><h3>Etapa prereguladora</h3><p>Circuito, transistor, Zener, cálculo de $R_Z$, área segura y disipadores.</p><div class="quien">Tomás Polizze</div></div>
+      <div class="tarjeta bloque"><div class="num">03</div><div class="sub">Simulación</div><h3>Regulación de línea</h3><p>Modelos validados, barrido de la primaria, resultado con ±10 %, tolerancia y cortocircuito.</p><div class="quien">Pedro Ernst</div></div>
+      <div class="tarjeta bloque"><div class="num">04</div><div class="sub">Calidad</div><h3>Parámetros y conclusiones</h3><p>Carga, rizado, temperatura, rendimiento, resumen y conclusiones.</p><div class="quien">Valentino Rao</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Consigna 6 · Datos de partida</div>
+  <h2>La consigna fija la primaria y la ventana; la carga la adoptamos</h2>
+  <div class="cuerpo">
+    <div class="g2">
+      <div class="tarjeta">
+        <div class="sub" style="margin-top:0">Lo que fija la consigna</div>
+        <div class="g2 kvs">
+          <div class="kv"><div class="rotulo">Fuente primaria</div><div class="valor">25 V de continua</div></div>
+          <div class="kv"><div class="rotulo">Regulador</div><div class="valor">LM7805 · 5 V</div></div>
+          <div class="kv"><div class="rotulo">Entrada del regulador</div><div class="valor">8 a 12 V</div></div>
+          <div class="kv"><div class="rotulo">Regulación de línea a verificar</div><div class="valor">$V_{in}$ = 25 V y 10 V</div></div>
+        </div>
+        <p style="margin-top:30px">Además: seleccionar el transistor, verificar su SOA, calcular el disipador y obtener todos los parámetros de calidad.</p>
+      </div>
+      <div class="tarjeta">
+        <div class="sub" style="margin-top:0">Lo que adoptamos</div>
+        <div class="g2 kvs">
+          <div class="kv"><div class="rotulo">Corriente de carga</div><div class="valor">0 a 0,5 A</div><p class="chico tenue" style="margin-top:4px">La de las características de la hoja de datos</p></div>
+          <div class="kv"><div class="rotulo">Variación de la primaria</div><div class="valor">±10 %</div><p class="chico tenue" style="margin-top:4px">Apunte, Sec. 6-6-3a</p></div>
+          <div class="kv"><div class="rotulo">Temperaturas</div><div class="valor">$T_a$ 40 °C · $T_J$ 100 °C</div><p class="chico tenue" style="margin-top:4px">Ejemplo 9 del apunte</p></div>
+          <div class="kv"><div class="rotulo">Rizado de prueba</div><div class="valor">2 Vpp · 100 Hz</div><p class="chico tenue" style="margin-top:4px">Sólo para medir el rechazo</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Consigna 6 · Interpretación</div>
+  <h2>$V_{in}$ es la entrada del LM7805: se compara con etapa y sin etapa</h2>
+  <div class="cuerpo">
+    <div class="col" style="gap:44px">
+      <figure class="marco" style="padding:36px 60px"><img src="figuras/interpretacion.svg" alt="" style="height:400px"></figure>
+      <div class="g2">
+        <div class="nota-barra azul"><b>$V_{in}$ ≈ 10 V:</b> el LM7805 alimentado a través de la etapa, en el centro de la ventana.</div>
+        <div class="nota-barra naranja"><b>$V_{in}$ = 25 V:</b> el LM7805 conectado directo a la primaria, en el límite de su entrada recomendada.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Consigna 6 · El regulador LM7805</div>
+  <h2>El LM7805 integra el elemento serie, el lazo y tres protecciones</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="marco w55" style="height:640px"><img src="figuras/bloques_7805.svg" alt="" style="height:520px"><figcaption>Diagrama en bloques (adaptado del apunte, Fig. 6-55 a 6-57).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">Limitación de corriente</div><div class="valor">750 mA en corto</div><div class="nota">Típica de la hoja de datos; 2,2 A de pico.</div></div>
+        <div class="dato"><div class="rotulo">Protección de área segura</div><div class="valor">Menos corriente</div><div class="nota">Reduce la corriente disponible cuando crece $V_I - V_O$.</div></div>
+        <div class="dato"><div class="rotulo">Corte térmico</div><div class="valor">Se apaga solo</div><div class="nota">Cuando la juntura se calienta en exceso.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Consigna 6 · Por qué una entrada de 8 a 12 V</div>
+  <h2>Entre 8 y 12 V el LM7805 regula mejor y disipa la cuarta parte</h2>
+  <div class="cuerpo">
+    <div class="col" style="gap:36px">
+      <div class="g3">
+        <div class="tarjeta"><div class="sub" style="margin-top:0">Regulación de línea típica</div>
+          <div class="valor grande azul" style="margin-top:22px">1 mV</div><p style="margin-top:4px">con $V_I$ de 8 a 12 V</p>
+          <div class="valor grande naranja" style="margin-top:22px">3 mV</div><p style="margin-top:4px">con $V_I$ de 7 a 25 V</p>
+          <p class="chico tenue" style="margin-top:22px">Hoja de datos del µA7805C.</p></div>
+        <div class="tarjeta"><div class="sub" style="margin-top:0">Potencia en el LM7805</div>
+          <div class="valor grande azul" style="margin-top:22px">≈ 2,5 W</div><p style="margin-top:4px">con unos 10 V en la entrada</p>
+          <div class="valor grande naranja" style="margin-top:22px">10 W</div><p style="margin-top:4px">(25 − 5) V × 0,5 A</p>
+          <p class="chico tenue" style="margin-top:22px">El resto de la caída la toma un transistor externo, más fácil de refrigerar.</p></div>
+        <div class="tarjeta"><div class="sub" style="margin-top:0">Límite inferior de la ventana</div>
+          <div class="valor grande" style="margin-top:22px">8 V</div><p style="margin-top:4px">= 5 V de salida + 3 V de margen</p>
+          <p style="margin-top:22px">Queda 1 V por encima del <i>dropout</i> de 2 V: el elemento serie no sale de la zona activa.</p>
+          <p class="chico tenue" style="margin-top:22px">Coughlin, Ec. 15-8.</p></div>
+      </div>
+      <div class="g2">
+        <div><span class="pildora azul">Con etapa · unos 10 V</span></div>
+        <div><span class="pildora naranja">Directo · 25 V, límite de su entrada recomendada</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Consigna 6 · Topología de la etapa</div>
+  <h2>Se eligió el Zener a masa: atenúa las variaciones de la primaria</h2>
+  <div class="cuerpo">
+    <div class="g2">
+      <div class="tarjeta topologia">
+        <h3>Zener entre base y masa</h3><div class="sub">Apunte · Fig. 6-71</div>
+        <figure><img src="figuras/fig671.svg" alt="" style="height:280px"></figure>
+        <div class="formula">$V_{i,\mathrm{reg}} = V_Z - V_{BE}$</div>
+        <p>Seguidor de emisor: las variaciones de $V_P$ llegan a la base atenuadas por el divisor de $R_Z$ y el Zener.</p>
+        <p style="margin-top:18px"><span class="pildora azul">Elegida</span></p>
+      </div>
+      <div class="tarjeta topologia">
+        <h3>Zener entre colector y base</h3><div class="sub">Apunte · Fig. 6-72</div>
+        <figure><img src="figuras/fig672.svg" alt="" style="height:280px"></figure>
+        <div class="formula">$V_{i,\mathrm{reg}} = V_P - (V_Z + V_{BE})$</div>
+        <p>Resta una tensión fija: toda variación de $V_P$ pasa sin atenuar, y si $V_P &lt; V_Z + V_{BE}$ deja de conducir.</p>
+        <p style="margin-top:18px"><span class="pildora">Descartada</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== BLOQUE 2 · TOMÁS -->
+<section class="slide oscura-total separador" data-expone="Tomás Polizze">
+  <div class="cuerpo">
+    <div class="kicker">Diseño de la etapa prereguladora</div>
+    <h1>¿Qué transistor, qué Zener y cuánto disipador hacen falta?</h1>
+    <div class="claves">
+      <div><span>Fuente primaria</span><b>25 V ± 10 %</b></div>
+      <div><span>Carga</span><b>0 a 0,5 A</b></div>
+      <div><span>Entrada del LM7805</span><b>8 a 12 V</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Diseño · Circuito completo</div>
+  <h2>Un Darlington y un Zener de 11 V dejan al LM7805 en unos 9,6 V</h2>
+  <div class="cuerpo">
+    <div class="col" style="gap:32px">
+      <figure class="marco" style="padding:34px 40px"><img src="figuras/circuito.svg" alt="" style="width:100%"></figure>
+      <div class="fila centro-v">
+        <div class="formula w45">$V_{i,\mathrm{reg}} = V_Z - V_{BE} \approx 11\ \mathrm{V} - 1{,}4\ \mathrm{V} = 9{,}6\ \mathrm{V}$</div>
+        <div class="nota-barra crece">$C_1$ y $C_2$ son los del circuito básico del apunte (Fig. 6-62), junto a los terminales. $D_1$ protege al regulador si su entrada cae antes que la salida.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Diseño · Selección del transistor</div>
+  <h2>El TIP31C exigiría 203 mA en el Zener; el TIP122, sólo 5,1 mA</h2>
+  <div class="cuerpo">
+    <div class="col" style="gap:30px">
+      <div class="fila centro-v" style="gap:60px">
+        <div class="formula">$$I_Z \geq 10\, I_{B,\max} = 10\,\frac{I_{C,\max}}{h_{FE,\min}}$$</div>
+        <div class="nota-barra">Criterio del apunte (Sec. 6-9-5h), con la ganancia <b>mínima garantizada</b> y no la típica. $I_{C,\max}$ = 0,5 A + 8 mA de polarización del regulador = 0,508 A.</div>
+      </div>
+      <table class="tabla">
+        <thead><tr><th>Transistor</th><th>$h_{FE}$ mínima</th><th>$I_{B,\max}$</th><th>$I_Z$ necesaria</th><th>$V_{CEO}$</th><th>$I_C$</th><th>$P_D$ a 25 °C</th><th>$R_{\theta JC}$</th></tr></thead>
+        <tbody>
+          <tr><td>Requerido</td><td>—</td><td>—</td><td>—</td><td>&gt; 27,5 V</td><td>0,508 A</td><td>9,5 W</td><td>—</td></tr>
+          <tr><td>TIP31C</td><td>25 (1 A)</td><td>20,3 mA</td><td>≥ 203 mA</td><td>100 V</td><td>3 A</td><td>40 W</td><td>3,125 °C/W</td></tr>
+          <tr class="destacada"><td>TIP122 · Darlington</td><td>1000 (0,5 A)</td><td>0,51 mA</td><td>≥ 5,1 mA</td><td>100 V</td><td>5 A</td><td>65 W</td><td>1,92 °C/W</td></tr>
+        </tbody>
+      </table>
+      <div class="g2">
+        <div class="nota-barra"><b>Con TIP31C:</b> $R_Z$ ≈ 52 Ω; sin carga el Zener disiparía unos 3,5 W y $R_Z$ más de 5 W.</div>
+        <div class="nota-barra"><b>Con TIP122:</b> la contrapartida es su $V_{BE}$ de dos junturas, unos 1,4 V, que se suma al elegir el Zener.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Diseño · Diodo Zener</div>
+  <h2>Con el 1N4741A, la entrada del LM7805 queda entre 8,85 y 10,35 V</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/ventana_calculo.svg" alt=""><figcaption>El 1N4740A, de 10 V, la dejaría demasiado cerca del límite inferior.</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">Zener necesario</div><div class="valor">10 V + 1,4 V = 11,4 V</div><div class="nota">Centro de la ventana más la $V_{BE}$ del Darlington.</div></div>
+        <div class="dato"><div class="rotulo">Elegido: 1N4741A</div><div class="valor">11 V ± 5 % · 1 W</div><div class="nota">$I_{ZT}$ = 23 mA · $Z_{ZT}$ ≤ 8 Ω. Nominal: $V_{i,\mathrm{reg}}$ ≈ 9,6 V.</div></div>
+        <div class="dato azul"><div class="rotulo">Peor caso</div><div class="valor">8,85 a 10,35 V</div><div class="nota">$V_Z$ de 10,45 a 11,55 V y $V_{BE}$ de 1,2 a 1,6 V.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Diseño · Cálculo de $R_Z$</div>
+  <h2>$R_Z$ = 680 Ω mantiene al Zener entre 16,4 y 24,3 mA</h2>
+  <div class="cuerpo">
+    <div class="col">
+      <div class="g4">
+        <div class="tarjeta paso"><div class="sub">Paso 1</div><h3>$R_Z$ para $I_Z$ ≈ 20 mA</h3><p>(25 − 11) V / (20 + 0,51) mA<br>= 683 Ω → <b>680 Ω</b></p></div>
+        <div class="tarjeta paso"><div class="sub">Paso 2</div><h3>Máximo del apunte</h3><p>Ec. 6-49, con $V_{P,\min}$ = 22,5 V:<br>$R_{Z,\max}$ = 2,05 kΩ</p></div>
+        <div class="tarjeta paso"><div class="sub">Paso 3</div><h3>$I_Z$ mínima</h3><p>$V_P$ = 22,5 V, plena carga:<br>16,4 mA</p></div>
+        <div class="tarjeta paso"><div class="sub">Paso 4</div><h3>$I_Z$ máxima</h3><p>$V_P$ = 27,5 V, sin carga (Ec. 6-51):<br>24,3 mA</p></div>
+      </div>
+      <div class="g3">
+        <div class="tarjeta oscura"><div class="rotulo chico">Potencia en el Zener (Ec. 6-50)</div><div class="valor grande">0,27 W</div><p class="chico">Admite 1 W: cumple el factor de seguridad de 2 (Ec. 6-55).</p></div>
+        <div class="tarjeta oscura"><div class="rotulo chico">Potencia en $R_Z$</div><div class="valor grande">0,40 W</div><p class="chico">(27,5 − 11)² / 680: se usa una resistencia de 1 W.</p></div>
+        <div class="tarjeta oscura"><div class="rotulo chico">Rizado en la base (Ec. 6-76)</div><div class="valor grande">20,4 mV</div><p class="chico">De 2 Vpp en la primaria: 39,8 dB de atenuación antes del regulador.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Diseño · Área de operación segura</div>
+  <h2>Los tres puntos de trabajo quedan dentro del área segura del TIP122</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/soa.svg" alt=""><figcaption>SOA en continua digitalizada de la hoja de datos (Fig. 6).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">Peor caso (Ec. 6-77 y 6-63)</div><div class="valor">18,65 V · 9,5 W</div><div class="nota">$V_{P,\max} - V_{i,\mathrm{reg},\min}$ con $I_C$ = 0,508 A.</div></div>
+        <div class="dato azul"><div class="rotulo">Nominal, simulado</div><div class="valor">15,36 V · 7,76 W</div><div class="nota">$V_P$ = 25 V e $I_L$ = 0,5 A.</div></div>
+        <div class="dato"><div class="rotulo">Límites del TIP122</div><div class="valor">100 V · 5 A · 65 W</div><div class="nota">Con $T_C$ ≈ 80 °C la potencia admisible baja a unos 36 W.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Diseño · Disipadores</div>
+  <h2>El TIP122 necesita 2,9 °C/W de disipador; el LM7805, 10 °C/W</h2>
+  <div class="cuerpo">
+    <div class="col" style="gap:30px">
+      <div class="fila centro-v">
+        <figure class="marco w55" style="padding:22px 30px"><img src="figuras/termico.svg" alt="" style="height:240px"></figure>
+        <div class="col crece" style="gap:14px">
+          <div class="formula">$$\frac{T_J - T_a}{P} = R_{\theta JC} + R_{th(mb\text{-}h)} + R_{th(h\text{-}a)}$$</div>
+          <p class="chico">Ec. 6-79 a 6-81 · $T_a$ = 40 °C, $T_J$ de diseño = 100 °C, mica y grasa: 1,3 °C/W.</p>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="tarjeta"><h3>TIP122 · disipador Aluel ZD-28</h3><div class="sub">Aleta unida al colector: va con mica</div>
+          <div class="g4 kvs">
+            <div class="kv"><div class="rotulo">Potencia</div><div class="valor">9,5 W</div></div>
+            <div class="kv"><div class="rotulo">$R_{th(h\text{-}a)}$ máx.</div><div class="valor">3,1 °C/W</div></div>
+            <div class="kv"><div class="rotulo">ZD-28 · 75 mm</div><div class="valor">2,9 °C/W</div></div>
+            <div class="kv"><div class="rotulo">$T_J$</div><div class="valor">98 °C</div></div>
+          </div>
+          <p class="chico tenue">Sin disipador, la juntura llegaría a unos 630 °C.</p></div>
+        <div class="tarjeta"><h3>LM7805 · disipador Aluel 2125D</h3><div class="sub">Peor caso: entrada de 10,35 V</div>
+          <div class="g4 kvs">
+            <div class="kv"><div class="rotulo">Potencia</div><div class="valor">2,8 W</div></div>
+            <div class="kv"><div class="rotulo">$R_{th(h\text{-}a)}$ máx.</div><div class="valor">17,1 °C/W</div></div>
+            <div class="kv"><div class="rotulo">Perfil 2125D</div><div class="valor">10 °C/W</div></div>
+            <div class="kv"><div class="rotulo">$T_J$</div><div class="valor">80 °C</div></div>
+          </div>
+          <p class="chico tenue">El mismo perfil del Ejemplo 9 del apunte.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== BLOQUE 3 · PEDRO -->
+<section class="slide oscura-total separador" data-expone="Pedro Ernst">
+  <div class="cuerpo">
+    <div class="kicker">Simulación en LTspice</div>
+    <h1>¿Cuánto mejora la regulación de línea con la etapa?</h1>
+    <div class="claves">
+      <div><span>Variación de la primaria</span><b>±10 % sobre 25 V</b></div>
+      <div><span>Carga</span><b>I<sub>L</sub> = 0,5 A</b></div>
+      <div><span>Referencia de comparación</span><b>LM7805 directo a la primaria</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Simulación · Modelos</div>
+  <h2>El modelo del LM7805 se validó contra su hoja de datos</h2>
+  <div class="cuerpo">
+    <div class="fila">
+      <div class="col w45">
+        <table class="tabla">
+          <thead><tr><th>Componente</th><th class="izq">Modelo y origen</th></tr></thead>
+          <tbody>
+            <tr><td>LM7805</td><td class="izq">Nivel transistor, 18 BJT, con efecto Early agregado</td></tr>
+            <tr><td>TIP122</td><td class="izq">onsemi/Fairchild, con $V_{BE}$ ajustada</td></tr>
+            <tr><td>1N4741A</td><td class="izq">Ajustado a su hoja de datos</td></tr>
+            <tr><td>1N4002</td><td class="izq">Diodes Incorporated</td></tr>
+          </tbody>
+        </table>
+        <div class="nota-barra">Sin efecto Early, el LM7805 daba 0,01 mV de regulación de línea entre 7 y 25 V: irreal. Se agregó $V_{AF}$ = 100 V (NPN) y 50 V (PNP), sin otro ajuste.</div>
+        <div class="aviso"><b>TIP122:</b> el modelo de onsemi daba $V_{BE}$ = 0,77 V a 0,5 A contra 1,35 V de la hoja de datos. Con el ajuste, el error máximo es de 4,5 mV.</div>
+      </div>
+      <div class="col crece">
+        <table class="tabla">
+          <thead><tr><th>LM7805 · ensayo de la hoja de datos</th><th>Simulado</th><th>Hoja (típ.)</th></tr></thead>
+          <tbody>
+            <tr><td>Regulación de línea, 7 a 25 V</td><td>3,02 mV</td><td>3 mV</td></tr>
+            <tr><td>Regulación de línea, 8 a 12 V</td><td>0,70 mV</td><td>1 mV</td></tr>
+            <tr><td>Rechazo de rizado, 120 Hz</td><td>75,1 dB</td><td>78 dB</td></tr>
+            <tr><td>Coeficiente de temperatura</td><td>−1,22 mV/°C</td><td>−1,1 mV/°C</td></tr>
+            <tr><td><i>Dropout</i>, 1 A</td><td>2,00 V</td><td>2 V</td></tr>
+            <tr class="destacada"><td>Regulación de carga, 5 mA a 1,5 A</td><td>2,29 mV</td><td>15 mV</td></tr>
+          </tbody>
+        </table>
+        <div class="nota-barra">Reproduce línea, rizado, temperatura y <i>dropout</i>. La regulación de carga sale unas siete veces mejor que la típica: la resistencia de salida simulada será optimista.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Simulación · Barrido de la fuente primaria</div>
+  <h2>Por encima de 11 V, la etapa fija la entrada del LM7805 en 9,64 V</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/linea.svg" alt=""><figcaption>Barrido de $V_P$ de 0 a 30 V con $I_L$ = 0,5 A (c6_linea.asc).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">Entrada del LM7805 con $V_P$ = 25 V</div><div class="valor">9,64 V</div><div class="nota">Coincide con los 9,6 V calculados.</div></div>
+        <div class="dato"><div class="rotulo">Variación con $V_P$ ± 10 %</div><div class="valor">58 mV</div><div class="nota">En lugar de los 5 V que vería el LM7805 directo.</div></div>
+        <div class="dato"><div class="rotulo">Con $V_P$ = 10 V</div><div class="valor">8,54 V</div><div class="nota">Por debajo de 11 V el Zener deja de conducir y el transistor copia la primaria.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Simulación · Regulación de línea con $V_{in}$ = 25 V y 10 V</div>
+  <h2>Con la etapa, la salida varía 73 veces menos ante ±10 %</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/linea_detalle.svg" alt=""><figcaption>Cambio de $V_O$ respecto del valor con $V_P$ = 25 V, $I_L$ = 0,5 A.</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato naranja"><div class="rotulo">LM7805 directo · entrada 22,5 a 27,5 V</div><div class="valor">742,5 µV</div><div class="nota">$R_{red}$ = 0,0150 % (Ec. 6-41)</div></div>
+        <div class="dato"><div class="rotulo">LM7805 directo · entrada 9 a 11 V</div><div class="valor">350,9 µV</div><div class="nota">$R_{red}$ = 0,0071 %: con 10 V regula mejor, como dice la hoja de datos.</div></div>
+        <div class="dato azul"><div class="rotulo">Con etapa · entrada 9,61 a 9,66 V</div><div class="valor">10,2 µV</div><div class="nota">$R_{red}$ = 0,0002 %: el regulador trabaja cerca de 10 V y además ve sólo 58 mV de variación.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Simulación · Tolerancia del Zener</div>
+  <h2>Con el Zener en sus extremos, la entrada sigue dentro de la ventana</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/ventana_tolerancia.svg" alt=""><figcaption>$V_P$ = 25 V, $I_L$ = 0,5 A (c6_tolerancia.asc).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato azul"><div class="rotulo">$V_Z$ −5 % · nominal · +5 %</div><div class="valor">9,10 · 9,64 · 10,18 V</div><div class="nota">Dentro del rango de peor caso calculado.</div></div>
+        <div class="dato"><div class="rotulo">Cálculo de peor caso</div><div class="valor">8,85 a 10,35 V</div><div class="nota">Incluye además la dispersión de $V_{BE}$.</div></div>
+        <div class="dato"><div class="rotulo">Con $V_P$ = 10 V</div><div class="valor">8,54 V</div><div class="nota">El Zener no conduce: no depende de su tolerancia.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Simulación · Salida en cortocircuito</div>
+  <h2>En cortocircuito, el LM7805 limita la corriente a 1,85 A</h2>
+  <div class="cuerpo">
+    <div class="col" style="gap:34px">
+      <div class="g3">
+        <div class="tarjeta oscura"><div class="rotulo chico">Corriente de cortocircuito</div><div class="valor grande">1,85 A</div><p class="chico">Simulada, con $V_{i,\mathrm{reg}}$ = 9,4 V.</p></div>
+        <div class="tarjeta oscura"><div class="rotulo chico">Potencia en el TIP122</div><div class="valor grande">29 W</div><p class="chico">Dentro de la SOA ($Q_{cc}$), pero su disipador no la sostiene en el tiempo.</p></div>
+        <div class="tarjeta oscura"><div class="rotulo chico">Potencia en el LM7805</div><div class="valor grande">17 W</div><p class="chico">Con 10 °C/W su juntura supera los 150 °C.</p></div>
+      </div>
+      <div class="g2">
+        <div class="tarjeta"><h3>Quién corta la falla</h3><p>El corte térmico del LM7805. Al anular su corriente de entrada, también deja sin corriente al transistor.</p></div>
+        <div class="tarjeta"><h3>Lo que no se simula</h3><p>El modelo SPICE del regulador no tiene corte térmico. Para uso de laboratorio conviene un fusible en la primaria.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================== BLOQUE 4 · VALENTINO -->
+<section class="slide centrado" data-expone="Valentino Rao">
+  <div class="kicker">Parámetros de calidad · Regulación de carga</div>
+  <h2>Regulación de carga de 0,021 % y $R_{sal}$ de 2,1 mΩ, optimistas</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/carga.svg" alt=""><figcaption>Barrido de $I_L$ con $V_P$ = 25 V (c6_carga.asc).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato azul"><div class="rotulo">Regulación de carga, 0 a 0,5 A (Ec. 6-42)</div><div class="valor">0,021 %</div><div class="nota">$V_O$ pasa de 4,9645 V a 4,9634 V.</div></div>
+        <div class="dato azul"><div class="rotulo">Resistencia de salida (Ec. 6-43)</div><div class="valor">2,1 mΩ</div><div class="nota">Con la regulación de carga típica de la hoja de datos, cabe esperar unos 10 mΩ.</div></div>
+        <div class="dato"><div class="rotulo">Corriente del Zener, vacío → plena carga</div><div class="valor">20,6 → 20,5 mA</div><div class="nota">La base pide 0,14 mA: la etapa queda fuera del lazo y no cambia la regulación de carga.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Parámetros de calidad · Rizado</div>
+  <h2>De 2 V pico a pico en la primaria quedan 4,1 µV en la salida</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/rizado.svg" alt=""><figcaption>Componente alterna con 2 Vpp a 100 Hz e $I_L$ = 0,5 A. Atención a las escalas: V, mV y µV.</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">Entrada del LM7805, pico a pico</div><div class="valor">23,1 mV</div><div class="nota">Cálculo con la Ec. 6-76: 20,4 mV.</div></div>
+        <div class="dato"><div class="rotulo">Salida, pico a pico</div><div class="valor"><span class="azul">4,1 µV</span> · <span class="naranja">302 µV</span></div><div class="nota">Eficaz: 1,44 µV con etapa, 106,7 µV directo.</div></div>
+        <div class="dato"><div class="rotulo">Rechazo de rizado</div><div class="valor"><span class="azul">113,8 dB</span> · <span class="naranja">76,4 dB</span></div><div class="nota">Etapa 38,7 dB + regulador 75,1 dB.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Parámetros de calidad · Coeficiente de temperatura</div>
+  <h2>El coeficiente de temperatura lo fija el LM7805: −0,96 mV/°C</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/temperatura.svg" alt=""><figcaption>$V_P$ = 25 V e $I_L$ = 0,5 A (c6_temperatura.asc).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">C.T. de 0 a 55 °C (Ec. 6-44)</div><div class="valor"><span class="azul">−0,0193</span> · <span class="naranja">−0,0190</span> %/°C</div><div class="nota">Con y sin etapa: prácticamente iguales.</div></div>
+        <div class="dato"><div class="rotulo">Entrada del LM7805</div><div class="valor">13,5 mV/°C</div><div class="nota">Zener (+) y dos junturas base-emisor (−). El regulador la rechaza como una variación de línea.</div></div>
+        <div class="dato"><div class="rotulo">Límite de la simulación</div><div class="valor">Temperatura uniforme</div><div class="nota">No incluye el calentamiento propio de cada componente.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Parámetros de calidad · Rendimiento</div>
+  <h2>La etapa no mejora el rendimiento: cambia dónde se disipa</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/potencias.svg" alt=""><figcaption>Reparto de la potencia que entrega la primaria; el tramo gris claro es la rama del Zener.</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">Rendimiento (Ec. 6-68)</div><div class="valor"><span class="azul">18,9 %</span> · <span class="naranja">19,6 %</span></div><div class="nota">Límite ideal de un regulador lineal: $V_O/V_{in}$ = 20 % (Ec. 6-69).</div></div>
+        <div class="dato"><div class="rotulo">Potencia en el LM7805</div><div class="valor"><span class="azul">2,38 W</span> · <span class="naranja">10,16 W</span></div><div class="nota">La primaria entrega 13,14 W con la etapa.</div></div>
+        <div class="dato"><div class="rotulo">Potencia en el TIP122</div><div class="valor">7,76 W</div><div class="nota">La toma un transistor externo, más fácil de refrigerar.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Parámetros de calidad · Resumen</div>
+  <h2>La etapa mejora la línea y el rizado; el resto lo fija el LM7805</h2>
+  <div class="cuerpo">
+    <div class="col" style="gap:16px">
+      <table class="tabla">
+        <thead><tr><th>Parámetro · $V_P$ = 25 V, $I_L$ = 0,5 A</th><th class="azul">Con etapa</th><th class="naranja">LM7805 directo</th></tr></thead>
+        <tbody>
+          <tr><td>Tensión de salida $V_O$</td><td>4,9634 V</td><td>4,9660 V</td></tr>
+          <tr><td>Entrada del regulador ($V_P$ ± 10 %)</td><td>9,61 a 9,66 V</td><td>22,5 a 27,5 V</td></tr>
+          <tr><td>Regulación de red, $V_P$ ± 10 % (Ec. 6-41)</td><td>0,0002 %</td><td>0,0150 %</td></tr>
+          <tr><td>Regulación de carga, 0 a 0,5 A (Ec. 6-42)</td><td>0,021 %</td><td>igual*</td></tr>
+          <tr><td>Resistencia de salida (Ec. 6-43)</td><td>2,1 mΩ</td><td>igual*</td></tr>
+          <tr><td>Coeficiente de temperatura, 0 a 55 °C (Ec. 6-44)</td><td>−0,0193 %/°C</td><td>−0,0190 %/°C</td></tr>
+          <tr><td>Rizado de salida pico a pico · eficaz</td><td>4,1 µV · 1,44 µV</td><td>302 µV · 106,7 µV</td></tr>
+          <tr><td>Rechazo de rizado</td><td>113,8 dB</td><td>76,4 dB</td></tr>
+          <tr><td>Rendimiento (Ec. 6-68)</td><td>18,9 %</td><td>19,6 %</td></tr>
+          <tr><td>Potencia en el LM7805 · en el TIP122</td><td>2,38 W · 7,76 W</td><td>10,16 W · —</td></tr>
+        </tbody>
+      </table>
+      <p class="chico tenue">* Depende del regulador y no de la etapa; no se simuló por separado. La hoja de datos indica unos 10 mΩ. Rizado medido con 2 Vpp a 100 Hz en $V_P$.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide centrado">
+  <div class="kicker">Cierre</div>
+  <h2>Conclusiones</h2>
+  <div class="cuerpo">
+    <div class="col">
+      <div class="g2">
+        <div class="tarjeta"><h3>Diseño</h3><ul class="lista" style="margin-top:16px;gap:14px">
+          <li>Con un TIP122 y un 1N4741A, la entrada del LM7805 queda en 9,64 V y dentro de la ventana aun con la tolerancia del Zener.</li>
+          <li>El transistor se eligió por su ganancia mínima garantizada: con un TIP31C el Zener debería conducir más de 200 mA.</li>
+          <li>El TIP122 trabaja lejos de los límites de su SOA, con un disipador de 2,9 °C/W; el LM7805 lleva uno de 10 °C/W.</li>
+        </ul></div>
+        <div class="tarjeta"><h3>Simulación</h3><ul class="lista" style="margin-top:16px;gap:14px">
+          <li>Ante ±10 % de la primaria, la salida cambia <b class="azul">10,2 µV</b> con la etapa contra <b class="naranja">742,5 µV</b> sin ella.</li>
+          <li>El rechazo de rizado sube de 76,4 dB a 113,8 dB.</li>
+          <li>El rendimiento sigue cerca del 20 %, pero el LM7805 pasa de 10,16 W a 2,38 W.</li>
+          <li>Los modelos se verificaron con las hojas de datos; la $R_{sal}$ real rondará los 10 mΩ, no los 2,1 mΩ simulados.</li>
+        </ul></div>
+      </div>
+      <div class="aviso oscuro"><div class="kicker" style="color:var(--naranja-claro);margin-bottom:14px">Para armarla</div>Fusible en la primaria · mica y grasa entre el TIP122 y su disipador, porque la aleta está unida al colector · $C_1$ y $C_2$ cerámicos, soldados junto a los terminales del regulador.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================== CIERRE -->
+<section class="slide oscura-total portada cierre" data-sin-pie>
+  <div class="kicker">Fuente de 5 V con LM7805 y etapa prereguladora · Grupo 6</div>
+  <h1>Gracias</h1>
+  <p class="pregunta">¿Preguntas?</p>
+  <img class="fondo" src="figuras/portada_fondo.svg" alt="">
+  <div class="autores">
+    <div><b>Alejo López Demichelis</b><span>Legajo 401900</span></div>
+    <div><b>Tomás Polizze</b><span>Legajo 400793</span></div>
+    <div><b>Pedro Ernst</b><span>Legajo 400624</span></div>
+    <div><b>Valentino Rao</b><span>Legajo 402308</span></div>
+  </div>
+</section>
+
+<!-- ================================================================ RESPALDO -->
+<section class="slide respaldo centrado">
+  <div class="kicker">Respaldo · La otra lectura de la consigna</div>
+  <h2>Si la primaria baja a 10 V, la entrada del LM7805 queda en 8,54 V</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/otra_lectura.svg" alt=""><figcaption>Barrido de $V_P$ con $I_L$ = 0,5 A (c6_linea.asc).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">Con $V_P$ = 10 V</div><div class="valor">8,54 V</div><div class="nota">Dentro de la ventana mientras $V_P$ ≥ 9,46 V.</div></div>
+        <div class="dato"><div class="rotulo">Por debajo de 11 V</div><div class="valor">La etapa no regula</div><div class="nota">El Zener deja de conducir y el transistor copia la primaria.</div></div>
+        <div class="dato"><div class="rotulo">$\Delta V_O$ con $V_P$ de 10 a 25 V</div><div class="valor"><span class="azul">194 µV</span> · <span class="naranja">2472,80 µV</span></div><div class="nota">Con etapa y con el LM7805 directo.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide respaldo centrado">
+  <div class="kicker">Respaldo · Validación del modelo del LM7805</div>
+  <h2>El modelo reproduce la hoja de datos, salvo la regulación de carga</h2>
+  <div class="cuerpo">
+    <table class="tabla">
+      <thead><tr><th>Parámetro y condición</th><th>Simulado</th><th>Hoja de datos (típ.)</th></tr></thead>
+      <tbody>
+        <tr><td>Tensión de salida, $V_I$ = 10 V, $I_O$ = 0,5 A</td><td>4,964 V</td><td>5 V (4,8 a 5,2 V)</td></tr>
+        <tr><td>Regulación de línea, $V_I$ = 7 a 25 V</td><td>3,02 mV</td><td>3 mV</td></tr>
+        <tr><td>Regulación de línea, $V_I$ = 8 a 12 V</td><td>0,70 mV</td><td>1 mV</td></tr>
+        <tr><td>Rechazo de rizado, $V_I$ = 10 V ± 1 V, 120 Hz</td><td>75,1 dB</td><td>78 dB (mín. 62)</td></tr>
+        <tr class="destacada"><td>Regulación de carga, $I_O$ = 5 mA a 1,5 A</td><td>2,29 mV</td><td>15 mV</td></tr>
+        <tr class="destacada"><td>Regulación de carga, $I_O$ = 0,25 a 0,75 A</td><td>0,72 mV</td><td>5 mV</td></tr>
+        <tr><td>Coef. de temperatura, $I_O$ = 5 mA, 0 a 125 °C</td><td>−1,22 mV/°C</td><td>−1,1 mV/°C</td></tr>
+        <tr><td><i>Dropout</i>, $I_O$ = 1 A ($V_O$ cae 100 mV)</td><td>2,00 V</td><td>2 V</td></tr>
+        <tr><td>Corriente de polarización, $V_I$ = 10 V</td><td>5,0 mA</td><td>4,2 mA (máx. 8)</td></tr>
+        <tr><td>Corriente con la salida en corto, $V_I$ = 10 V</td><td>1,82 A</td><td>2,2 A (pico)</td></tr>
+        <tr><td>Corriente con la salida en corto, $V_I$ = 25 / 35 V</td><td>0,94 / 0,30 A</td><td>0,75 A</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="slide respaldo centrado">
+  <div class="kicker">Respaldo · Modelo del TIP122</div>
+  <h2>Con el ajuste, la $V_{BE}$ del TIP122 sigue a la hoja de datos</h2>
+  <div class="cuerpo">
+    <div class="fila centro-v">
+      <figure class="w55"><img src="figuras/vbe.svg" alt=""><figcaption>$V_{CE}$ = 4 V, $T_J$ = 25 °C (validacion_tip122/vbe_tip122.asc).</figcaption></figure>
+      <div class="datos crece">
+        <div class="dato"><div class="rotulo">$V_{BE}$ con 0,5 A</div><div class="valor">0,77 V contra 1,35 V</div><div class="nota">Modelo de onsemi contra la curva típica de la hoja de datos (Fig. 11).</div></div>
+        <div class="dato"><div class="rotulo">Subcircuito TIP122_AJ</div><div class="valor">0,54 V + 83 mΩ</div><div class="nota">Fuente en serie con la base y resistencia en el emisor, por mínimos cuadrados entre 0,12 y 3 A.</div></div>
+        <div class="dato"><div class="rotulo">Error máximo en ese rango</div><div class="valor">4,5 mV</div><div class="nota">Contra 790 mV del modelo original. En el circuito, $V_{BE}$ = 1,35 V.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide respaldo centrado">
+  <div class="kicker">Respaldo · Límites de la simulación</div>
+  <h2>Cuatro límites de la simulación y cómo se tuvieron en cuenta</h2>
+  <div class="cuerpo">
+    <div class="g2">
+      <div class="tarjeta"><h3>Regulación de carga optimista</h3><p style="font-size:24px">El modelo no incluye la resistencia de los terminales ni los gradientes térmicos del chip: da 2,29 mV contra 15 mV típicos. Se informa que la $R_{sal}$ real rondará los 10 mΩ.</p></div>
+      <div class="tarjeta"><h3>Sin corte térmico</h3><p style="font-size:24px">El modelo del LM7805 no lo representa, así que el cortocircuito sostenido no se simula: se analizó con las potencias y los disipadores.</p></div>
+      <div class="tarjeta"><h3>Rechazo de rizado con <span class="mono">.ac</span></h3><p style="font-size:24px">Con este modelo da unos 38 dB, que no coincide ni con la regulación en continua ni con el transitorio. Se midió en transitorio, con la definición del Coughlin (Sec. 15-8.5).</p></div>
+      <div class="tarjeta"><h3>Temperatura uniforme</h3><p style="font-size:24px">El barrido de 0 a 55 °C supone todo el circuito a la temperatura ambiente, sin el calentamiento propio de cada componente.</p></div>
+    </div>
+  </div>
+</section>
+
+</div>
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="deck.js"></script>
+</body>
+</html>
