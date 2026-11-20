@@ -1,0 +1,71 @@
+\section{Problemas encontrados}
+\label{sec:problemas}
+Las dos primeras etapas funcionaron como se diseñaron, pero la medición tuvo errores de procedimiento y la señal 4 no salió como la simulada. Esta sección analiza cada problema, en el orden de la cadena de señales, y usa la simulación para separar lo que se explica por el ajuste o por la medición de lo que indica una falla de la etapa.
+
+\subsection{Presets sin ajustar antes de medir}
+Las capturas muestran que los presets no estaban en su posición de diseño cuando se registraron las señales:
+\begin{itemize}[leftmargin=*, nosep]
+    \item La señal 1 está \valu{2}{\medSUnoBajo+1}{\volt} por encima de lo pedido: la etapa restó \valu{2}{\simAjVrefUno}{\volt} en vez de \SI{1}{\volt}, es decir, $P_2$ daba $\Vrefu = \valu{2}{\simAjVrefUno}{\volt}$. Con ese valor, la simulación reproduce las dos mesetas medidas (Tabla~\ref{tab:medicion}).
+    \item El nivel medio de la triangular está \valu{2}{\medSDosVertCentro-1.25}{\volt} por encima de \SI{1,25}{\volt}. Con el integrador acoplado en alterna, ese nivel es $\Vrefd$ más los \emph{offsets} de U1D y U2A, que no superan \SI{60}{\milli\volt}; la diferencia restante corresponde a la posición de $P_1$.
+\end{itemize}
+El error fue capturar las señales sin completar los pasos 2 y 4 del procedimiento de la Sección~\ref{sec:ajuste}. Ninguno de los dos desvíos indica un problema del circuito: los dos niveles están dentro del rango de sus presets.
+
+\subsection{Amplitud y asimetría de la triangular}
+La triangular medida tiene \valu{2}{\medSDosVertVpp}{\volt} pico a pico, un \valu{0}{100*(\medSDosVertVpp/\simMedSdosVpp-1)}{\percent} más que la simulada con la misma entrada. Como la amplitud es proporcional a $1/(R_I C_1)$, equivale a una constante de tiempo un \valu{0}{100*(1-\simMedSdosVpp/\medSDosVertVpp)}{\percent} menor que la nominal. Eso es más de lo que cubre la simulación con tolerancias del \SI{5}{\percent} (Tabla~\ref{tab:mc}), así que el capacitor de integración se aparta de su valor nominal más de lo supuesto. Debió medirse $C_1$ antes de montarlo; el diseño no tiene un ajuste para esta amplitud, y una mejora sería poner un preset en serie con $R_I$.
+
+Además, la pendiente de subida es un \valu{0}{100*(\medSDosPendSub/(-\medSDosPendBaj)-1)}{\percent} mayor que la de bajada. Esto no es un defecto del circuito sino de la entrada: el generador tenía el nivel alto durante el \valu{0}{\medCiclo}{\percent} del período, así que el valor medio de la señal 1 quedó más cerca de su nivel bajo y la desviación respecto de ese valor medio, que es lo que integra el integrador, fue mayor en el semiperíodo alto. El ciclo de trabajo del generador debió verificarse y corregirse antes de medir.
+
+\subsection{Picos en los vértices y quiebre de la rampa}
+Sobre los vértices de la triangular hay picos de uno o dos píxeles de ancho (hasta \valu{1}{\medSDosMax}{\volt} en el superior), sincronizados con los flancos de la señal 1, que la simulación no tiene. Por su duración, de pocos microsegundos, y porque no dependen de la pendiente, se atribuyen al acoplamiento de los flancos de la señal 1 (\SI{2,5}{\volt} en \SI{0,2}{\micro\second}) a la punta del osciloscopio, a través del cable de masa largo de la punta o de capacidades parásitas. No hay capturas tomadas con el resorte de masa corto de la punta, que es la prueba que permitiría confirmarlo.
+
+En la rampa de bajada, unos \SI{30}{\micro\second} después del máximo, la pendiente se reduce durante unos \SI{15}{\micro\second}. Este quiebre importa porque la etapa siguiente es un derivador: cualquier cambio de pendiente de la señal 2 se convierte en un escalón de la señal 3 y, por lo tanto, en un impulso de más en la señal 4. Con una sola captura y un solo canal no se pudo establecer si el quiebre está en la señal o es otra vez un efecto de la medición.
+
+\subsection{Limitaciones de la medición}
+Antes de analizar la señal 4 conviene marcar lo que la medición no permite saber:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Un solo canal.} Cada captura tiene una sola señal, así que no hay referencia de fase entre etapas: no se puede verificar en la placa que la señal 3 cambie en los vértices de la triangular.
+    \item \textbf{Falta la señal 3.} No se guardó ninguna captura de la señal 3, que es justamente la entrada de la etapa que falla.
+    \item \textbf{Base de tiempo demasiado lenta.} La señal 4 se registró a \SI{100}{\micro\second\per div}, donde cada píxel abarca \SI{4}{\micro\second}. Una oscilación del orden de \SI{100}{\kilo\hertz}, como la que tendría un derivador mal amortiguado (Sección~\ref{sec:derivador}), no se puede representar con esa resolución: la captura muestra que hay oscilación y cuánto dura, pero no su frecuencia.
+    \item \textbf{Condiciones no registradas.} Las capturas 4 y 6 muestran la misma forma con amplitudes muy distintas, y no quedó anotado qué cambió entre una y otra.
+\end{itemize}
+
+\subsection{Señal 4: síntomas}
+En las capturas 4 a 6 la etapa de impulsos se aparta del diseño en tres aspectos:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Un impulso dominante por período}. Hay un solo impulso grande cada \valu{0}{\medCSeisPeriodo}{\micro\second}, es decir, uno por período, de \valu{1}{\medCSeisMax}{\volt} en la captura 6 y \valu{1}{\medCCuatroMax}{\volt} en la 4. El diseño da dos impulsos iguales por período, de \SI{1}{\volt}.
+    \item \textbf{Ráfagas de oscilación}. Después de cada impulso dominante aparecen varios picos menores durante unos \SI{100}{\micro\second}, con una separación aparente de unos \valu{0}{\medCSeisRafaga}{\micro\second}, que por lo dicho no es su período real.
+    \item \textbf{Eventos no equidistantes}. En $v_p$ (captura 5) hay dos eventos por período, pero separados alternadamente unos \valu{0}{\medCCincoSep}{\micro\second} y \valu{0}{\medCCincoPeriodo-\medCCincoSep}{\micro\second}, en vez de \SI{116}{\micro\second}, y sus amplitudes, \valu{2}{\medCCincoMax}{\volt} y \valu{2}{\medCCincoMin}{\volt}, son menores que los $\pm\SI{1,6}{\volt}$ del diseño.
+\end{itemize}
+
+\subsection{Señal 4: causas posibles}
+\label{sec:fallas}
+Como las capturas no alcanzan para ubicar la causa, se simuló el circuito completo con defectos introducidos a propósito, de los que pueden ocurrir en esta etapa por un componente equivocado o mal soldado. Dos de ellos reproducen los síntomas principales:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Derivador poco amortiguado}: $R_S = \SI{330}{\ohm}$ y sin $C_F$. La señal 3 oscila después de cada vértice y el generador de impulsos, que es un pasaaltos, deja pasar esa oscilación. En la salida aparecen ráfagas después de cada impulso, con picos de hasta \valu{1}{\simFallaAmortMax}{\volt}.
+    \item \textbf{Sumador desbalanceado}: $R_{14} = R_{15}$ en lugar de $R_{14} = 2R_{15}$. Como se vio en la Sección~\ref{sec:s4}, los impulsos positivos de $v_p$ se cancelan y los negativos salen con el doble de amplitud: un solo impulso por período, de \valu{1}{\simFallaSumadorPicoSub}{\volt}, y \valu{2}{\simFallaSumadorPicoBaj}{\volt} en el otro flanco.
+\end{itemize}
+Con los dos defectos a la vez, la salida simulada tiene un impulso dominante de \valu{1}{\simFallaAmbasPicoSub}{\volt} por período seguido de una ráfaga, como la captura 6. La Fig.~\ref{fig:fallas} superpone ambas.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[tp2, height=4.8cm, xmin=0, xmax=1200, ymin=-1.2, ymax=5.8,
+    xlabel={Tiempo [\si{\micro\second}]}, ylabel={S4 [V]}, legend pos=north west, legend columns=2]
+\addplot[cmed, line width=1.5pt] table[x=t, y=v] {datos/med6.dat};
+\addplot[cs4, line width=0.5pt] table[x expr=\thisrow{t}+\simFallaDesfase, y=s4ambas] {datos/fallas.dat};
+\legend{Captura 6, Simulación con ambos defectos}
+\end{axis}
+\end{tikzpicture}
+\caption{Señal 4 medida (captura 6 digitalizada) y simulada con el derivador poco amortiguado y el sumador desbalanceado.}
+\label{fig:fallas}
+\end{figure}
+
+La coincidencia no es completa, y conviene marcar sus límites. La simulación no explica la amplitud de la captura 4 (\valu{1}{\medCCuatroMax}{\volt}), que ni con la ganancia máxima de $P_3$ se alcanza; como tiene la misma forma y el mismo período que la captura 6, lo más probable es que entre ambas haya cambiado el estado de la oscilación o un ajuste, que no quedó registrado. Tampoco explica la separación desigual de los eventos de la captura 5, porque en el circuito simulado los flancos de la señal 3 coinciden siempre con los vértices de la triangular; el quiebre de la rampa de bajada de la triangular es una explicación posible.
+
+Lo que sí establece la simulación es que el diseño nominal no produce ninguno de estos síntomas: con la compensación de la Sección~\ref{sec:derivador} el derivador no oscila, y con la relación 2:1 el rectificador da impulsos iguales en ambos flancos (Fig.~\ref{fig:nominal}). Para completar el ensayo de esta etapa habría que:
+\begin{enumerate}[leftmargin=*, nosep]
+    \item medir la señal 3 con una base de tiempo de \SI{5}{\micro\second\per div} o menos alrededor de un vértice, para confirmar la oscilación, y verificar $R_S$ y $C_F$;
+    \item medir $R_{14}$ y $R_{15}$ fuera del circuito y confirmar la relación 2:1;
+    \item observar la señal 1 y la señal 2 a la vez con los dos canales, con el resorte de masa corto de la punta, para ubicar el quiebre de la rampa respecto de los flancos de la entrada;
+    \item reemplazar los 1N4004 por 1N4148 (Sección~\ref{sec:s4}) y volver a ajustar $P_3$.
+\end{enumerate}

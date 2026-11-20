@@ -1,0 +1,124 @@
+\documentclass{plantilla}
+
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{array}
+\usepackage{subcaption}
+% Ningun flotante puede quedar antes del lugar donde se lo declara: cada
+% figura o tabla va despues del parrafo que la cita.
+\usepackage{flafter}
+\usepgfplotslibrary{fillbetween,groupplots}
+\usetikzlibrary{calc,babel}
+
+% Mas espacio para flotantes en cada columna y menos paginas solo de figuras
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\dblfloatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+
+\sisetup{
+    output-decimal-marker = {,},
+    group-digits = none,
+    per-mode = symbol
+}
+\DeclareSIUnit{\ohm}{\ensuremath{\Omega}}
+\DeclareSIUnit{\ppm}{ppm}
+
+% Resultados de las simulaciones y de las capturas digitalizadas
+\input{datos/resultados.tex}
+% \val{decimales}{expresion}: numero (o expresion de l3fp) redondeado
+\newcommand{\val}[2]{\num[round-mode=places,round-precision=#1]{\fpeval{#2}}}
+% \valu{decimales}{\simXxx}{unidad}: numero redondeado con unidad
+\newcommand{\valu}[3]{\SI[round-mode=places,round-precision=#1]{\fpeval{#2}}{#3}}
+\newcommand{\Vrefu}{V_{\mathrm{REF1}}}
+\newcommand{\Vrefd}{V_{\mathrm{REF2}}}
+\newcommand{\sen}[1]{v_{\mathrm{S#1}}}
+
+% Estilo comun de los graficos
+\pgfplotsset{
+    tp2/.style={
+        width=\columnwidth, height=4.6cm,
+        grid=major, grid style={gray!25},
+        tick label style={font=\footnotesize},
+        label style={font=\footnotesize},
+        legend style={font=\scriptsize, fill=white, fill opacity=0.85,
+                      text opacity=1, draw=gray!50},
+        legend cell align=left,
+        every axis plot/.append style={line width=0.9pt},
+        /pgf/number format/use comma,
+        /pgf/number format/1000 sep={},
+    },
+}
+\definecolor{cs1}{RGB}{31,119,180}
+\definecolor{cs2}{RGB}{214,39,40}
+\definecolor{cs3}{RGB}{44,160,44}
+\definecolor{cs4}{RGB}{148,103,189}
+\definecolor{cmed}{RGB}{230,160,0}
+
+\materia{Electrónica Aplicada II}
+\comision{4R2}
+\titulo{Trabajo Práctico de Laboratorio N.\textordmasculine\ 2: Generación sucesiva de señales con amplificadores operacionales}
+\autores{Ernst Pedro (400624), Polizze Tomás (400793), Rao Valentino (402308)}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Se diseña, simula, implementa y ensaya un circuito con tres amplificadores operacionales TL084 que, a partir de una onda cuadrada de \SI{0}{} a \SI{2,5}{\volt} y \SI{4300}{\hertz}, obtiene en forma sucesiva las cuatro señales de la consigna: una cuadrada de \SI{-1}{} a \SI{1,5}{\volt}, una triangular de \SI{-1,5}{} a \SI{4}{\volt}, una cuadrada de \SI{0}{} a \SI{3}{\volt} y un impulso positivo de \SI{1}{\volt} en cada flanco de esta última. Como la consigna fija las señales pero no cómo obtenerlas, cada decisión se justifica frente a sus alternativas y se verifica por simulación con el macromodelo del TL084 de Texas Instruments: la elección del operacional y de la alimentación, la ganancia de cada etapa, una referencia de \SI{1,25}{\volt} hecha con un zener, presets y seguidores, un integrador acoplado en alterna para que el nivel de la triangular no dependa de la señal anterior, un derivador compensado para que no oscile y un rectificador de precisión. La triangular simulada va de \valu{2}{\simSdosMin}{\volt} a \valu{2}{\simSdosMax}{\volt} con una alinealidad de \valu{2}{\simNoLinSdos}{\percent}, los impulsos llegan a \valu{2}{\simScuatroPicoSub}{\volt}, la impedancia de entrada es de \SI{15}{\kilo\ohm} y la de salida, de \valu{2}{\simZoutF}{\ohm} a \SI{4,3}{\kilo\hertz}. En la placa, las señales 1 y 2 tienen la forma y la fase del diseño; sus diferencias de nivel y amplitud se deben al ajuste de los presets y al capacitor de integración. La señal 4 muestra un impulso dominante por período y ráfagas de oscilación, que las capturas no permitieron diagnosticar; con simulación se muestra que el diseño nominal no los produce y que dos defectos de la etapa los reproducen.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Amplificador operacional, TL084, integrador, derivador, rectificador de precisión, referencia de tensión, ngspice.
+\end{IEEEkeywords}
+
+\input{capitulos/1_introduccion.tex}
+\input{capitulos/2_diseno.tex}
+\input{capitulos/3_implementacion.tex}
+\input{capitulos/4_problemas.tex}
+\input{capitulos/5_conclusiones.tex}
+
+\begin{thebibliography}{99}
+\bibitem{linares-intro}
+F. Linares, \emph{Amplificadores operacionales: introducción}. Práctico de Electrónica Aplicada II, UTN FRC, versión 2020.
+
+\bibitem{linares-intder}
+F. Linares, \emph{Amplificadores operacionales: integradores y derivadores}, rev.~02. Práctico de Electrónica Aplicada II, UTN FRC.
+
+\bibitem{linares-comp}
+F. Linares, \emph{A.O.: comparadores, multiplicadores, convertidores}. Práctico de Electrónica Aplicada II, UTN FRC, versión 2020.
+
+\bibitem{refs}
+P. Miller y D. Moore, ``Precision voltage references'', \emph{Analog Applications Journal}, Texas Instruments, nov. 1999.
+
+\bibitem{tl08x}
+Texas Instruments, \emph{TL08xx JFET-input operational amplifiers}, hoja de datos SLOS081I, rev. may. 2015.
+
+\bibitem{opamps}
+Texas Instruments, \emph{LM741 operational amplifier} y \emph{LMx24 quadruple operational amplifiers}; Analog Devices, \emph{OP07 ultralow offset voltage operational amplifier}. Hojas de datos.
+
+\bibitem{1n750}
+onsemi, \emph{1N746A--1N759A, 500 mW DO-35 hermetically sealed glass zener voltage regulators}, hoja de datos.
+
+\bibitem{1n4004}
+Vishay General Semiconductor, \emph{1N4001 thru 1N4007: general purpose plastic rectifier}, hoja de datos 88503.
+
+\bibitem{1n4148}
+onsemi, \emph{1N914, 1N4148: high conductance fast diode}, hoja de datos.
+
+\bibitem{coughlin}
+R. F. Coughlin y F. F. Driscoll, \emph{Amplificadores operacionales y circuitos integrados lineales}, 5.ª ed. México: Prentice Hall, 1999.
+
+\bibitem{franco}
+S. Franco, \emph{Design with Operational Amplifiers and Analog Integrated Circuits}, 4.ª ed. Nueva York: McGraw-Hill, 2015.
+
+\bibitem{ngspice}
+H. Vogt, G. Atkinson y P. Nenzi, \emph{Ngspice User's Manual}, versión 47. [En línea]. Disponible: \url{https://ngspice.sourceforge.io}
+\end{thebibliography}
+
+\end{document}

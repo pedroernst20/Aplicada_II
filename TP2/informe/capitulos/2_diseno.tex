@@ -1,0 +1,521 @@
+\section{Diseño y simulación}
+\label{sec:diseno}
+
+\subsection{Cómo se verificó cada decisión}
+\label{sec:metodo}
+Cada etapa se diseñó con las ecuaciones del operacional ideal y después se verificó con ngspice~\cite{ngspice}, usando modelos de los fabricantes, porque varios de los problemas de este circuito (la estabilidad del derivador, la conmutación del rectificador, la impedancia de salida) dependen justamente de lo que el modelo ideal no tiene. Se usaron los siguientes modelos:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{TL084}: macromodelo de Texas Instruments, con entrada JFET, $B_1 = \SI{3}{\mega\hertz}$, $SR = \SI{13}{\volt\per\micro\second}$ y límites de excursión y de corriente de salida.
+    \item \textbf{1N750}: modelo de onsemi, con ruptura a \SI{4,7}{\volt}.
+    \item \textbf{1N4004}: parámetros de juntura de la familia 1N400x (Diodes Inc.), con tiempo de tránsito de \SI{5}{\micro\second}.
+    \item \textbf{1N4148}: modelo de onsemi, con tiempo de tránsito de \SI{20}{\nano\second}, para comparar.
+\end{itemize}
+Cada análisis se hizo sobre el circuito completo de la Fig.~\ref{fig:circuito} o sobre la etapa en estudio, y todos los valores numéricos y las curvas de simulación de este informe salen directamente de esas corridas. Los presets se representan como dos resistores que suman \SI{10}{\kilo\ohm}; $P_1$ y $P_2$ se ajustan para $\Vrefd = \SI{1,25}{\volt}$ y $\Vrefu = \SI{1}{\volt}$ con la tensión del zener simulada (\valu{3}{\simVz}{\volt}), y $P_3$ para que el pico de la señal 4 sea de \SI{1}{\volt} (queda en \valu{2}{\simPtres}{\kilo\ohm}). Por el acoplamiento del integrador, el nivel medio de la triangular tarda decenas de milisegundos en establecerse; para no simular ese arranque en cada corrida, los capacitores $C_C$ y $C_1$ parten de sus tensiones de régimen, se simulan \SI{60}{\milli\second} con paso máximo de \SI{0,1}{\micro\second} y se analizan los últimos períodos.
+
+\subsection{Elección del amplificador operacional}
+\label{sec:opamp}
+El circuito necesita once amplificadores, y antes de elegir el integrado conviene ver qué le exige cada etapa:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Corriente de polarización baja}. El integrador necesita una resistencia de \SI{1}{\mega\ohm} en la realimentación (Sección~\ref{sec:integrador}), y la corriente de polarización la recorre: \SI{80}{\nano\ampere} producirían \SI{80}{\milli\volt} de error en el nivel de la triangular.
+    \item \textbf{\emph{Slew rate} alto}. Cada vez que un impulso de la señal 4 cambia de signo, el operacional del rectificador tiene que mover su salida unos \SI{2,5}{\volt} para pasar de un diodo al otro. Los impulsos duran unos \SI{5}{\micro\second}, así que ese salto tiene que durar una fracción de microsegundo.
+    \item \textbf{Producto ganancia-ancho de banda alto}. Fija la frecuencia a la que tiende a oscilar el derivador y la impedancia de salida (Secciones~\ref{sec:derivador} y~\ref{sec:zout}).
+    \item \textbf{Cuatro amplificadores por encapsulado}, para que once amplificadores entren en tres integrados.
+\end{itemize}
+La Tabla~\ref{tab:opamps} compara el TL084 con los operacionales de uso general que hay en el laboratorio. El LM741 y el LM324 tienen un \emph{slew rate} de \SI{0,5}{\volt\per\micro\second}: tardarían \SI{5}{\micro\second} en el salto del rectificador, tanto como dura el impulso, y lo deformarían por completo. Su corriente de polarización, de decenas de nanoampere, daría además decenas de milivolt de error en el integrador. El OP07 tiene un \emph{offset} cincuenta veces menor que el TL084, pero es todavía más lento y es simple: harían falta once integrados. El TL084 cumple las cuatro condiciones: su entrada JFET tiene una corriente de polarización mil veces menor que la de los bipolares, es veintiséis veces más rápido que el LM741 y es cuádruple. Su punto débil es el \emph{offset} de entrada, de hasta \SI{15}{\milli\volt}, y por eso el diseño evita amplificar la continua y deja ajustables los niveles. El TL082 es el mismo integrado en versión doble (haría falta el doble de integrados) y el TL074 es la versión de bajo ruido, que acá no aporta nada.
+
+\begin{table}[!htb]
+\centering
+\caption{Operacionales de uso general (valores típicos de las hojas de datos~\cite{tl08x, opamps}).}
+\label{tab:opamps}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & \textbf{TL084} & \textbf{LM741} & \textbf{LM324} & \textbf{OP07} \\
+\midrule
+Entrada & JFET & bipolar & bipolar & bipolar \\
+\emph{Slew rate} [\si{\volt\per\micro\second}] & 13 & 0,5 & 0,5 & 0,3 \\
+Ganancia-ancho de banda [\si{\mega\hertz}] & 3 & 1 & 1 & 0,6 \\
+Corriente de polarización [\si{\nano\ampere}] & 0,03 & 80 & 20 & 1 \\
+\emph{Offset} de entrada [\si{\milli\volt}] & 3 & 1 & 2 & 0,06 \\
+Amplificadores por integrado & 4 & 1 & 4 & 1 \\
+Integrados para este circuito & 3 & 11 & 3 & 11 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+De la hoja de datos del TL084C~\cite{tl08x} interesan además los parámetros que la consigna pide analizar y que no aparecen en la Tabla~\ref{tab:opamps}. El rechazo de modo común es de \SI{86}{\deci\bel} típico (\SI{70}{\deci\bel} mínimo): en el restador de la señal 1 el modo común no pasa de \SI{1,25}{\volt}, lo que da un error de \SI{0,4}{\milli\volt}, despreciable frente al que introduce el apareamiento de los resistores (Sección~\ref{sec:s1}). El tiempo de crecimiento en pequeña señal es de \SI{0,05}{\micro\second}, y en gran señal manda el \emph{slew rate}: \SI{13}{\volt\per\micro\second} típico y \SI{8}{\volt\per\micro\second} mínimo, con lo que el flanco de \SI{2,5}{\volt} de la señal 1 dura \SI{0,2}{\micro\second}, el \SI{0,08}{\percent} del período. El \emph{offset} de entrada es de \SI{3}{\milli\volt} típico y \SI{15}{\milli\volt} máximo, con una deriva de \SI{18}{\micro\volt\per\celsius}; la corriente de polarización, de \SI{30}{\pico\ampere} típica y \SI{400}{\pico\ampere} máxima, produce sobre $R_F = \SI{1}{\mega\ohm}$ menos de \SI{0,4}{\milli\volt}. Con $\pm\SI{12}{\volt}$ la salida llega a unos $\pm\SI{10,5}{\volt}$, más del doble de la mayor excursión del circuito.
+
+\subsection{Alimentación}
+\label{sec:alim}
+Las señales van de \SI{-1,5}{} a \SI{4}{\volt}, así que el circuito necesita una fuente partida: con fuente simple habría que correr todos los niveles hacia arriba y volver a bajarlos al final. Se eligió $\pm\SI{12}{\volt}$ y no $\pm\SI{15}{\volt}$ porque alcanza con holgura: con \SI{12}{\volt} el TL084 llega a unos $\pm\SI{10,5}{\volt}$ de salida, más del doble de la mayor excursión del circuito, y su rango de modo común (unos \SI{9}{\volt} hacia el negativo) queda muy lejos de las señales. Además, con menos tensión cada integrado disipa menos y $R_Z$ también. Cada integrado tiene un capacitor cerámico de \SI{100}{\nano\farad} entre cada pin de alimentación y masa, lo más cerca posible del integrado, que entrega la corriente de los transitorios rápidos, y uno electrolítico de \SI{10}{\micro\farad} que cubre las variaciones lentas de consumo.
+
+\subsection{Arquitectura y ganancia de cada etapa}
+\label{sec:arq}
+La Fig.~\ref{fig:bloques} muestra la cadena de etapas y la Fig.~\ref{fig:circuito}, el circuito completo. La organización sigue tres criterios.
+
+\textbf{Cada señal sale de un operacional realimentado}, con impedancia de salida baja, para que la etapa siguiente no la cargue ni cambie su forma.
+
+\textbf{Los niveles de continua vienen de una referencia}, no de divisores sobre la fuente de \SI{12}{\volt}: un divisor transmite a la señal cualquier variación de la fuente en la misma proporción, mientras que con el zener la variación relativa es unas diez veces menor (Sección~\ref{sec:ref}).
+
+\textbf{Se amplifica donde la señal se genera, y la continua nunca con ganancia mayor que 2.} El \emph{offset} del TL084 llega a \SI{15}{\milli\volt}: una etapa que amplificara la continua por 4, por ejemplo, convertiría eso en \SI{60}{\milli\volt} de error de nivel. Por eso el integrador se dimensiona para dar directamente los \SI{5,5}{\volt} de la triangular, en vez de integrar una señal chica y amplificarla después, y el derivador da directamente los $\pm\SI{1,5}{\volt}$ de la señal 3. La Tabla~\ref{tab:ganancias} resume la ganancia de cada etapa y por qué.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[scale=0.92, transform shape, font=\scriptsize,
+    b/.style={draw, rounded corners=2pt, minimum width=2.2cm, minimum height=0.8cm, align=center, fill=blue!4},
+    r/.style={draw, rounded corners=2pt, minimum width=2.2cm, minimum height=0.8cm, align=center, fill=orange!8},
+    s/.style={font=\scriptsize\bfseries, color=red!70!black},
+    ->, >=stealth]
+\node[b] (gen) at (0,0) {Generador\\0 a \SI{2,5}{\volt}};
+\node[b] (u1a) at (2.85,0) {U1A: seguidor\\$Z_i = \SI{15}{\kilo\ohm}$};
+\node[b] (u1c) at (5.7,0) {U1C: restador\\$v_a - \Vrefu$};
+\node[b] (u1d) at (0,-1.5) {U1D: integrador\\acoplado en alterna};
+\node[b] (u2a) at (2.85,-1.5) {U2A: inversor\\alrededor de $\Vrefd$};
+\node[b] (u2b) at (5.7,-1.5) {U2B: derivador\\compensado};
+\node[b] (u2c) at (0,-3.0) {U2C: inversor\\con desplazamiento};
+\node[b] (u3a) at (2.85,-3.0) {U3A: pasaaltos\\activo};
+\node[b] (u3b) at (5.7,-3.0) {U3B, U3C: recti-\\ficador y sumador};
+\node[r] (ref) at (2.85,-4.5) {D\textsubscript{Z1}, U1B, U2D:\\referencia};
+\draw (gen) -- (u1a);
+\draw (u1a) -- (u1c);
+\draw (u1c.south) -- ++(0,-0.25) -| node[s, pos=0.12, above] {S1} (u1d.north);
+\draw (u1d) -- (u2a);
+\draw (u2a) -- node[s, above] {S2} (u2b);
+\draw (u2b.south) -- ++(0,-0.25) -| (u2c.north);
+\draw (u2c) -- node[s, above] {S3} (u3a);
+\draw (u3a) -- node[above] {$v_p$} (u3b);
+\draw (u3b.east) -- ++(0.35,0) node[s, right] {S4};
+\draw[dashed, color=orange!70!black] (ref.west) -- ++(-0.6,0) node[left, align=right] {$\Vrefu$: U1C\\$\Vrefd$: U1D, U2A, U2C};
+\end{tikzpicture}
+\caption{Cadena de etapas. Cada bloque es un amplificador de los tres TL084; la referencia alimenta a los bloques que fijan niveles.}
+\label{fig:bloques}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Ganancia de cada etapa y su justificación.}
+\label{tab:ganancias}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l>{\centering}p{1.3cm}>{\raggedright\arraybackslash}p{4.6cm}@{}}
+\toprule
+\textbf{Etapa} & \textbf{Ganancia} & \textbf{Por qué} \\
+\midrule
+U1A & $1$ & El generador ya entrega los \SI{2,5}{\volt} pico a pico de la señal 1; solo hay que fijar $Z_i$. \\
+U1C & $1$ & La señal 1 tiene la misma amplitud que la entrada; solo cambia el nivel. \\
+U1D & $1/(sR_IC_1)$ & Da directamente los \SI{5,5}{\volt} de la triangular: no hace falta amplificarla después. \\
+U2A & $-1$ & Corrige el signo y pone el nivel en $\Vrefd$; la amplitud ya es la correcta. \\
+U2B & $-sR_DC_D$ & Da directamente los $\pm\SI{1,5}{\volt}$ que necesita la señal 3. \\
+U2C & $-1$ & Corrige el signo y suma \SI{1,5}{\volt}. \\
+U3A & $-1$ (alta frec.) & Genera los impulsos sin cambiar su escala. \\
+U3B, U3C & $0{,}5$ a $1$ & Rectifica y ajusta con $P_3$ el pico final de \SI{1}{\volt}, igual para los dos flancos. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure*}[!t]
+\centering
+\input{figuras/circuito.tex}
+\caption{Circuito completo. S1 a S4 son las cuatro señales de la consigna. Los nodos marcados $\Vrefu$ y $\Vrefd$ se conectan a las salidas de U2D y U1B. El cuarto amplificador de U3 queda sin uso, conectado como seguidor con la entrada a masa.}
+\label{fig:circuito}
+\end{figure*}
+
+El período de la señal es $T = 1/\SI{4300}{\hertz} = \SI{232,56}{\micro\second}$ y cada semiperíodo dura $T/2 = \SI{116,28}{\micro\second}$. Salvo indicación, los resistores son de película metálica con tolerancia del \SI{1}{\percent}: los niveles de varias etapas dependen de cocientes entre resistores, y con resistores de carbón del \SI{5}{\percent} esos cocientes podrían errar un \SI{10}{\percent}.
+
+\subsection{Entrada: impedancia de \SI{15}{\kilo\ohm} (U1A)}
+\label{sec:entrada}
+\paragraph*{Alternativas} La forma más directa de fijar una impedancia de entrada es la resistencia de entrada de un amplificador inversor: con \SI{15}{\kilo\ohm} en serie con la entrada inversora, $Z_i = \SI{15}{\kilo\ohm}$. Pero esa etapa invierte la señal y su ganancia queda atada a los \SI{15}{\kilo\ohm} ($-R_F/\SI{15}{\kilo\ohm}$). Se eligió terminar la entrada en $R_1 = \SI{15}{\kilo\ohm}$ a masa y tomarla con el seguidor U1A:
+\begin{equation}
+Z_i = R_1 \parallel r_i \approx \SI{15}{\kilo\ohm},
+\end{equation}
+porque la resistencia de entrada del TL084 es de $\SI{e12}{\ohm}$ y su capacidad de entrada, de pocos picofaradios. Así $Z_i$ depende de un solo resistor del \SI{1}{\percent} y no de lo que venga después, y la señal no se invierte.
+
+\paragraph*{Por qué hace falta el seguidor} Sin U1A, el restador de la señal 1 quedaría en paralelo con $R_1$; su resistencia de entrada es de \SI{20}{\kilo\ohm} y bajaría la impedancia de entrada a \SI{8,6}{\kilo\ohm}. El seguidor tiene ganancia 1 porque no hay nada que amplificar: el generador ya entrega la amplitud de la señal 1. La simulación da $Z_i = \valu{2}{\simZin}{\kilo\ohm}$, constante hasta \SI{1}{\mega\hertz}.
+
+\subsection{Referencia de precisión con buffer (D\textsubscript{Z1}, U1B, U2D)}
+\label{sec:ref}
+\paragraph*{Por qué un zener y no un divisor} Un divisor resistivo sobre la fuente de \SI{12}{\volt} transmite a la referencia cualquier variación de la fuente: un \SI{10}{\percent} menos de alimentación movería los niveles un \SI{10}{\percent}. El zener se polariza con $R_Z$ desde $+\SI{12}{\volt}$ y su tensión cambia solo en la proporción del divisor que forman $R_Z$ y su impedancia dinámica $Z_Z$:
+\begin{equation}
+\frac{\Delta \Vrefd}{\Delta V_{CC}} = \alpha_1 \frac{Z_Z}{R_Z + Z_Z},
+\end{equation}
+donde $\alpha_1$ es la fracción de $V_Z$ que toma el preset. Con el máximo de la hoja de datos, $Z_Z = \SI{19}{\ohm}$~\cite{1n750}, una variación de $\pm\SI{10}{\percent}$ en la fuente mueve $\Vrefd$ en $\pm\SI{12}{\milli\volt}$ ($\pm\SI{1}{\percent}$), diez veces menos que con un divisor. Con el modelo SPICE, cuya impedancia dinámica es de \valu{1}{\simZz}{\ohm}, la simulación da \valu{1}{\simRefLinea}{\milli\volt} entre \SI{10,8}{} y \SI{13,2}{\volt}. Una referencia integrada de banda prohibida (TL431, LM336) tendría mejor coeficiente de temperatura, pero los niveles de la consigna se leen con una resolución de décimas de volt y el zener con preset alcanza con margen. Es además el esquema de zener más amplificador que describe la nota de aplicación de la cátedra~\cite{refs}.
+
+\paragraph*{Zener y $R_Z$} Se usa un 1N750, de \SI{4,7}{\volt} y \SI{500}{\milli\watt}~\cite{1n750}. Su tensión deja \SI{7,3}{\volt} sobre $R_Z$ para fijar la corriente, y las dos referencias necesarias (\SI{1}{} y \SI{1,25}{\volt}) son una fracción cómoda de ella. La tolerancia de $V_Z$ no importa porque las referencias se ajustan con presets. La impedancia dinámica de un zener baja con la corriente, así que conviene polarizarlo cerca de los \SI{20}{\milli\ampere} de su especificación, sin calentar $R_Z$. Con $R_Z = \SI{470}{\ohm}$ y $V_Z = \SI{4,69}{\volt}$,
+\begin{equation}
+I_{R_Z} = \frac{\SI{12}{\volt} - V_Z}{R_Z} = \SI{15,6}{\milli\ampere},
+\end{equation}
+de los que \SI{0,94}{\milli\ampere} van a los presets y \SI{14,6}{\milli\ampere} al zener. El zener disipa \SI{68}{\milli\watt} (\SI{14}{\percent} de su máximo) y $R_Z$, \SI{114}{\milli\watt}, dentro de lo admisible para un resistor de \SI{0,25}{\watt}. El modelo de onsemi tiene un coeficiente de temperatura de \SI{-21}{\ppm\per\celsius}: entre \SI{0}{} y \SI{40}{\celsius} la referencia de \SI{1,25}{\volt} cambia \SI{1,1}{\milli\volt}.
+
+\paragraph*{Presets} Cada preset toma una fracción de $V_Z$: $\alpha_1 = \SI{1,25}{\volt}/V_Z = 0{,}267$ para $\Vrefd$ y $\alpha_2 = \SI{1}{\volt}/V_Z = 0{,}213$ para $\Vrefu$. Son multivuelta de \SI{10}{\kilo\ohm}: con 25 vueltas para \SI{4,7}{\volt}, cada vuelta mueve la referencia \SI{0,19}{\volt}, de modo que el ajuste fino llega al milivolt; y \SI{10}{\kilo\ohm} es lo bastante alto para tomar solo \SI{0,47}{\milli\ampere} del zener. Se usan dos referencias independientes porque la consigna fija dos niveles distintos (el de la señal 1 y el de la señal 2) y así cada uno se ajusta sin mover el otro.
+
+\paragraph*{Por qué el buffer} El cursor de un preset de \SI{10}{\kilo\ohm} en esa posición tiene una resistencia de Thévenin de unos \SI{2}{\kilo\ohm}, comparable con las resistencias que alimenta: $\Vrefu$ entra por $R_4 = \SI{10}{\kilo\ohm}$ al restador, y $\Vrefd$ alimenta el divisor $R_8$--$R_9$ de \SI{25}{\kilo\ohm}. Sin seguidores, esa resistencia se sumaría a $R_4$ y desbalancearía el restador, y la corriente variable de cada etapa movería la referencia. Los seguidores U1B y U2D entregan las referencias con impedancia de salida de fracciones de ohm: esta es la ``referencia de precisión con un \emph{buffer}'' que pide la consigna.
+
+\subsection{Señal 1: restador (U1C)}
+\label{sec:s1}
+\paragraph*{Alternativas} Para restar \SI{1}{\volt} hay dos opciones con un operacional: un sumador inversor, que daría $-(v_a - \SI{1}{\volt})$ y obligaría a agregar otro inversor, o un amplificador diferencial, que resta sin invertir. Se eligió el diferencial, con cuatro resistores iguales:
+\begin{equation}
+\sen{1} = \frac{R_3}{R_2 + R_3}\left(1 + \frac{R_5}{R_4}\right) v_a - \frac{R_5}{R_4}\,\Vrefu = v_a - \Vrefu,
+\end{equation}
+donde $v_a$ es la salida del seguidor de entrada. Con $v_a$ de \SI{0}{} a \SI{2,5}{\volt} y $\Vrefu = \SI{1}{\volt}$, $\sen{1}$ va de \SI{-1}{} a \SI{1,5}{\volt}. La ganancia es 1 porque la señal 1 tiene la misma amplitud que la entrada.
+
+\paragraph*{Valores} \SI{10}{\kilo\ohm} es lo bastante alto para que U1A y U2D entreguen como máximo \SI{0,25}{\milli\ampere}, y lo bastante bajo para que las capacidades parásitas de pocos picofaradios formen polos por encima de los megahertz. La ganancia para $v_a$ es exactamente 1 solo si $R_3/R_2 = R_5/R_4$, y por eso los resistores son del \SI{1}{\percent}: el error de ganancia queda por debajo del \SI{2}{\percent} (\SI{50}{\milli\volt} sobre \SI{2,5}{\volt}). El nivel se corrige con $P_2$, que también compensa el \emph{offset} de U1C (ganancia de ruido 2, hasta \SI{30}{\milli\volt}).
+
+\subsection{Señal 2: integrador (U1D) e inversor (U2A)}
+\label{sec:integrador}
+\paragraph*{Topología} La triangular es la integral de la cuadrada. Se usa el integrador inversor (de Miller), que tiene una sola constante de tiempo y no depende del apareamiento de resistores, a diferencia del integrador no inversor de Deboo. Su inversión se corrige con U2A, que hace falta de todos modos para fijar el nivel de la señal 2.
+
+\paragraph*{Pendiente y amplitud} La señal 1 vale $\langle \sen{1} \rangle + \SI{1,25}{\volt}$ en el semiperíodo alto y $\langle \sen{1} \rangle - \SI{1,25}{\volt}$ en el bajo. El integrador la convierte en rampas de pendiente $\pm\SI{1,25}{\volt}/(R_I C_1)$, y para que la triangular tenga \SI{5,5}{\volt} pico a pico hace falta
+\begin{equation}
+R_I C_1 = \frac{\SI{1,25}{\volt} \cdot T/2}{\SI{5,5}{\volt}} = \SI{26,4}{\micro\second}.
+\label{eq:ric1}
+\end{equation}
+Se eligió $C_1 = \SI{4,7}{\nano\farad}$ y $R_I = \SI{5,6}{\kilo\ohm}$ ($R_I C_1 = \SI{26,3}{\micro\second}$: \SI{5,52}{\volt} pico a pico y \SI{47,5}{\volt\per\milli\second}). Con un capacitor diez veces mayor, $R_I$ sería de \SI{560}{\ohm} y U1C tendría que entregar \SI{2,2}{\milli\ampere}; con uno diez veces menor, las capacidades parásitas de la placa serían una fracción apreciable de $C_1$. $C_1$ es de poliéster del \SI{5}{\percent}, porque la amplitud de la triangular depende directamente de su valor y un cerámico de uso general cambia hasta un \SI{20}{\percent} con la temperatura y con la tensión aplicada.
+
+\paragraph*{El problema de la continua} Un integrador ideal tiene ganancia infinita en continua: el valor medio de la señal 1 (\SI{0,25}{\volt}) y el \emph{offset} del operacional lo saturan en pocos milisegundos. La solución habitual es una resistencia $R_F$ en paralelo con $C_1$~\cite{linares-intder}, que limita la ganancia en continua a $-R_F/R_I$, pero eso obliga a un compromiso:
+\begin{itemize}[leftmargin=*, nosep]
+    \item Cada rampa es en realidad una exponencial de constante $R_F C_1$, y su pendiente al final del semiperíodo es $e^{-T/(2 R_F C_1)}$ veces la del principio. Con $R_F/R_I = 10$ ese factor es 0,64.
+    \item Si se aumenta $R_F$ para mejorar la linealidad, también crece la ganancia en continua, y cualquier error $\varepsilon$ en el valor medio de la entrada desplaza la triangular $(R_F/R_I)\,\varepsilon$. Con $R_F/R_I = 100$ las rampas son casi rectas, pero \SI{50}{\milli\volt} de error mueven el nivel \SI{5}{\volt}.
+\end{itemize}
+Por eso se agrega $C_C$ en serie con $R_I$. Para la continua la entrada queda abierta: el valor medio de la señal 1 no llega al integrador, $C_C$ se carga con $\langle \sen{1} \rangle - \Vrefd = \SI{-1}{\volt}$ y la única realimentación en continua es $R_F$, con ganancia de ruido 1. La salida queda centrada en el potencial de la entrada no inversora, $\Vrefd$, con un error igual al \emph{offset} de U1D. La transferencia completa es
+\begin{equation}
+\frac{V_{int}}{V_{S1}}(s) = -\frac{s C_C R_F}{(1 + s R_I C_C)(1 + s R_F C_1)},
+\end{equation}
+que por encima de los polos en $1/(2\pi R_I C_C) = \SI{28}{\hertz}$ y $1/(2\pi R_F C_1) = \SI{34}{\hertz}$ se reduce a $-1/(s R_I C_1)$.
+
+\paragraph*{$C_C$ y $R_F$} Con $C_C$ acoplando la entrada, $R_F$ ya no fija el nivel y puede ser grande. Con \SI{1}{\mega\ohm} se pierden por ella como máximo \SI{2,8}{\micro\ampere}, contra \SI{223}{\micro\ampere} de corriente de integración; con un valor mayor, la corriente de polarización empezaría a pesar y el arranque sería aún más lento. $C_C = \SI{1}{\micro\farad}$ hace que $R_I C_C = \SI{5,6}{\milli\second}$, cincuenta veces el semiperíodo, de modo que la corriente por $R_I$ decae solo un \SI{2}{\percent} durante cada rampa. $C_C$ es de poliéster y no electrolítico: la corriente de fuga de un electrolítico, del orden del microampere, entraría al nodo de integración y saldría por $R_F$, y \SI{1}{\micro\ampere} por \SI{1}{\mega\ohm} correría la triangular \SI{1}{\volt}. El precio es el arranque: después de encender, el nivel medio tarda unas decenas de milisegundos en establecerse.
+
+\paragraph*{Nivel y sentido de la señal 2} El integrador invierte: su salida baja mientras la señal 1 está en alto. U2A la invierte otra vez alrededor de $\Vrefd$, con $R_6 = R_7 = \SI{10}{\kilo\ohm}$:
+\begin{equation}
+\sen{2} = 2\Vrefd - v_{int} = \Vrefd + \frac{1}{R_I C_1}\int \left(\sen{1} - \langle \sen{1} \rangle\right) dt.
+\end{equation}
+La triangular sube cuando la señal 1 está en alto y su valor medio es $\Vrefd = \SI{1,25}{\volt}$. El nivel de continua de la señal 2 queda fijado por la referencia de precisión, como pide la consigna, y no por el valor medio de la señal anterior ni por la ganancia en continua del integrador. La ganancia de U2A es $-1$ porque la amplitud ya es la correcta.
+
+\paragraph*{Verificación} Se simularon tres versiones de la etapa integradora con U2A, excitadas con una cuadrada ideal de \SI{-1}{} a \SI{1,5}{\volt}: acoplada en continua con $R_F/R_I = 10$ (\SI{56}{\kilo\ohm}), acoplada en continua con $R_F/R_I = 100$ (\SI{560}{\kilo\ohm}) y la elegida, con $C_C$ y $R_F = \SI{1}{\mega\ohm}$. En las dos primeras la entrada no inversora se lleva a \SI{0,25}{\volt} para que, con la entrada exacta, las tres den la misma triangular. Después se repitió cada simulación con la entrada desplazada \SI{50}{\milli\volt}, un error posible si $P_2$ no está bien ajustado (Fig.~\ref{fig:integrador} y Tabla~\ref{tab:integrador}). Con $R_F/R_I = 10$ las rampas son curvas: la pendiente al final es el \valu{0}{100*\simIntDcDiezPend}{\percent} de la del principio, y el error de \SI{50}{\milli\volt} sube la triangular \valu{2}{\simIntDcDiezCorr}{\volt}. Con $R_F/R_I = 100$ las rampas son rectas, pero el mismo error la sube \valu{2}{\simIntDcCienCorr}{\volt} y su máximo llega a \valu{1}{\simIntDcCienMaxErr}{\volt}, cerca de la saturación. La versión elegida tiene la linealidad de la segunda (\valu{2}{\simIntAcNoLin}{\percent}) y su nivel no se mueve: el error lo absorbe $C_C$.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=1 by 2, vertical sep=6pt, xticklabels at=edge bottom},
+    tp2, height=3.7cm, xmin=0, xmax=232.6, ymin=-2.5, ymax=10,
+    ytick={-1.5,1.25,4,6.25,9},
+]
+\nextgroupplot[ylabel={S2 [V], sin error}, legend pos=north east, legend columns=3]
+\addplot[cs1] table[x=t, y=dc10] {datos/integrador.dat};
+\addplot[cs2, dashed] table[x=t, y=dc100] {datos/integrador.dat};
+\addplot[cs3, densely dotted, line width=1.2pt] table[x=t, y=ac] {datos/integrador.dat};
+\legend{$R_F/R_I = 10$, $R_F/R_I = 100$, con $C_C$}
+\nextgroupplot[ylabel={S2 [V], error \SI{50}{\milli\volt}}, xlabel={Tiempo desde el flanco de subida de la señal 1 [\si{\micro\second}]}]
+\addplot[cs1] table[x=t, y=dc10e] {datos/integrador.dat};
+\addplot[cs2, dashed] table[x=t, y=dc100e] {datos/integrador.dat};
+\addplot[cs3, densely dotted, line width=1.2pt] table[x=t, y=ace] {datos/integrador.dat};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Señal 2 con tres versiones del integrador, con la entrada exacta (arriba) y con un error de \SI{50}{\milli\volt} en su valor medio (abajo).}
+\label{fig:integrador}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Comparación de los integradores (señal 2, simulación).}
+\label{tab:integrador}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & $R_F/R_I = 10$ & $R_F/R_I = 100$ & Con $C_C$ \\
+\midrule
+Ganancia en continua & 10 & 100 & 0 \\
+Pico a pico [\si{\volt}] & \val{2}{\simIntDcDiezVpp} & \val{2}{\simIntDcCienVpp} & \val{2}{\simIntAcVpp} \\
+Pendiente final / inicial & \val{2}{\simIntDcDiezPend} & \val{2}{\simIntDcCienPend} & \val{2}{\simIntAcPend} \\
+Alinealidad [\si{\percent}] & \val{2}{\simIntDcDiezNoLin} & \val{2}{\simIntDcCienNoLin} & \val{2}{\simIntAcNoLin} \\
+Corrimiento por \SI{50}{\milli\volt} [\si{\volt}] & \val{2}{\simIntDcDiezCorr} & \val{2}{\simIntDcCienCorr} & \val{2}{\simIntAcCorr} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Señal 3: derivador (U2B) y desplazador (U2C)}
+\label{sec:derivador}
+\paragraph*{Por qué un derivador y no un comparador} La forma más común de obtener una cuadrada a partir de una triangular es un comparador~\cite{linares-comp}. Pero un comparador contra el valor medio de la triangular daría una cuadrada en alto desde la mitad de la rampa de subida hasta la mitad de la de bajada: atrasada un cuarto de período respecto de la Fig.~\ref{fig:consigna}. Un comparador con histéresis y umbrales en los vértices tendría la fase correcta, pero cambiaría o no según pequeñas variaciones de la amplitud de la triangular. La consigna pide una señal en alto mientras la triangular sube, es decir, el signo de su pendiente: eso es una derivada, y su salida cambia exactamente en los vértices.
+
+\paragraph*{Amplitud} Un derivador ideal da $v_{der} = -R_D C_D\, d\sen{2}/dt$. Con pendientes de $\pm\SI{47,3}{\volt\per\milli\second}$ (\SI{5,5}{\volt} en \SI{116,28}{\micro\second}) y una salida de $\pm\SI{1,5}{\volt}$,
+\begin{equation}
+R_D C_D = \frac{\SI{1,5}{\volt}}{\SI{47,3}{\volt\per\milli\second}} = \SI{31,7}{\micro\second}.
+\end{equation}
+Se usa $C_D = \SI{1}{\nano\farad}$ de poliéster y $R_D = \SI{31,6}{\kilo\ohm}$, de la serie E96: la amplitud de la señal 3 depende directamente de este producto, y el valor E24 más cercano (\SI{33}{\kilo\ohm}) la correría un \SI{4}{\percent}. Durante la subida de la triangular $v_{der} = \SI{-1,5}{\volt}$ y durante la bajada, $+\SI{1,5}{\volt}$.
+
+\paragraph*{Estabilidad} El derivador es el punto delicado del circuito~\cite{franco}. Su ganancia de ruido, $1 + Z_F/Z_I = 1 + j\omega R_D C_D$, crece \SI{20}{\deci\bel} por década a partir de
+\begin{equation}
+f_1 = \frac{1}{2\pi R_D C_D} = \SI{5,04}{\kilo\hertz},
+\end{equation}
+mientras la ganancia de lazo abierto del TL084 cae \SI{20}{\deci\bel} por década. Las dos curvas se cruzan en
+\begin{equation}
+f_0 = \sqrt{f_1 B_1} = \SI{123}{\kilo\hertz},
+\end{equation}
+donde la ganancia de lazo tiene una fase de casi \SI{-180}{\degree}: \SI{-90}{\degree} del polo dominante del operacional y otros \SI{-90}{\degree} de la red $C_D$--$R_D$. Sin margen de fase, el derivador oscila a $f_0$ ante cualquier cambio de pendiente, y en este circuito los cambios de pendiente son justamente los vértices de la triangular. Se compensa con dos componentes:
+\begin{itemize}[leftmargin=*, nosep]
+    \item $C_F = \SI{56}{\pico\farad}$ en paralelo con $R_D$: la ganancia de ruido deja de crecer en $f_3 = 1/(2\pi R_D C_F) = \SI{90}{\kilo\hertz}$, antes de $f_0$, y a partir de ahí baja.
+    \item $R_S = \SI{1}{\kilo\ohm}$ en serie con $C_D$: agrega un cero en $f_2 = 1/(2\pi R_S C_D) = \SI{159}{\kilo\hertz}$ que devuelve fase al lazo, y aísla la salida de U2A de $C_D$, que sin $R_S$ sería \SI{1}{\nano\farad} conectado a una masa virtual: diez veces la carga capacitiva con la que la hoja de datos especifica al TL084.
+\end{itemize}
+Con los dos, la ganancia de lazo cruza la unidad cerca de \valu{0}{\simBarrDFc}{\kilo\hertz}, donde la ganancia de ruido ya cayó, y el margen de fase supera los \SI{90}{\degree}. A \SI{4,3}{\kilo\hertz} estos componentes no cambian la ganancia. Su costo es que los flancos de la señal 3 tardan unos \SI{4}{\micro\second} en vez de ser instantáneos.
+
+\paragraph*{Verificación} El derivador se simuló aislado, excitado con una triangular ideal de \SI{-1,5}{} a \SI{4}{\volt}. Sin compensar, su respuesta en frecuencia (Fig.~\ref{fig:derac}) tiene un pico de \valu{0}{\simDerSinPico}{\deci\bel} en \valu{0}{\simDerSinFpico}{\kilo\hertz}, muy cerca de los \valu{0}{\teoDerFcero}{\kilo\hertz} calculados para $f_0$. Con $R_S$ solo el pico baja a \valu{0}{\simDerRsPico}{\deci\bel}; con $R_S$ y $C_F$ desaparece, y la ganancia se aparta de la de un derivador ideal por encima de unos \SI{30}{\kilo\hertz}. A \SI{4,3}{\kilo\hertz} los tres casos coinciden (\valu{2}{\simDerConGanancia}{\deci\bel}). En el tiempo (Fig.~\ref{fig:dertr}), en el vértice inferior de la triangular, sin compensar el derivador oscila a \valu{0}{\simDerSinFosc}{\kilo\hertz} con un sobrepico del \valu{0}{\simBarrASobrepico}{\percent}, y la oscilación no llega a extinguirse antes del vértice siguiente. Con $R_S$ y $C_F$ el sobrepico es del \valu{1}{\simBarrDSobrepico}{\percent} y la transición dura \valu{1}{\simBarrDTransicion}{\micro\second}.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[tp2, height=5cm, xmin=1e3, xmax=1e7, ymin=-20, ymax=70,
+    xlabel={Frecuencia [\si{\hertz}]}, ylabel={$|V_{der}/V_{S2}|$ [\si{\deci\bel}]},
+    legend pos=north west]
+\addplot[cs2] table[x=f, y=sin] {datos/derivador_ac.dat};
+\addplot[cmed, dashed] table[x=f, y=rs] {datos/derivador_ac.dat};
+\addplot[cs3] table[x=f, y=con] {datos/derivador_ac.dat};
+\addplot[gray, densely dotted, domain=1e3:1e7, samples=50] {20*log10(2*pi*x*31.6e-6)};
+\addplot[gray, densely dashed, domain=1e3:1e7, samples=50] {20*log10(3e6/x)};
+\legend{Sin compensar, Solo $R_S$, $R_S$ y $C_F$ (diseño), Derivador ideal, $|A|$ del TL084}
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{Respuesta en frecuencia del derivador. Las rectas grises son la ganancia de un derivador ideal ($2\pi f R_D C_D$) y la de lazo abierto del TL084 ($B_1/f$); se cruzan en $f_0$.}
+\label{fig:derac}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[tp2, height=4.6cm, xmin=-10, xmax=70, ymin=-3.4, ymax=2.2,
+    xlabel={Tiempo desde el vértice [\si{\micro\second}]}, ylabel={$v_{der}$ [\si{\volt}]},
+    legend pos=north east]
+\addplot[cs2, line width=0.6pt] table[x=t, y=sin] {datos/derivador_tr.dat};
+\addplot[cmed, dashed] table[x=t, y=rs] {datos/derivador_tr.dat};
+\addplot[cs3, line width=1.1pt] table[x=t, y=con] {datos/derivador_tr.dat};
+\legend{Sin compensar, Solo $R_S$, $R_S$ y $C_F$}
+\end{axis}
+\end{tikzpicture}
+\caption{Salida del derivador en un vértice de la triangular (simulación).}
+\label{fig:dertr}
+\end{figure}
+
+\paragraph*{Elección de $R_S$ y $C_F$} La Tabla~\ref{tab:barrido} resume el barrido con el que se eligieron. El margen de fase se calculó con un modelo de un polo del TL084 ($A_{VD} = \SI{200}{\volt\per\milli\volt}$, $B_1 = \SI{3}{\mega\hertz}$) y las demás columnas, con el macromodelo. La fila con $C_F$ solo muestra que el capacitor aporta casi todo el amortiguamiento; $R_S$ se agrega por la carga capacitiva de U2A y porque baja el sobrepico del \val{1}{\simBarrCSobrepico} al \valu{1}{\simBarrDSobrepico}{\percent}. Hay un compromiso entre amortiguamiento y velocidad: \SI{2,7}{\kilo\ohm} eliminan el sobrepico pero alargan la transición a \valu{1}{\simBarrETransicion}{\micro\second}, lo que achica los impulsos de la señal 4, y \SI{22}{\pico\farad} la acortan a cambio de un sobrepico del \valu{0}{\simBarrFSobrepico}{\percent}. La combinación elegida, \SI{1}{\kilo\ohm} y \SI{56}{\pico\farad}, tiene un sobrepico menor que el \SI{3}{\percent} y flancos de \SI{4}{\micro\second}, el \SI{2}{\percent} del período.
+
+\begin{table}[!htb]
+\centering
+\caption{Barrido de la compensación del derivador (simulación).}
+\label{tab:barrido}
+\footnotesize
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+$R_S$ & $C_F$ & \textbf{Margen} & \textbf{Sobrepico} & \textbf{Transición} & \textbf{Establec.} \\
+ & & \textbf{de fase} & & \textbf{10--90 \%} & \textbf{al 2 \%} \\
+\midrule
+0 & 0 & \valu{0}{\simBarrAPm}{\degree} & \valu{0}{\simBarrASobrepico}{\percent} & -- & $>$\valu{0}{\simBarrAEst}{\micro\second} \\
+\SI{1}{\kilo\ohm} & 0 & \valu{0}{\simBarrBPm}{\degree} & \valu{0}{\simBarrBSobrepico}{\percent} & \valu{1}{\simBarrBTransicion}{\micro\second} & \valu{0}{\simBarrBEst}{\micro\second} \\
+0 & \SI{56}{\pico\farad} & \valu{0}{\simBarrCPm}{\degree} & \valu{1}{\simBarrCSobrepico}{\percent} & \valu{1}{\simBarrCTransicion}{\micro\second} & \valu{0}{\simBarrCEst}{\micro\second} \\
+\SI{1}{\kilo\ohm} & \SI{22}{\pico\farad} & \valu{0}{\simBarrFPm}{\degree} & \valu{1}{\simBarrFSobrepico}{\percent} & \valu{1}{\simBarrFTransicion}{\micro\second} & \valu{0}{\simBarrFEst}{\micro\second} \\
+\textbf{\SI{1}{\kilo\ohm}} & \textbf{\SI{56}{\pico\farad}} & \valu{0}{\simBarrDPm}{\degree} & \valu{1}{\simBarrDSobrepico}{\percent} & \valu{1}{\simBarrDTransicion}{\micro\second} & \valu{0}{\simBarrDEst}{\micro\second} \\
+\SI{2,7}{\kilo\ohm} & \SI{56}{\pico\farad} & \valu{0}{\simBarrEPm}{\degree} & \valu{1}{\simBarrESobrepico}{\percent} & \valu{1}{\simBarrETransicion}{\micro\second} & \valu{0}{\simBarrEEst}{\micro\second} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph*{Desplazamiento (U2C)} La salida del derivador es simétrica y está invertida. U2C la invierte otra vez alrededor de $V_{P5} = \Vrefd\, R_9/(R_8 + R_9) = \SI{0,75}{\volt}$:
+\begin{equation}
+\sen{3} = 2 V_{P5} - v_{der} = \SI{1,5}{\volt} - v_{der},
+\end{equation}
+que vale \SI{3}{\volt} durante la subida de la triangular y \SI{0}{\volt} durante la bajada. El divisor $R_8$--$R_9$ se toma de $\Vrefd$ y no de la fuente, por la razón de la Sección~\ref{sec:ref}; como alimenta solo una entrada no inversora, que no toma corriente, su resistencia de Thévenin (\SI{6}{\kilo\ohm}) no introduce error. La ganancia es $-1$ porque el derivador ya dio la amplitud.
+
+\subsection{Señal 4: generador de impulsos (U3A) y rectificador (U3B, U3C)}
+\label{sec:s4}
+\paragraph*{Impulsos} Los impulsos se obtienen derivando la señal 3. Se usa un derivador con resistencia en serie, es decir, un pasaaltos activo:
+\begin{equation}
+\frac{V_p}{V_{S3}}(s) = -\frac{R_{F4}}{R_{S4}} \cdot \frac{s\tau_4}{1 + s\tau_4}, \qquad \tau_4 = R_{S4} C_4 = \SI{4,7}{\micro\second}.
+\end{equation}
+Ante un escalón $\Delta V$ responde con $v_p(t) = -(R_{F4}/R_{S4})\,\Delta V\, e^{-t/\tau_4}$: un impulso que decae exponencialmente, negativo en el flanco de subida de la señal 3 y positivo en el de bajada. $\tau_4$ se eligió para que cada impulso se extinga en unos \SI{20}{\micro\second}, menos del \SI{10}{\percent} del período, como en la Fig.~\ref{fig:consigna}. A diferencia del derivador de la señal 3, este no tiene problemas de estabilidad: $R_{S4}$ limita su ganancia de ruido a 2. Se usa una etapa activa y no una red $RC$ pasiva porque el rectificador que sigue tiene \SI{6,7}{\kilo\ohm} de resistencia de entrada, que cargaría la red y cambiaría $\tau_4$. $R_{F4} = R_{S4}$ porque la amplitud final se ajusta después, en un solo lugar. Como los flancos de la señal 3 duran unos \SI{4}{\micro\second}, comparables con $\tau_4$, los impulsos no llegan a los \SI{3}{\volt} de un escalón ideal sino a unos \SI{1,6}{\volt}.
+
+\paragraph*{Por qué un rectificador de precisión} Un rectificador con diodos solos perdería en cada impulso la caída del diodo, unos \SI{0,6}{\volt} de los \SI{1,6}{\volt} disponibles, y la parte final de cada exponencial, por debajo de esa tensión, desaparecería. En el rectificador de precisión los diodos están dentro del lazo de realimentación y su caída se divide por la ganancia del operacional. Tiene que ser de onda completa porque los impulsos de los dos flancos tienen que salir positivos.
+
+\paragraph*{Funcionamiento} U3B es un rectificador de media onda inversor~\cite{coughlin}. Cuando $v_p > 0$, su salida baja, conduce $D_2$ y $v_A = -(R_{13}/R_{12})\, v_p = -v_p$; cuando $v_p < 0$, conduce $D_1$, que fija su salida en unos \SI{0,5}{\volt}, $D_2$ queda cortado y $v_A = 0$. U3C suma $v_p$ y $v_A$ con pesos 1:2:
+\begin{equation}
+\sen{4} = -R_{F}\left(\frac{v_p}{R_{14}} + \frac{v_A}{R_{15}}\right) = \frac{R_{F8} + P_3}{\SI{20}{\kilo\ohm}}\,|v_p|,
+\end{equation}
+con $R_{14} = 2R_{15} = \SI{20}{\kilo\ohm}$. Con $v_p > 0$, $-v_p/R_{14} + v_p/R_{15} = v_p/R_{14}$; con $v_p < 0$ solo actúa el primer término. La relación 2:1 es la que iguala los impulsos de ambos flancos: si $R_{14}$ y $R_{15}$ fueran iguales, los impulsos positivos de $v_p$ se cancelarían y los negativos saldrían con el doble de amplitud. Por eso esos dos resistores son del \SI{1}{\percent}.
+
+\paragraph*{Ganancia final y $P_3$} La amplitud se ajusta acá, al final, porque es el único punto donde un solo preset escala por igual los impulsos de los dos flancos. Con $R_{F8} = \SI{10}{\kilo\ohm}$ más el preset $P_3$ de \SI{10}{\kilo\ohm}, la ganancia va de 0,5 a 1; para llevar los \SI{1,6}{\volt} de $v_p$ a \SI{1}{\volt} hace falta $R_{F8} + P_3 = \SI{12,3}{\kilo\ohm}$. Ese rango cubre la dispersión por tolerancias (Sección~\ref{sec:tolerancias}).
+
+\paragraph*{Diodos} Se usan dos 1N4004~\cite{1n4004}, diodos rectificadores de uso general disponibles en el laboratorio. Con los diodos dentro del lazo, su caída de tensión no importa y las corrientes son de décimas de miliampere, así que un diodo de potencia cumple la función. Lo que sí puede importar es su velocidad: la Tabla~\ref{tab:diodos} lo compara con el 1N4148~\cite{1n4148}, un diodo de conmutación. El 1N4004 tiene más capacidad de juntura y un tiempo de recuperación inversa del orden del microsegundo, comparable con la duración de los impulsos.
+
+\begin{table}[!htb]
+\centering
+\caption{Diodos para el rectificador de precisión.}
+\label{tab:diodos}
+\footnotesize
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Parámetro} & \textbf{1N4004}~\cite{1n4004} & \textbf{1N4148}~\cite{1n4148} \\
+\midrule
+Tensión inversa máxima & \SI{400}{\volt} & \SI{100}{\volt} \\
+Corriente media máxima & \SI{1}{\ampere} & \SI{200}{\milli\ampere} \\
+Capacidad de juntura & \SI{15}{\pico\farad} (típ., \SI{4}{\volt}) & \SI{4}{\pico\farad} (máx.) \\
+Recuperación inversa $t_{rr}$ & \SI{2}{\micro\second} (típ.) & \SI{4}{\nano\second} (máx.) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph*{Verificación} Para cuantificar el efecto del diodo se simuló el rectificador excitado con la señal 3 de la simulación completa, con 1N4004, con 1N4148 y con un diodo ideal sin almacenamiento de carga (Fig.~\ref{fig:rect} y Tabla~\ref{tab:rect}). Con los tres, los impulsos de ambos flancos son iguales dentro del \SI{0,2}{\percent}: el rectificador funciona con 1N4004. La diferencia está en un rebote negativo al comienzo de cada impulso positivo de $v_p$, en el flanco de bajada de la señal 3. En reposo la salida de U3B está en unos \valu{1}{\simRectAOsieteMax}{\volt}, con $D_1$ apenas conduciendo; cuando $v_p$ se hace positivo, tiene que bajar hasta unos \valu{1}{\simRectAOsieteMin}{\volt} para que conduzca $D_2$. Mientras atraviesa el tramo en que ningún diodo conduce, el lazo está abierto y $v_A$ sigue en cero, de modo que el sumador recibe solo el término $-v_p/R_{14}$ y su salida se hace negativa. Con el 1N4004 ese pulso llega a \valu{0}{-1000*\simRectAMin}{\milli\volt}, porque la carga almacenada en $D_1$ y su capacidad de juntura demoran el cambio de estado; con el 1N4148 baja a \valu{0}{-1000*\simRectBMin}{\milli\volt} y con el diodo ideal, a \valu{0}{-1000*\simRectCMin}{\milli\volt}, que es lo que tarda el operacional en recorrer el tramo muerto. El 1N4148 sería la mejor elección para impulsos de pocos microsegundos, pero el 1N4004 da una señal 4 que cumple la consigna.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 1, horizontal sep=6pt, yticklabels at=edge left},
+    tp2, width=0.58\columnwidth, height=4.4cm, ymin=-0.25, ymax=1.15,
+    ylabel={S4 [V]}, xlabel={Tiempo [\si{\micro\second}]},
+]
+\nextgroupplot[xmin=-2, xmax=28, title={\footnotesize Flanco de subida de S3}]
+\addplot[cs2] table[x=t, y=s4a] {datos/rectificador.dat};
+\addplot[cs1, dashed] table[x=t, y=s4b] {datos/rectificador.dat};
+\addplot[gray, densely dotted, line width=1.2pt] table[x=t, y=s4c] {datos/rectificador.dat};
+\nextgroupplot[xmin=114.3, xmax=144.3, title={\footnotesize Flanco de bajada de S3}, legend pos=north east]
+\addplot[cs2] table[x=t, y=s4a] {datos/rectificador.dat};
+\addplot[cs1, dashed] table[x=t, y=s4b] {datos/rectificador.dat};
+\addplot[gray, densely dotted, line width=1.2pt] table[x=t, y=s4c] {datos/rectificador.dat};
+\legend{1N4004, 1N4148, Ideal}
+\end{groupplot}
+\end{tikzpicture}
+\caption{Señal 4 simulada con tres tipos de diodo en el rectificador. El tiempo se mide desde el flanco de subida de la señal 1.}
+\label{fig:rect}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Señal 4 según el diodo del rectificador (simulación).}
+\label{tab:rect}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & \textbf{1N4004} & \textbf{1N4148} & \textbf{Ideal} \\
+\midrule
+Pico, flanco de subida [\si{\volt}] & \val{3}{\simRectAPicoSub} & \val{3}{\simRectBPicoSub} & \val{3}{\simRectCPicoSub} \\
+Pico, flanco de bajada [\si{\volt}] & \val{3}{\simRectAPicoBaj} & \val{3}{\simRectBPicoBaj} & \val{3}{\simRectCPicoBaj} \\
+Área, flanco de bajada [\si{\volt\micro\second}] & \val{2}{\simRectAAreaBaj} & \val{2}{\simRectBAreaBaj} & \val{2}{\simRectCAreaBaj} \\
+Rebote negativo [\si{\milli\volt}] & \val{0}{1000*\simRectAMin} & \val{0}{1000*\simRectBMin} & \val{0}{1000*\simRectCMin} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Simulación del circuito completo}
+\label{sec:completo}
+La Fig.~\ref{fig:nominal} muestra las cuatro señales del circuito completo en dos períodos, con el origen de tiempo en el flanco de subida de la señal 1, y la Tabla~\ref{tab:nominal} compara sus valores con los de la consigna. Todas tienen la forma, el nivel y la fase pedidos:
+\begin{itemize}[leftmargin=*, nosep]
+    \item La señal 1 va de \valu{3}{\simSunoBajo}{\volt} a \valu{3}{\simSunoAlto}{\volt}.
+    \item La triangular tiene su mínimo \valu{1}{\simRetMinTri}{\micro\second} después del flanco de la señal 1 y sube a \valu{1}{\simPendSubida}{\volt\per\milli\second} mientras la señal 1 está en alto. Su nivel medio es de \valu{3}{\simSdosMed}{\volt}; los \valu{0}{1000*(\simSdosMed-1.25)}{\milli\volt} de diferencia con la referencia son el \emph{offset} de los modelos de U1D y U2A. La mayor desviación de las rampas respecto de una recta es del \valu{2}{\simNoLinSdos}{\percent} de la excursión.
+    \item La señal 3 cambia \valu{1}{\simStresRetardo}{\micro\second} después de cada vértice, con flancos de \valu{1}{\simStresSubida}{\micro\second} (\SI{10}{} a \SI{90}{\percent}) y un sobrepico del \valu{1}{\simStresSobrepico}{\percent}. Su parte alta cae \valu{0}{\simStresInclin}{\milli\volt} a lo largo del semiperíodo, porque la pendiente de la triangular disminuye levemente hacia el final de cada rampa.
+    \item Los impulsos de la señal 4 llegan a \valu{3}{\simScuatroPicoSub}{\volt} en el flanco de subida y a \valu{3}{\simScuatroPicoBaj}{\volt} en el de bajada, con un ancho a media altura de \valu{1}{\simScuatroAnchoSub}{\micro\second}. Entre impulsos la salida es nula, salvo el rebote de \valu{0}{-1000*\simScuatroMin}{\milli\volt} ya analizado.
+\end{itemize}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=1 by 4, vertical sep=5pt, xticklabels at=edge bottom},
+    tp2, height=3.1cm, xmin=-58, xmax=407, xtick={0,116.28,232.56,348.84},
+    xticklabels={$0$,$T/2$,$T$,$3T/2$},
+]
+\nextgroupplot[ylabel={S1 [V]}, ymin=-1.6, ymax=2.9, ytick={-1,0,1.5}]
+\addplot[gray, dashed, line width=0.6pt] table[x=t, y=in] {datos/nominal.dat};
+\addplot[cs1] table[x=t, y=s1] {datos/nominal.dat};
+\nextgroupplot[ylabel={S2 [V]}, ymin=-2.4, ymax=5.2, ytick={-1.5,1.25,4}]
+\addplot[cs2] table[x=t, y=s2] {datos/nominal.dat};
+\nextgroupplot[ylabel={S3 [V]}, ymin=-0.7, ymax=3.8, ytick={0,1.5,3}]
+\addplot[cs3] table[x=t, y=s3] {datos/nominal.dat};
+\nextgroupplot[ylabel={S4 [V]}, ymin=-0.3, ymax=1.3, ytick={0,0.5,1}, xlabel={Tiempo ($T = \SI{232,6}{\micro\second}$)}]
+\addplot[cs4] table[x=t, y=s4] {datos/nominal.dat};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Simulación del circuito completo. En la señal 1 se superpone en gris la cuadrada del generador (\SI{0}{} a \SI{2,5}{\volt}).}
+\label{fig:nominal}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Valores de la consigna y simulados.}
+\label{tab:nominal}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Señal} & \textbf{Magnitud} & \textbf{Consigna} & \textbf{Simulado} \\
+\midrule
+Entrada & Impedancia & \SI{15}{\kilo\ohm} & \valu{2}{\simZin}{\kilo\ohm} \\
+\midrule
+\multirow{2}{*}{S1} & Nivel bajo / alto & \SI{-1}{} / \SI{1,5}{\volt} & \val{3}{\simSunoBajo} / \valu{3}{\simSunoAlto}{\volt} \\
+ & Valor medio & \SI{0,25}{\volt} & \valu{3}{(\simSunoBajo+\simSunoAlto)/2}{\volt} \\
+\midrule
+\multirow{3}{*}{S2} & Mínimo / máximo & \SI{-1,5}{} / \SI{4}{\volt} & \val{3}{\simSdosMin} / \valu{3}{\simSdosMax}{\volt} \\
+ & Valor medio & \SI{1,25}{\volt} & \valu{3}{\simSdosMed}{\volt} \\
+ & Alinealidad & -- & \valu{2}{\simNoLinSdos}{\percent} \\
+\midrule
+\multirow{2}{*}{S3} & Nivel bajo / alto & \SI{0}{} / \SI{3}{\volt} & \val{3}{\simStresBajo} / \valu{3}{\simStresAlto}{\volt} \\
+ & Flanco (\SI{10}{}--\SI{90}{\percent}) & -- & \valu{1}{\simStresSubida}{\micro\second} \\
+\midrule
+\multirow{2}{*}{S4} & Pico (subida / bajada) & \SI{1}{\volt} & \val{3}{\simScuatroPicoSub} / \valu{3}{\simScuatroPicoBaj}{\volt} \\
+ & Ancho a media altura & -- & \valu{1}{\simScuatroAnchoSub}{\micro\second} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Impedancia de salida del sistema}
+\label{sec:zout}
+La salida del sistema es la de U3C, un operacional con realimentación negativa permanente: a diferencia de U3B, sus diodos no abren nunca el lazo. Su impedancia de salida es la resistencia de salida en lazo abierto del operacional, $r_o$, dividida por $1 + A\beta$, con
+\begin{equation}
+\beta = \frac{R_{14} \parallel R_{15}}{R_{14} \parallel R_{15} + R_{F8} + P_3} = \val{3}{\teoBeta}.
+\end{equation}
+Por encima del polo dominante (unos \SI{15}{\hertz}) la ganancia de lazo abierto es $A(f) \approx B_1/(jf)$, y entonces
+\begin{equation}
+Z_o(f) \approx \frac{r_o}{1 + A\beta} \approx j\,\frac{r_o f}{\beta B_1} = j\omega L_{eq}, \qquad L_{eq} = \frac{r_o}{2\pi \beta B_1}.
+\end{equation}
+La impedancia de salida crece con la frecuencia y es inductiva. La hoja de datos del TL084 no especifica $r_o$; el macromodelo de TI se comporta como si $r_o \approx \valu{0}{\teoRo}{\ohm}$, de donde $L_{eq} = \valu{1}{\teoLeq}{\micro\henry}$.
+
+Para verificarlo se inyectó por simulación una corriente alterna en la salida, con el generador apagado (Fig.~\ref{fig:zout}): \valu{1}{\simZoutCien}{\milli\ohm} a \SI{100}{\hertz}, \valu{2}{\simZoutF}{\ohm} a \SI{4,3}{\kilo\hertz}, \valu{2}{\simZoutDiez}{\ohm} a \SI{43}{\kilo\hertz} y \valu{1}{\simZoutCienK}{\ohm} a \SI{100}{\kilo\hertz}, con una fase de \valu{0}{\simZoutFaseF}{\degree}. En la banda que ocupan los impulsos (hasta $1/(2\pi\tau_4) = \SI{34}{\kilo\hertz}$) son unos pocos ohm: cualquier carga de más de algunos cientos de ohm recibe la señal 4 sin pérdida apreciable.
+
+El método de la carga, que mide la amplitud con y sin una resistencia conocida en la salida, no sirve para esta impedancia. Con \SI{1}{\kilo\ohm} de carga el pico de los impulsos simulado baja menos del \SI{0,03}{\percent}, lo que equivaldría a \valu{1}{\simZoCargaB}{\ohm} o menos. Como $Z_o$ es casi puramente reactiva, la caída en ella está en cuadratura con la tensión en la carga y la amplitud cambia en una cantidad de segundo orden, $1 - |1 + jX/R_L|^{-1} \approx X^2/(2R_L^2)$. Para medir $Z_o$ hay que medir fase o inyectar corriente.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[tp2, width=0.96\columnwidth, height=4.6cm, xmin=10, xmax=1e7, ymin=1e-3, ymax=1e3,
+    xlabel={Frecuencia [\si{\hertz}]}, ylabel={$|Z_o|$ [\si{\ohm}]}, legend pos=north west]
+\addplot[cs4] table[x=f, y=z] {datos/zout.dat};
+\addplot[gray, densely dashed, domain=10:1e7, samples=40] {2*pi*x*\teoLeq*1e-6};
+\addplot[cmed, only marks, mark=*, mark size=1.6pt] coordinates {(4300,\simZoutF)};
+\legend{Simulación, $\omega L_{eq}$, \SI{4,3}{\kilo\hertz}}
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{Impedancia de salida del sistema (salida de U3C, simulación).}
+\label{fig:zout}
+\end{figure}
+
+\subsection{Tolerancias y presets}
+\label{sec:tolerancias}
+Para decidir qué magnitudes necesitaban un preset se hicieron \val{0}{\simMcN} simulaciones del circuito completo con los resistores sorteados en $\pm\SI{1}{\percent}$ y $C_1$, $C_D$ y $C_4$ en $\pm\SI{5}{\percent}$, con distribución uniforme y sin retocar los presets (Tabla~\ref{tab:mc}). El nivel medio de la triangular no se mueve, porque lo fija la referencia, y su amplitud varía $\pm\valu{1}{100*\simMcVppDesv/\simMcVppMedia}{\percent}$ (una desviación estándar), sobre todo por $C_1$. La señal 3 depende de $R_D C_D$ y de la pendiente de la triangular, es decir, de dos capacitores: en el peor caso sus niveles se corren \SI{0,2}{\volt}. El pico de la señal 4 depende además de $C_4$ y de la velocidad de los flancos, y varía entre \valu{2}{\simMcScuatroMin}{\volt} y \valu{2}{\simMcScuatroMax}{\volt}, un \SI{20}{\percent}: por eso tiene su propio preset, cuyo rango de ganancia (0,5 a 1) lo cubre. Los niveles de las señales 1 y 2 tienen preset porque dependen del \emph{offset} de los operacionales, que ninguna tolerancia de componentes acota.
+
+\begin{table}[!htb]
+\centering
+\caption{Simulación con tolerancias (\val{0}{\simMcN} corridas).}
+\label{tab:mc}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Magnitud} & \textbf{Media} & \textbf{Desv.} & \textbf{Mín.} & \textbf{Máx.} \\
+\midrule
+S2 pico a pico [\si{\volt}] & \val{2}{\simMcVppMedia} & \val{2}{\simMcVppDesv} & \val{2}{\simMcVppMin} & \val{2}{\simMcVppMax} \\
+S2 nivel medio [\si{\volt}] & \val{3}{\simMcCentroMedia} & \val{3}{\simMcCentroDesv} & \val{3}{\simMcCentroMin} & \val{3}{\simMcCentroMax} \\
+S3 nivel alto [\si{\volt}] & \val{2}{\simMcStresAltoMedia} & \val{2}{\simMcStresAltoDesv} & \val{2}{\simMcStresAltoMin} & \val{2}{\simMcStresAltoMax} \\
+S3 nivel bajo [\si{\volt}] & \val{2}{\simMcStresBajoMedia} & \val{2}{\simMcStresBajoDesv} & \val{2}{\simMcStresBajoMin} & \val{2}{\simMcStresBajoMax} \\
+S4 pico [\si{\volt}] & \val{2}{\simMcScuatroMedia} & \val{2}{\simMcScuatroDesv} & \val{2}{\simMcScuatroMin} & \val{2}{\simMcScuatroMax} \\
+\bottomrule
+\end{tabular}
+\end{table}

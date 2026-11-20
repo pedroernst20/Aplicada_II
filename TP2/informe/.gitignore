@@ -1,0 +1,13 @@
+# Temporales de LaTeX
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# El PDF compilado se versiona en la raiz del TP
+EA_TP2.pdf

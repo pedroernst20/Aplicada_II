@@ -1,0 +1,57 @@
+\section{Introducción}
+
+\subsection{Consigna}
+El Trabajo Práctico de Laboratorio N.\textordmasculine\ 2 pide diseñar los circuitos necesarios para obtener, en el orden indicado y cada una a partir de la anterior, las cuatro señales de la Fig.~\ref{fig:consigna}, con una frecuencia de \SI{4300}{\hertz}. Además fija tres condiciones de diseño:
+\begin{itemize}[leftmargin=*, nosep]
+    \item cuidar la ubicación del nivel de continua (\emph{offset}) de cada señal;
+    \item que la impedancia de entrada del circuito sea de \SI{15}{\kilo\ohm};
+    \item que el nivel de continua de la señal 2 se establezca con una referencia de precisión con un \emph{buffer}.
+\end{itemize}
+El informe debe incluir las hojas de datos de los componentes con un análisis de sus parámetros, el circuito completo, las pautas y cálculos de cada etapa, la impedancia de salida del sistema y observaciones sobre el funcionamiento.
+
+La consigna dice qué señales obtener, pero no cómo: no fija la topología de ninguna etapa, ni el operacional, ni la alimentación, ni los componentes. Por eso la mayor parte de este informe se dedica a justificar cada una de esas decisiones y a verificarlas por simulación antes de llevarlas a la placa.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=1 by 4, vertical sep=5pt, xticklabels at=edge bottom},
+    tp2, height=3.1cm, xmin=-58.14, xmax=465.1,
+    xtick={0,116.28,232.56,348.84,465.1}, xticklabels={$0$,$T/2$,$T$,$3T/2$,$2T$},
+    ylabel style={font=\footnotesize}, yticklabel style={font=\footnotesize},
+    ymajorgrids=false, xmajorgrids=true,
+]
+\nextgroupplot[ymin=-1.9, ymax=2.4, ytick={-1,1.5}, yticklabels={$-1$,$1{,}5$}, ylabel={S1 [V]}]
+\addplot[gray!60, dashed, line width=0.5pt] coordinates {(-58.14,0) (465.1,0)};
+\addplot[cs1, const plot] coordinates {(-58.14,-1) (0,1.5) (116.28,-1) (232.56,1.5) (348.84,-1) (465.1,-1)};
+\nextgroupplot[ymin=-2.6, ymax=5.1, ytick={-1.5,4}, yticklabels={$-1{,}5$,$4$}, ylabel={S2 [V]}]
+\addplot[gray!60, dashed, line width=0.5pt] coordinates {(-58.14,0) (465.1,0)};
+\addplot[cs2] coordinates {(-58.14,1.25) (0,-1.5) (116.28,4) (232.56,-1.5) (348.84,4) (465.1,-1.5)};
+\nextgroupplot[ymin=-0.8, ymax=3.8, ytick={0,3}, ylabel={S3 [V]}]
+\addplot[cs3, const plot] coordinates {(-58.14,0) (0,3) (116.28,0) (232.56,3) (348.84,0) (465.1,0)};
+\nextgroupplot[ymin=-0.3, ymax=1.3, ytick={0,1}, ylabel={S4 [V]}, xlabel={Tiempo}]
+\addplot[cs4, domain=0:116, samples=80] {exp(-x/6)};
+\addplot[cs4, domain=116.28:232, samples=80] {exp(-(x-116.28)/6)};
+\addplot[cs4, domain=232.56:348, samples=80] {exp(-(x-232.56)/6)};
+\addplot[cs4, domain=348.84:465, samples=80] {exp(-(x-348.84)/6)};
+\addplot[cs4] coordinates {(-58.14,0) (0,0) (0,1)};
+\addplot[cs4] coordinates {(116.28,0) (116.28,1)};
+\addplot[cs4] coordinates {(232.56,0) (232.56,1)};
+\addplot[cs4] coordinates {(348.84,0) (348.84,1)};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Señales pedidas por la consigna ($T = 1/\SI{4300}{\hertz} = \SI{232,6}{\micro\second}$). La línea de trazos marca \SI{0}{\volt}. La señal 2 sube mientras la señal 1 está en alto, la señal 3 está en alto mientras la señal 2 sube y la señal 4 tiene un impulso positivo de \SI{1}{\volt} en cada flanco de la señal 3.}
+\label{fig:consigna}
+\end{figure}
+
+\subsection{Interpretación de las señales}
+De la Fig.~\ref{fig:consigna} se leen las relaciones que debe cumplir cada etapa:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Señal 1}: cuadrada de \SI{-1}{\volt} a \SI{1,5}{\volt} (\SI{2,5}{\volt} pico a pico, valor medio \SI{0,25}{\volt}). El generador entrega una cuadrada de \SI{0}{} a \SI{2,5}{\volt}, de modo que la primera etapa le resta \SI{1}{\volt}.
+    \item \textbf{Señal 2}: triangular de \SI{-1,5}{\volt} a \SI{4}{\volt} (\SI{5,5}{\volt} pico a pico, valor medio \SI{1,25}{\volt}). Es la integral de la señal 1 sin su valor medio y sin inversión: sube mientras la señal 1 está en alto. Su nivel de continua es el que la consigna pide fijar con la referencia de precisión.
+    \item \textbf{Señal 3}: cuadrada de \SI{0}{} a \SI{3}{\volt}, en alto mientras la señal 2 sube. Sus flancos coinciden con los vértices de la triangular: la señal 3 indica el signo de la pendiente de la señal 2, es decir, es su derivada, desplazada y escalada.
+    \item \textbf{Señal 4}: un impulso positivo de \SI{1}{\volt} que decae exponencialmente en cada flanco de la señal 3, tanto de subida como de bajada. Se obtiene derivando la señal 3, lo que da impulsos de signo alternado, y tomando su valor absoluto.
+\end{itemize}
+
+\subsection{Organización del informe}
+La Sección~\ref{sec:diseno} desarrolla el diseño y su verificación por simulación. Para cada decisión explica qué alternativas había, por qué se eligió una, cómo se calcularon sus componentes y qué muestra la simulación. Incluye las hojas de datos y su análisis, el circuito completo y la impedancia de salida. La Sección~\ref{sec:impl} describe la implementación: la placa, el procedimiento de ajuste y medición y los resultados de las etapas que funcionaron como se esperaba. La Sección~\ref{sec:problemas} analiza lo que salió mal, en la medición y en las últimas etapas, y usa la simulación para acotar sus causas. La Sección~\ref{sec:conclusiones} reúne las conclusiones.

@@ -1,0 +1,95 @@
+* ============================================================================
+* TP2 - Electronica Aplicada II - Circuito completo (3 x TL084, +/-12 V)
+* Senal 1 -> Senal 2 -> Senal 3 -> Senal 4, a partir de una cuadrada de
+* 0 a 2,5 V y 4300 Hz entregada por el generador.
+* Se abre tal cual en LTspice o se corre con ngspice desde
+* correr_simulaciones.py (que agrega el analisis y cambia los .param).
+* ============================================================================
+.include modelos_tp2.lib
+*
+* ---- Parametros (valores nominales del diseno) -----------------------------
+.param VALTO=2.5 FREQ=4300 TR=50n
+.param ALFA1=0.26656 ALFA2=0.21325
+.param RP3=3.8k
+.param C1V=4.7n RIV=5.6k RFV=1Meg CCV=1u
+.param RSV=1k CDV=1n RDV=31.6k CFV=56p
+.param RS4V=4.7k C4V=1n RF4V=4.7k
+.param RLOAD=1e9
+.param VCCI=-1 VC1I=-2.75
+* Condiciones iniciales de CC y C1 = valores de regimen (evitan el
+* arranque lento del integrador; usar .tran con uic).
+*
+* ---- Alimentacion ----------------------------------------------------------
+VCCP vcc 0 12
+VCCN 0 vee 12
+*
+* ---- Entrada: generador y adaptacion de impedancia (U1A) ---------------------
+VGEN in 0 PULSE(0 {VALTO} 0 {TR} {TR} {0.5/FREQ-TR} {1/FREQ})
+R1   in 0 15k
+XU1A in a vcc vee a TL084
+*
+* ---- Referencia de precision: zener + presets + buffers (U1B, U2D) -------
+RZ   vcc z 470
+DZ1  0 z D1N750
+RP1A z w1 {10k*(1-ALFA1)}
+RP1B w1 0 {10k*ALFA1}
+XU1B w1 vref2 vcc vee vref2 TL084
+RP2A z w2 {10k*(1-ALFA2)}
+RP2B w2 0 {10k*ALFA2}
+XU2D w2 vref1 vcc vee vref1 TL084
+*
+* ---- Senal 1: desplazamiento de nivel (U1C), s1 = a - VREF1 ---------------
+R2   a p1 10k
+R3   p1 0 10k
+R4   vref1 n1 10k
+R5   n1 s1 10k
+XU1C p1 n1 vcc vee s1 TL084
+*
+* ---- Integrador con acoplamiento capacitivo (U1D) --------------------------
+CC   s1 ci {CCV} IC={VCCI}
+RI   ci n2 {RIV}
+C1   n2 int {C1V} IC={VC1I}
+RF   n2 int {RFV}
+XU1D vref2 n2 vcc vee int TL084
+*
+* ---- Senal 2: inversor alrededor de VREF2 (U2A), s2 = 2 VREF2 - int --------
+R6   int n3 10k
+R7   n3 s2 10k
+XU2A vref2 n3 vcc vee s2 TL084
+*
+* ---- Derivador compensado (U2B) ------------------------------------------------
+RS   s2 cd {RSV}
+CD   cd n4 {CDV}
+RD   n4 der {RDV}
+CF   n4 der {CFV}
+XU2B 0 n4 vcc vee der TL084
+*
+* ---- Senal 3: inversor con desplazamiento (U2C), s3 = 1,5 V - der ----------
+R8   vref2 p5 10k
+R9   p5 0 15k
+R10  der n5 10k
+R11  n5 s3 10k
+XU2C p5 n5 vcc vee s3 TL084
+*
+* ---- Generador de impulsos: pasaaltos activo (U3A) ---------------------------
+RS4  s3 c4 {RS4V}
+C4   c4 n6 {C4V}
+RF4  n6 vp {RF4V}
+XU3A 0 n6 vcc vee vp TL084
+*
+* ---- Rectificador de precision de onda completa (U3B, U3C) -----------------
+R12  vp n7 10k
+R13  n7 va 10k
+D1   o7 n7 D1N4004
+D2   va o7 D1N4004
+XU3B 0 n7 vcc vee o7 TL084
+R14  vp n8 20k
+R15  va n8 10k
+RF8  n8 m8 10k
+RP3  m8 s4 {RP3}
+XU3C 0 n8 vcc vee s4 TL084
+RL   s4 0 {RLOAD}
+*
+* Para LTspice (descomentar):
+* .tran 0 60m 59m 50n uic
+.end
